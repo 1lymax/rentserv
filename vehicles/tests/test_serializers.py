@@ -1,10 +1,9 @@
-import json
-
+from django.db import connection
 from django.db.models import F
 from django.test import TestCase
-from django.urls import reverse
-from rest_framework import status
+from django.test.utils import CaptureQueriesContext
 
+from store.models import City, Store
 from vehicles.models import Type, Vehicle, MessurementUnit, FeatureList, VehicleFeature, VehicleImage
 from vehicles.serializers import VehicleSerializer
 
@@ -26,11 +25,17 @@ class VehicleSerializerTestCase(TestCase):
                                                                vehicle=self.vehicle_2)
         self.image_1 = VehicleImage.objects.create(vehicle=self.vehicle_1,
                                                    image="media/vehicle/hyundai-hd-120-manipulyator.png")
+        self.city_1 = City.objects.create(name='Kiev')
+        self.city_2 = City.objects.create(name='Odessa')
+        self.store_1 = Store.objects.create(vehicle=self.vehicle_1, quantity=3, city=self.city_1)
+        self.store_2 = Store.objects.create(vehicle=self.vehicle_1, quantity=5, city=self.city_2)
+        self.store_3 = Store.objects.create(vehicle=self.vehicle_2, quantity=4, city=self.city_1)
 
     def test_ok(self):
+
         vehicles = Vehicle.objects.all().annotate(
             vehicle_type_name=F('vehicle_type__name')
-        ).prefetch_related('features')
+        ).prefetch_related('images').prefetch_related('features').prefetch_related('store').distinct()
         data = [
             {"name": "Hyundai 100",
              "vehicle_type": 1,
@@ -73,7 +78,9 @@ class VehicleSerializerTestCase(TestCase):
              }]
              }
         ]
-        serializer_data = VehicleSerializer(vehicles, many=True).data
+        with CaptureQueriesContext(connection) as queries:
+            serializer_data = VehicleSerializer(vehicles, many=True).data
+            self.assertEqual(4, len(queries))
 
         # print(json.dumps(serializer_data), sep='\n\n')
-        self.assertEqual(serializer_data, data)
+        self.assertEqual(serializer_data, data, serializer_data)

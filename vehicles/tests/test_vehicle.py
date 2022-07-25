@@ -4,12 +4,14 @@ import os
 from django.contrib.auth.models import User
 from django.db.models import F
 from django.urls import reverse
-from rest_framework import status, request
+from rest_framework import status
 from rest_framework.exceptions import ErrorDetail
 from rest_framework.test import APITestCase
 from django.db import connection
 from django.test.utils import CaptureQueriesContext
-from vehicles.models import Vehicle, Type, MessurementUnit, FeatureList, VehicleFeature
+
+from store.models import City, Store
+from vehicles.models import Vehicle, Type, MessurementUnit, FeatureList, VehicleFeature, VehicleImage
 from vehicles.serializers import VehicleSerializer
 from vehicles.views import VehicleViewSet
 
@@ -35,48 +37,51 @@ class VehiclesApiTestCase(APITestCase):
                                                              vehicle=self.vehicle_1)
         self.vehicle_feature_2 = VehicleFeature.objects.create(feature=self.feature_2, unit=self.unit, value='10',
                                                                vehicle=self.vehicle_1)
+        self.city_1 = City.objects.create(name='Kiev')
+        self.city_2 = City.objects.create(name='Odessa')
+        self.store_1 = Store.objects.create(vehicle=self.vehicle_1, quantity=3, city=self.city_1)
+        self.store_2 = Store.objects.create(vehicle=self.vehicle_1, quantity=5, city=self.city_2)
+        self.store_3 = Store.objects.create(vehicle=self.vehicle_2, quantity=4, city=self.city_1)
+
+        self.qs = Vehicle.objects.all().annotate(
+            vehicle_type_name=F('vehicle_type__name')
+        ).prefetch_related('images').prefetch_related('features').prefetch_related('store').distinct()
 
     def test_get(self):
         url = reverse('vehicle-list')
         with CaptureQueriesContext(connection) as queries:
             response = self.client.get(url)
-            self.assertEqual(7, len(queries))
-        vehicles = Vehicle.objects.all().annotate(
-            vehicle_type_name=F('vehicle_type__name')
-        ).prefetch_related('images').prefetch_related('features').distinct()
-        serializer_data = VehicleSerializer(vehicles, many=True).data
+            self.assertEqual(4, len(queries))
+
+        serializer_data = VehicleSerializer(self.qs, many=True).data
         self.assertEqual(status.HTTP_200_OK, response.status_code)
         self.assertEqual(serializer_data, response.data)
 
     def test_filter(self):
         url = reverse('vehicle-list')
-        vehicles = Vehicle.objects.all().annotate(
-            vehicle_type_name=F('vehicle_type__name')
-        ).prefetch_related('images').prefetch_related('features').filter(vehicle_type=1).distinct()
         response = self.client.get(url, data={'vehicle_type': 1})
+        vehicles = self.qs.filter(vehicle_type=1)
         serializer_data = VehicleSerializer(vehicles, many=True).data
+        print(serializer_data, sep='\n\n')
+        print(response.data, sep='\n\n')
+        self.assertEqual(len(serializer_data), len(response.data))
         self.assertEqual(status.HTTP_200_OK, response.status_code)
         self.assertEqual(serializer_data, response.data)
 
     def test_filter_price_cap_min_max(self):
         url = reverse('vehicle-list')
-        vehicles = Vehicle.objects.all().annotate(
-            vehicle_type_name=F('vehicle_type__name')
-        ).prefetch_related('images').prefetch_related('features').distinct()
         response = self.client.get(url, data={'min_price_cap': 600, 'max_price_cap': 650})
-        vehicles = vehicles.filter(price_cap__gte=600).filter(price_cap__lte=650)
+        vehicles = self.qs.filter(price_cap__gte=600).filter(price_cap__lte=650)
         serializer_data = VehicleSerializer(vehicles, many=True).data
         self.assertEqual(status.HTTP_200_OK, response.status_code)
-        self.assertEqual(serializer_data, response.data)
+        self.assertEqual(len(serializer_data), len(response.data))
         self.assertEqual(1, vehicles.count())
+        self.assertEqual(serializer_data, response.data)
 
     def test_filter_price_region_min_max(self):
         url = reverse('vehicle-list')
-        vehicles = Vehicle.objects.all().annotate(
-            vehicle_type_name=F('vehicle_type__name')
-        ).prefetch_related('images').prefetch_related('features').distinct()
         response = self.client.get(url, data={'min_price_region': 600, 'max_price_region': 700})
-        vehicles = vehicles.filter(price_region__gte=600).filter(price_region__lte=700)
+        vehicles = self.qs.filter(price_region__gte=600).filter(price_region__lte=700)
         serializer_data = VehicleSerializer(vehicles, many=True).data
         self.assertEqual(status.HTTP_200_OK, response.status_code)
         self.assertEqual(serializer_data, response.data)
@@ -84,11 +89,8 @@ class VehiclesApiTestCase(APITestCase):
 
     def test_filter_feature_value(self):
         url = reverse('vehicle-list')
-        vehicles = Vehicle.objects.all().annotate(
-            vehicle_type_name=F('vehicle_type__name')
-        ).prefetch_related('images').prefetch_related('features').distinct()
         response = self.client.get(url, data={'features__value': 5})
-        vehicles = vehicles.filter(features__value=5)
+        vehicles = self.qs.filter(features__value=5)
         serializer_data = VehicleSerializer(vehicles, many=True).data
         self.assertEqual(status.HTTP_200_OK, response.status_code)
         self.assertEqual(serializer_data, response.data)
@@ -96,11 +98,8 @@ class VehiclesApiTestCase(APITestCase):
 
     def test_filter_feature_min_max(self):
         url = reverse('vehicle-list')
-        vehicles = Vehicle.objects.all().annotate(
-            vehicle_type_name=F('vehicle_type__name')
-        ).prefetch_related('images').prefetch_related('features').distinct()
         response = self.client.get(url, data={'min_features__value': 5, 'max_features__value': 7})
-        vehicles = vehicles.filter(features__value__gte=5).filter(features__value__lte=5)
+        vehicles = self.qs.filter(features__value__gte=5).filter(features__value__lte=5)
         serializer_data = VehicleSerializer(vehicles, many=True).data
         self.assertEqual(status.HTTP_200_OK, response.status_code)
         self.assertEqual(serializer_data, response.data)
@@ -108,20 +107,16 @@ class VehiclesApiTestCase(APITestCase):
 
     def test_order_asc(self):
         url = reverse('vehicle-list')
-        vehicles = Vehicle.objects.all().annotate(
-            vehicle_type_name=F('vehicle_type__name')
-        ).prefetch_related('images').prefetch_related('features').order_by('name').distinct()
         response = self.client.get(url, data={'ordering': 'name'})
+        vehicles = self.qs.order_by('name')
         serializer_data = VehicleSerializer(vehicles, many=True).data
         self.assertEqual(status.HTTP_200_OK, response.status_code)
         self.assertEqual(serializer_data, response.data)
 
     def test_order_desc(self):
         url = reverse('vehicle-list')
-        vehicles = Vehicle.objects.all().annotate(
-            vehicle_type_name=F('vehicle_type__name')
-        ).prefetch_related('images').prefetch_related('features').order_by('-vehicle_type_name').distinct()
         response = self.client.get(url, data={'ordering': '-vehicle_type_name'})
+        vehicles = self.qs.order_by('-vehicle_type_name')
         serializer_data = VehicleSerializer(vehicles, many=True).data
         self.assertEqual(status.HTTP_200_OK, response.status_code)
         self.assertEqual(serializer_data, response.data)

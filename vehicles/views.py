@@ -5,9 +5,10 @@ from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 
-from vehicles.models import Vehicle, Type, VehicleFeature
+from vehicles.models import Vehicle, Type, VehicleFeature, FeatureList
 from vehicles.permissions import IsStaffOrReadOnly
-from vehicles.serializers import VehicleSerializer, VehicleTypeSerializer, VehicleFeaturesCreateUpdateSerializer
+from vehicles.serializers import VehicleSerializer, VehicleTypeSerializer, VehicleFeaturesCreateUpdateSerializer, \
+    FeatureListSerializer
 
 
 class TypeViewSet(ModelViewSet):
@@ -20,13 +21,12 @@ class TypeViewSet(ModelViewSet):
 class VehicleViewSet(ModelViewSet):
     queryset = Vehicle.objects.all().annotate(
         vehicle_type_name=F('vehicle_type__name')
-    ).prefetch_related('images').prefetch_related('features').distinct()
+    ).prefetch_related('images').prefetch_related('features').prefetch_related('store').distinct()
     serializer_class = VehicleSerializer
     permission_classes = [IsStaffOrReadOnly]
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_fields = ['vehicle_type', 'name',
-                        'vehicle_type__name', 'features__feature', 'features__unit', 'features__value']
-    # filter_class = VehicleFilter
+                        'vehicle_type__name', 'features__feature', 'features__unit', 'features__value', 'store__city']
     ordering_fields = ['name', 'vehicle_type_name']
     search_fields = ['name', 'vehicle_type_name']
 
@@ -64,3 +64,9 @@ class VehicleFeatureViewSet(ModelViewSet):
             serializer.save()
         else:
             raise serializers.ValidationError("Vehicle already has such feature")
+
+
+class FeatureListViewSet(ModelViewSet):
+    queryset = FeatureList.objects.all()
+    serializer_class = FeatureListSerializer
+    permission_classes = [IsStaffOrReadOnly]

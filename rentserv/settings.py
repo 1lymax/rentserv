@@ -58,7 +58,8 @@ INSTALLED_APPS = [
     'django_filters',
     'debug_toolbar',
 
-    'vehicles'
+    'vehicles',
+    'store'
 ]
 
 MIDDLEWARE = [
