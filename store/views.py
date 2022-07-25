@@ -26,3 +26,18 @@ class StoreViewSet(ModelViewSet):
     serializer_class = StoreViewSerializer
     permission_classes = [IsStaffOrReadOnly]
     depth = 1
+
+
+class StoreCreateUpdateGetSet(ModelViewSet):
+    queryset = Store.objects.all()
+    serializer_class = StoreViewSerializer
+    permission_classes = [IsStaffOrReadOnly]
+
+    def perform_create(self, serializer):
+        # Check for existence of the record with the same feature name
+        data = serializer.validated_data
+        qs = Store.objects.all().filter(vehicle=data['vehicle'], city=data['city'])
+        if (len(qs)) == 0:
+            serializer.save()
+        else:
+            raise serializers.ValidationError("This name is already exists")
