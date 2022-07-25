@@ -58,12 +58,3 @@ class VehicleFeature(models.Model):
     def __str__(self):
         return f'{self.vehicle} -- {self.feature}, {self.value} {self.unit}'
 
-    # def save(self, force_insert=True, *args, **kwargs):
-    #     qs = type(self).objects.all().filter(vehicle=self.vehicle).filter(feature=self.feature)
-    #     print(list(qs))
-    #     if len(qs) == 0:
-    #         super().save()
-    #     else:
-    #         return #ErrorDetail(string='You do not have permission to perform this action.',
-    #                #                             code='permission_denied')
-    #         # raise ValueError("Vehicle already has this feature.")

@@ -2,7 +2,7 @@ from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 
 from store.serializers import StoreViewSerializer
-from vehicles.models import Vehicle, Type, FeatureList, VehicleFeature, VehicleImage
+from vehicles.models import Vehicle, Type, FeatureList, VehicleFeature, VehicleImage, MessurementUnit
 
 
 class VehicleFeaturesCreateUpdateSerializer(ModelSerializer):
@@ -21,12 +21,6 @@ class VehicleImageSerializer(ModelSerializer):
     class Meta:
         model = VehicleImage
         exclude = ['vehicle']
-
-
-class VehicleTypeSerializer(ModelSerializer):
-    class Meta:
-        model = Type
-        fields = ['name']
 
 
 class VehicleSerializer(ModelSerializer):
@@ -54,3 +48,16 @@ class FeatureListSerializer(ModelSerializer):
     class Meta:
         model = FeatureList
         fields = ['name']
+
+
+class MessurementUnitSerializer(ModelSerializer):
+    class Meta:
+        model = MessurementUnit
+        fields = ['name']
+
+
+class TypeSerializer(ModelSerializer):
+    class Meta:
+        model = Type
+        fields = ['name']
+

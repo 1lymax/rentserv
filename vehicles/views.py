@@ -5,17 +5,26 @@ from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 
-from vehicles.models import Vehicle, Type, VehicleFeature, FeatureList
+from vehicles.models import Vehicle, Type, VehicleFeature, FeatureList, MessurementUnit
 from vehicles.permissions import IsStaffOrReadOnly
-from vehicles.serializers import VehicleSerializer, VehicleTypeSerializer, VehicleFeaturesCreateUpdateSerializer, \
-    FeatureListSerializer
+from vehicles.serializers import VehicleSerializer, TypeSerializer, VehicleFeaturesCreateUpdateSerializer, \
+    FeatureListSerializer, MessurementUnitSerializer
 
 
 class TypeViewSet(ModelViewSet):
     queryset = Type.objects.all()
-    serializer_class = VehicleTypeSerializer
+    serializer_class = TypeSerializer
     permission_classes = [IsStaffOrReadOnly]
-    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+
+    def perform_create(self, serializer):
+        # Check for existence of the record with the same feature name
+        data = serializer.validated_data
+        qs = Type.objects.all().filter(name=data['name'])
+        if (len(qs)) == 0:
+            serializer.save()
+        else:
+            raise serializers.ValidationError("This name is already exists")
+
 
 
 class VehicleViewSet(ModelViewSet):
@@ -70,3 +79,27 @@ class FeatureListViewSet(ModelViewSet):
     queryset = FeatureList.objects.all()
     serializer_class = FeatureListSerializer
     permission_classes = [IsStaffOrReadOnly]
+
+    def perform_create(self, serializer):
+        # Check for existence of the record with the same feature name
+        data = serializer.validated_data
+        qs = FeatureList.objects.all().filter(name=data['name'])
+        if (len(qs)) == 0:
+            serializer.save()
+        else:
+            raise serializers.ValidationError("This name is already exists")
+
+
+class MessurementUnitViewSet(ModelViewSet):
+    queryset = MessurementUnit.objects.all()
+    serializer_class = MessurementUnitSerializer
+    permission_classes = [IsStaffOrReadOnly]
+
+    def perform_create(self, serializer):
+        # Check for existence of the record with the same feature name
+        data = serializer.validated_data
+        qs = MessurementUnit.objects.all().filter(name=data['name'])
+        if (len(qs)) == 0:
+            serializer.save()
+        else:
+            raise serializers.ValidationError("This name is already exists")

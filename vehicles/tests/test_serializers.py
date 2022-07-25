@@ -5,7 +5,8 @@ from django.test.utils import CaptureQueriesContext
 
 from store.models import City, Store
 from vehicles.models import Type, Vehicle, MessurementUnit, FeatureList, VehicleFeature, VehicleImage
-from vehicles.serializers import VehicleSerializer
+from vehicles.serializers import VehicleSerializer, FeatureListSerializer, MessurementUnitSerializer, \
+    VehicleFeaturesViewSerializer
 
 
 class VehicleSerializerTestCase(TestCase):
@@ -31,8 +32,7 @@ class VehicleSerializerTestCase(TestCase):
         self.store_2 = Store.objects.create(vehicle=self.vehicle_1, quantity=5, city=self.city_2)
         self.store_3 = Store.objects.create(vehicle=self.vehicle_2, quantity=4, city=self.city_1)
 
-    def test_ok(self):
-
+    def test_vehicle(self):
         vehicles = Vehicle.objects.all().annotate(
             vehicle_type_name=F('vehicle_type__name')
         ).prefetch_related('images').prefetch_related('features').prefetch_related('store').distinct()
@@ -83,4 +83,45 @@ class VehicleSerializerTestCase(TestCase):
             self.assertEqual(4, len(queries))
 
         # print(json.dumps(serializer_data), sep='\n\n')
+        self.assertEqual(serializer_data, data, serializer_data)
+
+    def test_feature(self):
+        vehicles = FeatureList.objects.all()
+        data = [
+            {"name": "Weight"},
+            {"name": "Weight 2"}
+        ]
+        serializer_data = FeatureListSerializer(vehicles, many=True).data
+        self.assertEqual(serializer_data, data, serializer_data)
+
+    def test_messure(self):
+        queryset = MessurementUnit.objects.all()
+        data = [
+            {"name": "tons"}
+        ]
+        serializer_data = MessurementUnitSerializer(queryset, many=True).data
+        self.assertEqual(serializer_data, data, serializer_data)
+
+    def test_vehiclefeatures(self):
+        queryset = VehicleFeature.objects.all()
+        data = [
+            {'feature': self.feature_1.id,
+             'unit': self.unit.id,
+             'value': '5'
+             },
+            {'feature': self.feature_2.id,
+             'unit': self.unit.id,
+             'value': '10'
+             },
+        ]
+        serializer_data = VehicleFeaturesViewSerializer(queryset, many=True).data
+        self.assertEqual(serializer_data, data)
+
+    def test_types(self):
+        queryset = Type.objects.all()
+        data = [
+            {"name": "Manipulator"},
+            {"name": "Excavator"}
+        ]
+        serializer_data = FeatureListSerializer(queryset, many=True).data
         self.assertEqual(serializer_data, data, serializer_data)
