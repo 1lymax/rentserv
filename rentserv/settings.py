@@ -9,7 +9,8 @@ https://docs.djangoproject.com/en/4.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
-
+import os
+import sys
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -34,6 +35,21 @@ INTERNAL_IPS = [
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media/'
 
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+    ),
+    'DEFAULT_PARSER_CLASSES': (
+        'rest_framework.parsers.JSONParser',
+    ),
+    'DEFAULT_FILTER_BACKENDS': [
+        'django_filters.rest_framework.DjangoFilterBackend'
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+}
+
 # REST_FRAMEWORK = {
 #     'DEFAULT_PERMISSION_CLASSES': (
 #         'rest_framework.permissions.IsAuthenticated',
@@ -57,9 +73,12 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_filters',
     'debug_toolbar',
+    'django_rest_passwordreset',
 
+    'user',
     'vehicles',
     'store'
+
 ]
 
 MIDDLEWARE = [
@@ -103,6 +122,8 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+
 
 AUTHENTICATION_BACKENDS = (
     # 'social_core.backends.github.GithubOAuth2',
@@ -151,3 +172,17 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+#disable if not in DEBUG or if $USE_DEBUG_TOOLBAR is not set.
+USE_DEBUG_TOOLBAR = bool(int(os.getenv("USE_DEBUG_TOOLBAR", 0))) and DEBUG
+
+#disable as well if running unit tests...
+pgm = os.path.basename(sys.argv[0])
+if not USE_DEBUG_TOOLBAR or pgm.startswith("test") or pgm.startswith("nosetests"):
+    li = [app for app in INSTALLED_APPS if not app == "debug_toolbar"]
+    INSTALLED_APPS = tuple(li)
+    li = [app for app in MIDDLEWARE if not app == "debug_toolbar.middleware.DebugToolbarMiddleware"]
+    MIDDLEWARE = tuple(li)
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

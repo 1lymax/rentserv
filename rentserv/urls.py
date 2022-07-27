@@ -21,7 +21,7 @@ router.register(r'api/store', StoreCreateUpdateGetSet)
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('__debug__/', include('debug_toolbar.urls')),
-    # path('', Vehicle_view.as_view()),
+    path('user/', include('user.urls')),
 ]
 
 urlpatterns += router.urls

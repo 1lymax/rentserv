@@ -10,8 +10,8 @@ from rest_framework.test import APITestCase
 from django.db import connection
 from django.test.utils import CaptureQueriesContext
 from vehicles.models import Vehicle, Type, MessurementUnit, FeatureList, VehicleFeature
-from vehicles.serializers import VehicleFeaturesViewSerializer, VehicleFeaturesCreateUpdateSerializer, \
-    VehicleTypeSerializer
+from vehicles.serializers import TypeSerializer
+from vehicles.tests import test_get_token, bad_token
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "rentserv.settings")
 
@@ -28,46 +28,18 @@ class TypeApiTestCase(APITestCase):
         self.vehicle_feature = VehicleFeature.objects.create(feature=self.feature_1, unit=self.unit, value='5',
                                                              vehicle=self.vehicle_1)
 
+        token = test_get_token(self.client)
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + token)
     def test_get(self):
         url = reverse('type-list')
         with CaptureQueriesContext(connection) as queries:
             response = self.client.get(url)
-            self.assertEqual(1, len(queries))
+            self.assertEqual(2, len(queries))
         types = Type.objects.all()
-        serializer_data = VehicleTypeSerializer(types, many=True).data
+        serializer_data = TypeSerializer(types, many=True).data
         self.assertEqual(status.HTTP_200_OK, response.status_code)
         self.assertEqual(serializer_data, response.data)
 
-    # def test_get_filter(self):
-    #     url = reverse('vehicle-list')
-    #     vehicles = Vehicle.objects.all().annotate(
-    #         vehicle_type_name=F('vehicle_type__name')
-    #     ).prefetch_related('images').prefetch_related('features').filter(vehicle_type=1)
-    #     response = self.client.get(url, data={'vehicle_type': 1})
-    #     serializer_data = VehicleSerializer(vehicles, many=True).data
-    #     self.assertEqual(status.HTTP_200_OK, response.status_code)
-    #     self.assertEqual(serializer_data, response.data)
-
-    # def test_order_asc(self):
-    #     url = reverse('vehicle-list')
-    #     vehicles = Vehicle.objects.all().annotate(
-    #         vehicle_type_name=F('vehicle_type__name')
-    #     ).prefetch_related('images').prefetch_related('features').order_by('name')
-    #     response = self.client.get(url, data={'ordering': 'name'})
-    #     serializer_data = VehicleSerializer(vehicles, many=True).data
-    #     print(response.data, sep='\n\n')
-    #     self.assertEqual(status.HTTP_200_OK, response.status_code)
-    #     self.assertEqual(serializer_data, response.data)
-
-    # def test_order_desc(self):
-    #     url = reverse('vehicle-list')
-    #     vehicles = Vehicle.objects.all().annotate(
-    #         vehicle_type_name=F('vehicle_type__name')
-    #     ).prefetch_related('images').prefetch_related('features').order_by('-vehicle_type_name')
-    #     response = self.client.get(url, data={'ordering': '-vehicle_type_name'})
-    #     serializer_data = VehicleSerializer(vehicles, many=True).data
-    #     self.assertEqual(status.HTTP_200_OK, response.status_code)
-    #     self.assertEqual(serializer_data, response.data)
 
     def test_create(self):
         self.assertEqual(1, Type.objects.all().count())
@@ -89,18 +61,16 @@ class TypeApiTestCase(APITestCase):
             'name': 'Экскаватор'
         }
         json_data = json.dumps(data)
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer  dvsdvklmlvknsdfkbsnklbnfdkd')
         self.client.force_login(self.user)
         response = self.client.post(url, data=json_data,
                                     content_type='application/json')
-        self.assertEqual(status.HTTP_403_FORBIDDEN, response.status_code)
-        self.assertEqual({'detail': ErrorDetail(string='You do not have permission to perform this action.',
-                                                code='permission_denied')}, response.data, response.data)
+        self.assertEqual(status.HTTP_401_UNAUTHORIZED, response.status_code)
         self.assertEqual(1, Type.objects.all().count())
 
     def test_delete(self):
         self.assertEqual(1, Type.objects.all().count())
         url = reverse('type-detail', args=(self.type_1.id,))
-
         self.client.force_login(self.staff_user)
         response = self.client.delete(url)
         self.assertEqual(status.HTTP_204_NO_CONTENT, response.status_code)
@@ -109,13 +79,10 @@ class TypeApiTestCase(APITestCase):
     def test_delete_not_staff(self):
         self.assertEqual(1, Type.objects.all().count())
         url = reverse('type-detail', args=(self.type_1.id,))
-
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer  dvsdvklmlvknsdfkbsnklbnfdkd')
         self.client.force_login(self.user)
         response = self.client.delete(url)
-        self.assertEqual(status.HTTP_403_FORBIDDEN, response.status_code)
-        self.assertEqual({'detail': ErrorDetail(string='You do not have permission to perform this action.',
-                                                code='permission_denied')}
-                         , response.data)
+        self.assertEqual(status.HTTP_401_UNAUTHORIZED, response.status_code)
         self.assertEqual(1, Type.objects.all().count())
 
     def test_update(self):
@@ -137,9 +104,10 @@ class TypeApiTestCase(APITestCase):
             'name': "Самосвал",
         }
         json_data = json.dumps(data)
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer  dvsdvklmlvknsdfkbsnklbnfdkd')
         self.client.force_login(self.user)
         response = self.client.put(url, data=json_data,
                                    content_type='application/json')
-        self.assertEqual(status.HTTP_403_FORBIDDEN, response.status_code)
+        self.assertEqual(status.HTTP_401_UNAUTHORIZED, response.status_code)
         self.type_1.refresh_from_db()
         self.assertEqual('Манипулятор', self.type_1.name)

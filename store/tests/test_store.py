@@ -65,7 +65,6 @@ class StoreApiTestCase(APITestCase):
         self.client.force_login(self.staff_user)
         response = self.client.post(url, data=json_data,
                                     content_type='application/json')
-        print(response.data)
         self.assertEqual(status.HTTP_400_BAD_REQUEST, response.status_code, response.data)
         self.assertEqual(2, Store.objects.all().count())
         self.assertEqual([ErrorDetail(string='This name is already exists', code='invalid')], response.data)

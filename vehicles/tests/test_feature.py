@@ -1,15 +1,16 @@
 import json
 
 from django.contrib.auth.models import User
+from django.db import connection
+from django.test.utils import CaptureQueriesContext
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.exceptions import ErrorDetail
 from rest_framework.test import APITestCase
-from django.db import connection
-from django.test.utils import CaptureQueriesContext
 
 from vehicles.models import FeatureList
 from vehicles.serializers import FeatureListSerializer
+from vehicles.tests import test_get_token
 
 
 class VehicleFeaturesApiTestCase(APITestCase):
@@ -18,12 +19,14 @@ class VehicleFeaturesApiTestCase(APITestCase):
         self.staff_user = User.objects.create_user(username='staff_user', is_staff=True)
         self.feature_1 = FeatureList.objects.create(name='Грузоподъемность борта')
         self.feature_2 = FeatureList.objects.create(name='Грузоподъемность стрелы')
+        token = test_get_token(self.client)
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + token)
 
     def test_get(self):
         url = reverse('featurelist-list')
         with CaptureQueriesContext(connection) as queries:
             response = self.client.get(url)
-            self.assertEqual(1, len(queries))
+            self.assertEqual(2, len(queries))
         features = FeatureList.objects.all()
         serializer_data = FeatureListSerializer(features, many=True).data
         self.assertEqual(status.HTTP_200_OK, response.status_code)
@@ -52,7 +55,6 @@ class VehicleFeaturesApiTestCase(APITestCase):
         self.client.force_login(self.staff_user)
         response = self.client.post(url, data=json_data,
                                     content_type='application/json')
-        print(response.data)
         self.assertEqual(status.HTTP_400_BAD_REQUEST, response.status_code)
         self.assertEqual(2, FeatureList.objects.all().count())
         self.assertEqual([ErrorDetail(string='This name is already exists', code='invalid')], response.data)
@@ -64,12 +66,11 @@ class VehicleFeaturesApiTestCase(APITestCase):
             'name': 'Weight'
         }
         json_data = json.dumps(data)
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer odfgnzsodbnlkkdsbnlkjndlxkfjbnd')
         self.client.force_login(self.user)
         response = self.client.post(url, data=json_data,
                                     content_type='application/json')
-        self.assertEqual(status.HTTP_403_FORBIDDEN, response.status_code)
-        self.assertEqual({'detail': ErrorDetail(string='You do not have permission to perform this action.',
-                                                code='permission_denied')}, response.data, response.data)
+        self.assertEqual(status.HTTP_401_UNAUTHORIZED, response.status_code)
         self.assertEqual(2, FeatureList.objects.all().count())
 
     def test_delete(self):
@@ -84,13 +85,10 @@ class VehicleFeaturesApiTestCase(APITestCase):
     def test_delete_not_staff(self):
         self.assertEqual(2, FeatureList.objects.all().count())
         url = reverse('featurelist-detail', args=(self.feature_1.id,))
-
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer')
         self.client.force_login(self.user)
         response = self.client.delete(url)
-        self.assertEqual(status.HTTP_403_FORBIDDEN, response.status_code)
-        self.assertEqual({'detail': ErrorDetail(string='You do not have permission to perform this action.',
-                                                code='permission_denied')}
-                         , response.data)
+        self.assertEqual(status.HTTP_401_UNAUTHORIZED, response.status_code)
         self.assertEqual(2, FeatureList.objects.all().count())
 
     def test_update(self):
@@ -112,9 +110,10 @@ class VehicleFeaturesApiTestCase(APITestCase):
             'name': 'Weight 2'
         }
         json_data = json.dumps(data)
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer')
         self.client.force_login(self.user)
         response = self.client.put(url, data=json_data,
                                    content_type='application/json')
-        self.assertEqual(status.HTTP_403_FORBIDDEN, response.status_code)
+        self.assertEqual(status.HTTP_401_UNAUTHORIZED, response.status_code)
         self.feature_1.refresh_from_db()
         self.assertEqual('Грузоподъемность борта', self.feature_1.name)

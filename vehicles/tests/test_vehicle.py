@@ -2,18 +2,18 @@ import json
 import os
 
 from django.contrib.auth.models import User
+from django.db import connection
 from django.db.models import F
+from django.test.utils import CaptureQueriesContext
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.exceptions import ErrorDetail
 from rest_framework.test import APITestCase
-from django.db import connection
-from django.test.utils import CaptureQueriesContext
 
 from store.models import City, Store
-from vehicles.models import Vehicle, Type, MessurementUnit, FeatureList, VehicleFeature, VehicleImage
+from vehicles.models import Vehicle, Type, MessurementUnit, FeatureList, VehicleFeature
 from vehicles.serializers import VehicleSerializer
-from vehicles.views import VehicleViewSet
+from vehicles.tests import test_get_token
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "rentserv.settings")
 
@@ -47,11 +47,14 @@ class VehiclesApiTestCase(APITestCase):
             vehicle_type_name=F('vehicle_type__name')
         ).prefetch_related('images').prefetch_related('features').prefetch_related('store').distinct()
 
+        token = test_get_token(self.client)
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + token)
+
     def test_get(self):
         url = reverse('vehicle-list')
         with CaptureQueriesContext(connection) as queries:
             response = self.client.get(url)
-            self.assertEqual(4, len(queries))
+            self.assertEqual(5, len(queries))
 
         serializer_data = VehicleSerializer(self.qs, many=True).data
         self.assertEqual(status.HTTP_200_OK, response.status_code)
@@ -62,8 +65,6 @@ class VehiclesApiTestCase(APITestCase):
         response = self.client.get(url, data={'vehicle_type': 1})
         vehicles = self.qs.filter(vehicle_type=1)
         serializer_data = VehicleSerializer(vehicles, many=True).data
-        print(serializer_data, sep='\n\n')
-        print(response.data, sep='\n\n')
         self.assertEqual(len(serializer_data), len(response.data))
         self.assertEqual(status.HTTP_200_OK, response.status_code)
         self.assertEqual(serializer_data, response.data)
@@ -143,12 +144,11 @@ class VehiclesApiTestCase(APITestCase):
             'type': self.type_1.id,
         }
         json_data = json.dumps(data)
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer')
         self.client.force_login(self.user)
         response = self.client.post(url, data=json_data,
                                     content_type='application/json')
-        self.assertEqual(status.HTTP_403_FORBIDDEN, response.status_code)
-        self.assertEqual({'detail': ErrorDetail(string='You do not have permission to perform this action.',
-                                                code='permission_denied')}, response.data)
+        self.assertEqual(status.HTTP_401_UNAUTHORIZED, response.status_code)
         self.assertEqual(3, Vehicle.objects.all().count())
 
     def test_delete(self):
@@ -164,36 +164,35 @@ class VehiclesApiTestCase(APITestCase):
         self.assertEqual(3, Vehicle.objects.all().count())
         url = reverse('vehicle-detail', args=(self.vehicle_1.id,))
 
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer')
         self.client.force_login(self.user)
         response = self.client.delete(url)
-        self.assertEqual(status.HTTP_403_FORBIDDEN, response.status_code)
-        self.assertEqual({'detail': ErrorDetail(string='You do not have permission to perform this action.',
-                                                code='permission_denied')}
-                         , response.data)
+        self.assertEqual(status.HTTP_401_UNAUTHORIZED, response.status_code)
         self.assertEqual(3, Vehicle.objects.all().count())
 
     def test_update(self):
         url = reverse('vehicle-detail', args=(self.vehicle_1.id,))
         data = {
-            'name': "Isuzu 12345",
+            "name": "Isuzu 12345",
         }
         json_data = json.dumps(data)
-        self.client.force_login(self.staff_user)
+        # self.client.force_login(self.staff_user)
         response = self.client.put(url, data=json_data,
                                    content_type='application/json')
-        self.assertEqual(status.HTTP_200_OK, response.status_code)
+        self.assertEqual(status.HTTP_200_OK, response.status_code, response.data)
         self.vehicle_1.refresh_from_db()
         self.assertEqual('Isuzu 12345', self.vehicle_1.name)
 
     def test_update_not_staff(self):
         url = reverse('vehicle-detail', args=(self.vehicle_1.id,))
         data = {
-            'name': "Isuzu 12345",
+            "name": "Isuzu 12345",
         }
         json_data = json.dumps(data)
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer')
         self.client.force_login(self.user)
         response = self.client.put(url, data=json_data,
                                    content_type='application/json')
-        self.assertEqual(status.HTTP_403_FORBIDDEN, response.status_code)
+        self.assertEqual(status.HTTP_401_UNAUTHORIZED, response.status_code)
         self.vehicle_1.refresh_from_db()
         self.assertEqual('Hyundai 100', self.vehicle_1.name)
