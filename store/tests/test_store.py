@@ -10,6 +10,7 @@ from django.test.utils import CaptureQueriesContext
 
 from store.models import Store, City
 from store.serializers import StoreViewSerializer
+from store.tests import test_get_token, bad_token
 from vehicles.models import Type, Vehicle, MessurementUnit, FeatureList
 
 
@@ -29,6 +30,8 @@ class StoreApiTestCase(APITestCase):
         self.store_1 = Store.objects.create(city=self.city_1, vehicle=self.vehicle_1, quantity=5)
         self.store_2 = Store.objects.create(city=self.city_2, vehicle=self.vehicle_2, quantity=10)
 
+        token = test_get_token(self.client)
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + token)
 
     def test_get(self):
         url = reverse('store-list')
@@ -78,12 +81,11 @@ class StoreApiTestCase(APITestCase):
             'quantity': 3
         }
         json_data = json.dumps(data)
+        self.client.credentials(HTTP_AUTHORIZATION=bad_token())
         self.client.force_login(self.user)
         response = self.client.post(url, data=json_data,
                                     content_type='application/json')
-        self.assertEqual(status.HTTP_403_FORBIDDEN, response.status_code)
-        self.assertEqual({'detail': ErrorDetail(string='You do not have permission to perform this action.',
-                                                code='permission_denied')}, response.data, response.data)
+        self.assertEqual(status.HTTP_401_UNAUTHORIZED, response.status_code)
         self.assertEqual(2, Store.objects.all().count())
 
     def test_delete(self):
@@ -98,13 +100,10 @@ class StoreApiTestCase(APITestCase):
     def test_delete_not_staff(self):
         self.assertEqual(2, Store.objects.all().count())
         url = reverse('store-detail', args=(self.store_1.id,))
-
+        self.client.credentials(HTTP_AUTHORIZATION=bad_token())
         self.client.force_login(self.user)
         response = self.client.delete(url)
-        self.assertEqual(status.HTTP_403_FORBIDDEN, response.status_code)
-        self.assertEqual({'detail': ErrorDetail(string='You do not have permission to perform this action.',
-                                                code='permission_denied')}
-                         , response.data)
+        self.assertEqual(status.HTTP_401_UNAUTHORIZED, response.status_code)
         self.assertEqual(2, Store.objects.all().count())
 
     def test_update(self):
@@ -128,9 +127,10 @@ class StoreApiTestCase(APITestCase):
             'quantity': 7
         }
         json_data = json.dumps(data)
+        self.client.credentials(HTTP_AUTHORIZATION=bad_token())
         self.client.force_login(self.user)
         response = self.client.put(url, data=json_data,
                                    content_type='application/json')
-        self.assertEqual(status.HTTP_403_FORBIDDEN, response.status_code)
+        self.assertEqual(status.HTTP_401_UNAUTHORIZED, response.status_code)
         self.store_1.refresh_from_db()
         self.assertEqual(5, self.store_1.quantity)
