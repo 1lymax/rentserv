@@ -28,38 +28,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-INTERNAL_IPS = [
-    "127.0.0.1",
-]
-
-MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media/'
-
-REST_FRAMEWORK = {
-    'DEFAULT_RENDERER_CLASSES': (
-        'rest_framework.renderers.JSONRenderer',
-    ),
-    'DEFAULT_PARSER_CLASSES': (
-        'rest_framework.parsers.JSONParser',
-    ),
-    'DEFAULT_FILTER_BACKENDS': [
-        'django_filters.rest_framework.DjangoFilterBackend'
-    ],
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ],
-}
-
-# REST_FRAMEWORK = {
-#     'DEFAULT_PERMISSION_CLASSES': (
-#         'rest_framework.permissions.IsAuthenticated',
-#     ),
-#     'DEFAULT_AUTHENTICATION_CLASSES': (
-#         'rest_framework.authentication.BasicAuthentication',
-#         'rest_framework.authentication.SessionAuthentication',
-#     )
-# }
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -74,10 +42,14 @@ INSTALLED_APPS = [
     'django_filters',
     'debug_toolbar',
     'django_rest_passwordreset',
+    'phonenumbers',
+    'phonenumber_field',
+
 
     'user',
     'vehicles',
-    'store'
+    'store',
+    'orders'
 
 ]
 
@@ -105,6 +77,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+
+                'cart.context_processors.cart'
             ],
         },
     },
@@ -177,6 +151,34 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #disable if not in DEBUG or if $USE_DEBUG_TOOLBAR is not set.
 USE_DEBUG_TOOLBAR = bool(int(os.getenv("USE_DEBUG_TOOLBAR", 0))) and DEBUG
 
+# ------------------------------------------------------
+# Custom (my) section
+# ------------------------------------------------------
+
+CART_SESSION_ID = 'cart'
+
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media/'
+
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+    ),
+    'DEFAULT_PARSER_CLASSES': (
+        'rest_framework.parsers.JSONParser',
+    ),
+    'DEFAULT_FILTER_BACKENDS': [
+        'django_filters.rest_framework.DjangoFilterBackend'
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+}
+
 #disable as well if running unit tests...
 pgm = os.path.basename(sys.argv[0])
 if not USE_DEBUG_TOOLBAR or pgm.startswith("test") or pgm.startswith("nosetests"):
@@ -186,3 +188,5 @@ if not USE_DEBUG_TOOLBAR or pgm.startswith("test") or pgm.startswith("nosetests"
     MIDDLEWARE = tuple(li)
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+APPEND_SLASH = False

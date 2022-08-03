@@ -1,7 +1,17 @@
 from django.core.mail import send_mail
+from django.db import models
 from django.dispatch import receiver
 from django.urls import reverse
 from django_rest_passwordreset.signals import reset_password_token_created
+
+from django.contrib.auth.models import User
+from phonenumber_field.modelfields import PhoneNumberField
+
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    phone = PhoneNumberField(null=True, blank=False, unique=True)
+
 
 
 @receiver(reset_password_token_created)

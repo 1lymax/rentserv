@@ -41,9 +41,9 @@ class AuthApiTestCase(APITestCase):
         self.assertEqual(2, User.objects.all().count())
         data = {
             "username": "test_user1",
-            "password": "qwerty12356782",
-            "password2": "qwerty12356782",
-            "email": "some@google.com",
+            "password": "qwsah12356782",
+            "password2": "qwsah12356782",
+            "email": "some1@google.com",
             "first_name": "Max",
             "last_name": "Popov",
 
@@ -51,10 +51,10 @@ class AuthApiTestCase(APITestCase):
         json_data = json.dumps(data)
         response = self.client.post(url, data=json_data, content_type='application/json')
         self.assertEqual(status.HTTP_201_CREATED, response.status_code, response.data)
-        self.assertEqual({'username': 'test_user1',
-                          'email': 'some@google.com',
-                          'first_name': 'Max',
-                          'last_name': 'Popov'}
+        self.assertEqual({"username": "test_user1",
+                          "email": "some1@google.com",
+                          "first_name": "Max",
+                          "last_name": "Popov"}
                          , response.data, response.data)
 
         self.assertEqual(3, User.objects.all().count())
@@ -64,8 +64,8 @@ class AuthApiTestCase(APITestCase):
         self.assertEqual(2, User.objects.all().count())
         data = {
             "username": "test_user",
-            "password": "123",
-            "password2": "123",
+            "password": "qwsahg735",
+            "password2": "qwsahg735",
             "email": "some@google.com",
             "first_name": "Max",
             "last_name": "Popov",
@@ -76,12 +76,7 @@ class AuthApiTestCase(APITestCase):
         # serializer_data = MyTokenObtainPairSerializer(messure, many=True).data
         self.assertEqual(status.HTTP_400_BAD_REQUEST, response.status_code, response.data)
         self.assertEqual({'username': [ErrorDetail(string='A user with that username already exists.', code='unique')],
-                          'password': [
-                              ErrorDetail(string='This password is too short. It must contain at least 8 characters.',
-                                          code='password_too_short'),
-                              ErrorDetail(string='This password is too common.', code='password_too_common'),
-                              ErrorDetail(string='This password is entirely numeric.',
-                                          code='password_entirely_numeric')]}
+                          'email': [ErrorDetail(string='This field must be unique.', code='unique')]}
                          , response.data, response.data)
 
         self.assertEqual(2, User.objects.all().count())
@@ -97,7 +92,7 @@ class AuthApiTestCase(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + token)
         response = self.client.put(url, data=json_data, content_type='application/json')
         self.assertEqual(status.HTTP_200_OK, response.status_code, response.data)
-        self.assertEqual({'code': 200,  'data': [],  'message': 'Password updated successfully',  'status': 'success'}
+        self.assertEqual({'code': 200, 'data': [], 'message': 'Password updated successfully', 'status': 'success'}
                          , response.data)
 
     def test_password_change_bad(self):
