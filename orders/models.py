@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
 
@@ -6,9 +7,10 @@ from vehicles.models import Vehicle
 
 
 class Order(models.Model):
-    first_name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=50)
-    email = models.EmailField()
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    first_name = models.CharField(max_length=50, null=True)
+    last_name = models.CharField(max_length=50, null=True)
+    email = models.EmailField(null=True)
     phone = PhoneNumberField(null=False, blank=False, unique=True)
     city = models.ForeignKey(City, on_delete=models.SET_NULL, null=True)
     created = models.DateTimeField(auto_now_add=True)

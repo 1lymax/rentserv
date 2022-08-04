@@ -5,5 +5,5 @@ from .views import CartViewSet
 urlpatterns = [
     path('', CartViewSet.as_view(), name='cart_detail'),
     path('add/<id>/', CartViewSet.as_view(), name='cart_add'),
-    # path('remove/<vehicle_id>/', views.cart_remove, name='cart_remove'),
+    path('remove/<id>/', CartViewSet.as_view(), name='cart_remove'),
 ]

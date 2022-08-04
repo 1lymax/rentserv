@@ -4,8 +4,8 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 
 
-def test_get_token(client):
-    user = User.objects.create_user(username='test_user1', password='qwerty12345678', is_staff=True)
+def test_get_token(client, staff = True):
+    user = User.objects.create_user(username='test_user1', password='qwerty12345678', is_staff=staff)
     url = reverse('token_obtain_pair')
     data = {
         "username": "test_user1",

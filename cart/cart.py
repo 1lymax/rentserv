@@ -10,14 +10,10 @@ from vehicles.models import Vehicle
 class Cart(object):
 
     def __init__(self, session):
-        """
-        Инициализируем корзину
-        """
         self.session = session
         cart = self.session.get(settings.CART_SESSION_ID)
         if not cart:
             cart = self.session[settings.CART_SESSION_ID] = {}
-            print("Cart self cart init", cart)
         self.cart = cart
 
     def get(self):
@@ -43,14 +39,13 @@ class Cart(object):
                 is_in_cart = True
                 self.cart[self.cart.index(vehicle_in_cart)] = {
                     str(vehicle.id):
-                        {"name": vehicle.name, "quantity": quantity, "price": float(vehicle.price_region)}}
+                        {"id": vehicle.id, "name": vehicle.name, "quantity": quantity, "price": float(vehicle.price_region)}}
 
         if not is_in_cart:
             self.cart.update(
                 {
                     str(vehicle.id):
-                    {"name": vehicle.name, "quantity": quantity, "price": float(vehicle.price_region)}})
-            print("self.cart.update", self.cart)
+                    {"id": vehicle.id, "name": vehicle.name, "quantity": quantity, "price": float(vehicle.price_region)}})
 
         self.save()
         return self.cart
@@ -59,11 +54,12 @@ class Cart(object):
         self.session[settings.CART_SESSION_ID] = self.cart
         self.session.modified = True
 
-    def remove(self, product):
-        vehicle_id = str(product.id)
+    def remove(self, id):
+        vehicle_id = str(id)
         if vehicle_id in self.cart:
             del self.cart[vehicle_id]
             self.save()
+        return self.cart
 
     def __iter__(self):
         vehicle_ids = self.cart.keys()
@@ -77,7 +73,7 @@ class Cart(object):
             yield item
 
     def __len__(self):
-        return sum(item['quantity'] for item in self.cart.values())
+        return len(self.cart)
 
     def get_total_price(self):
         return sum(Decimal(item['price']) * item['quantity'] for item in
