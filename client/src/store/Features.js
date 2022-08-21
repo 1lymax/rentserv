@@ -5,7 +5,7 @@ export default class Features {
 	constructor() {
 		this._data = []
 		this.endpoint = API_ROUTES.feature
-		this.title = ADMIN.feature.title
+		this.settings = ADMIN.feature
 
 		makeAutoObservable(this)
 	}

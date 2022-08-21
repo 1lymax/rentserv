@@ -5,7 +5,7 @@ export default class Cities {
 	constructor() {
 		this._data = []
 		this.endpoint = API_ROUTES.city
-		this.title = ADMIN.city.title
+		this.settings = ADMIN.city
 
 		makeAutoObservable(this)
 	}

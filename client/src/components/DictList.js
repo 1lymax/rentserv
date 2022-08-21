@@ -6,24 +6,24 @@ const DictList = ({context}) => {
 	const [inputVisible, setInputVisible] = useState(0)
 	const [edit, setEdit] = useState(0)
 	const [add, setAdd] = useState(false)
-	const [name, setName] = useState('')
+	const [fieldValue, setFieldValue] = useState('')
 	const [isLoading, setIsLoading] = useState('')
 
 	const editOrSave = (id, itemName) => {
 		setEdit(id)
-		setName(itemName)
+		setFieldValue(itemName)
 		if (id === edit) {
 			setIsLoading(true)
-			doUpdate(context, id, name).then(() => {
+			doUpdate(context, id, fieldValue).then(() => {
 				doFetch(context)
 				hideAll()
 			}).catch(e => {
 				console.log(e.response.data)
 			});
 		} else if (inputVisible === 0) {
-			doCreate(context, {name: name}).then(() => {
+			doCreate(context, {name: fieldValue}).then(() => {
 				doFetch(context)
-				setName('')
+				setFieldValue('')
 				hideAll()
 			})
 
@@ -53,19 +53,23 @@ const DictList = ({context}) => {
 					 onMouseEnter={() => setInputVisible(item.id)}
 					 onMouseLeave={() => setInputVisible(0)}
 				>
-					<div style={{width: "70%"}}>
+					<div style={{width: "auto"}}>
 						{edit === item.id
 							?
 							<Form>
-								<Form.Control
-									onChange={e => setName(e.target.value)}
-									value={name}
-									placeholder={"Название"}
-									autoFocus={true}
-								/>
+									<Form.Control
+										onChange={e => setFieldValue(e.target.value)}
+										value={item.name}
+										placeholder={"Название"}
+										autoFocus={true}
+									/>
 							</Form>
 							:
-							<div className="m-2 p-1">
+							<div className="m-2 p-1"
+								 onClick={() => {
+									 setAdd(false)
+									 editOrSave(item.id, item.name)
+								 }}>
 								{item.name}
 							</div>
 
@@ -77,7 +81,7 @@ const DictList = ({context}) => {
 						<div>
 							<Button
 								variant={"outline-dark"}
-								className="m-1 p-1"
+								className="p-1"
 								onClick={() => {
 									setAdd(false)
 									editOrSave(item.id, item.name)
@@ -101,7 +105,7 @@ const DictList = ({context}) => {
 							</Button>
 							<Button
 								variant={"outline-dark"}
-								className="m-1 p-1"
+								className="p-1"
 								onClick={() => {
 									setAdd(false)
 									deleteOrCancel(item.id)
@@ -123,8 +127,8 @@ const DictList = ({context}) => {
 					<div style={{width: "70%"}}>
 						<Form>
 							<Form.Control
-								onChange={e => setName(e.target.value)}
-								value={name}
+								onChange={e => setFieldValue(e.target.value)}
+								value={fieldValue}
 								placeholder={"Название"}
 								autoFocus={true}
 							/>
@@ -136,7 +140,7 @@ const DictList = ({context}) => {
 							className="m-1 p-1"
 							onClick={() => {
 								setEdit(-1)
-								editOrSave(undefined, name)
+								editOrSave(undefined, fieldValue)
 							}}
 						>
 							{isLoading
@@ -171,7 +175,7 @@ const DictList = ({context}) => {
 					style={{minWidth: "100px", width: "30%"}}
 					onClick={() => {
 						setIsLoading(true)
-						setName('')
+						setFieldValue('')
 						setAdd(true)
 						hideAll()
 					}}

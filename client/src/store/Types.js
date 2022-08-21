@@ -5,7 +5,7 @@ export default class Types {
 	constructor() {
 		this._data = []
 		this.endpoint = API_ROUTES.type
-		this.title = ADMIN.type.title
+		this.settings = ADMIN.type
 
 		makeAutoObservable(this)
 	}

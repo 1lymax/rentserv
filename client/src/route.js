@@ -5,6 +5,8 @@ import VehicleDetailPage from "./pages/VehicleDetailPage";
 import Catalogs from "./pages/Admin/Catalogs";
 import Admin from "./pages/Admin";
 import MainPage from "./pages/Admin/MainPage";
+import StoresAdmin from "./pages/Admin/StoresAdmin";
+import VehiclesAdmin from "./pages/Admin/VehiclesAdmin";
 
 export const authRoutes = [
     {
@@ -24,10 +26,14 @@ export const authRoutes = [
     },
     {
         path: ADMIN_ROUTE + '/vehicles/' ,
-        Component: Catalogs,
+        Component: VehiclesAdmin,
         title: 'Транспорт'
     },
-
+    {
+        path: ADMIN_ROUTE + '/stores/' ,
+        Component: StoresAdmin,
+        title: 'Хранение'
+    },
 ]
 
 export const publicRoutes = [

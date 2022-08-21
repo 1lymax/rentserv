@@ -5,7 +5,7 @@ export default class Units {
 	constructor() {
 		this._data = []
 		this.endpoint = API_ROUTES.unit
-		this.title = ADMIN.unit.title
+		this.settings = ADMIN.unit
 
 		makeAutoObservable(this)
 	}

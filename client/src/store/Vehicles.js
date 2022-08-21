@@ -5,7 +5,7 @@ export default class Vehicles {
 	constructor() {
 		this._data = []
 		this.endpoint = API_ROUTES.vehicle
-		this.title = ADMIN.vehicle.title
+		this.settings = ADMIN.vehicle
 
 		makeAutoObservable(this)
 	}

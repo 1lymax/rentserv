@@ -18,18 +18,49 @@ export const API_ROUTES = {
 export const ADMIN = {
 	type: {
 		title: 'Типы транспортных средств',
+		fields: [
+			{
+				name: 'name', type: 'string', placeholder: 'Название'
+			},
+			{
+				name: 'type', type: 'string', placeholder: 'Тип'
+			},
+		]
 	},
 	feature: {
 		title: 'Характеристики',
+		fields: [
+			{
+				name: 'name', type: 'string'
+			},
+		]
 	},
 	vehicle: {
 		title: 'Транспорт',
+		fields: [
+			{
+				name: 'name', type: 'string', placeholder: 'Название'
+			},
+			{
+				name: 'vehicle_type', type: 'string', placeholder: 'Тип'
+			},
+		]
 	},
 	unit: {
 		title: 'Единицы измерения',
+		fields: [
+			{
+				name: 'name', type: 'string'
+			},
+		]
 	},
 	city: {
 		title: 'Города',
+		fields: [
+			{
+				name: 'name', type: 'string'
+			},
+		]
 	},
 	store: {
 		title: 'Склады',

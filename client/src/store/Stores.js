@@ -5,7 +5,7 @@ export default class Stores {
 	constructor() {
 		this._data = []
 		this.endpoint = API_ROUTES.store
-		this.title = ADMIN.store.title
+		this.settings = ADMIN.store
 
 		makeAutoObservable(this)
 	}
