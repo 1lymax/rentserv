@@ -1,11 +1,11 @@
 import {makeAutoObservable} from "mobx";
 import {ADMIN, API_ROUTES} from "../utils/consts";
 
-export default class Features {
+export default class Stores {
 	constructor() {
 		this._data = []
-		this.endpoint = API_ROUTES.feature
-		this.title = ADMIN.feature.title
+		this.endpoint = API_ROUTES.store
+		this.title = ADMIN.store.title
 
 		makeAutoObservable(this)
 	}

@@ -1,32 +1,20 @@
 import {makeAutoObservable} from "mobx";
-import {type} from "@testing-library/user-event/dist/type";
+import {ADMIN, API_ROUTES} from "../utils/consts";
 
-export default class Types{
+export default class Types {
 	constructor() {
-		this._types = [
-			{id: 1, name: 'Манипулятор'},
-			{id: 2, name: 'Самосвал'},
-			{id: 3, name: 'Экскаватор'},
-			{id: 4, name: 'Бульдозер'},
-		]
-		this._selectedType = {}
+		this._data = []
+		this.endpoint = API_ROUTES.type
+		this.title = ADMIN.type.title
 
 		makeAutoObservable(this)
 	}
 
-	setTypes(types) {
-		this._types = types
+	setData(data) {
+		this._data = data
 	}
 
-	setSelectedType(type) {
-		this._selectedType = type
+	get data() {
+		return this._data
 	}
-	get types() {
-		return this._types
-	}
-
-	get selectedType() {
-		return this._selectedType
-	}
-
 }

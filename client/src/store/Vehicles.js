@@ -1,22 +1,20 @@
 import {makeAutoObservable} from "mobx";
+import {ADMIN, API_ROUTES} from "../utils/consts";
 
-export default class Vehicles{
+export default class Vehicles {
 	constructor() {
-		this._vehicles = [
-			{id: 1, name: 'Hyundai H-200', vehicle_type: 1, price_cap: 700, price_region: 650},
-			{id: 2, name: 'Hyundai H-78', vehicle_type: 1, price_cap: 900, price_region: 800},
-			{id: 3, name: 'Камаз 6538', vehicle_type: 2, price_cap: 900, price_region: 800},
-
-		]
+		this._data = []
+		this.endpoint = API_ROUTES.vehicle
+		this.title = ADMIN.vehicle.title
 
 		makeAutoObservable(this)
 	}
 
-	setTypes(vehicles) {
-		this._vehicles = vehicles
+	setData(data) {
+		this._data = data
 	}
 
-	get vehicles() {
-		return this._vehicles
+	get data() {
+		return this._data
 	}
 }

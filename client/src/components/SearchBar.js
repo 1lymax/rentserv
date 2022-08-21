@@ -1,23 +1,17 @@
 import React, {useContext} from 'react';
 import {observer} from "mobx-react-lite";
 import {Context} from "../index";
-import {ListGroup} from "react-bootstrap";
+import MultiSelect from "./UI/MultiSelect/MultiSelect";
 
-const SearchBar = observer( () => {
+const SearchBar = observer(({onChange}) => {
 	const {types} = useContext(Context)
 	return (
-		<ListGroup>
-			{types.types.map(type =>
-				<ListGroup.Item
-					style={{cursor: "pointer"}}
-					active={type.id === types.selectedType.id}
-					onClick={() => types.setSelectedType(type)}
-					key={type.id}
-				>
-					{type.name}
-				</ListGroup.Item>
-			)}
-		</ListGroup>
+		<MultiSelect isMulti={false}
+					 className="basic-multi-select"
+					 options={types.data}
+					 placeholder={'Тип...'}
+					 onChange={e => onChange(e)}
+		/>
 	);
 })
 
