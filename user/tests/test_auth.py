@@ -21,6 +21,15 @@ class AuthApiTestCase(APITestCase):
         json_data = json.dumps(data)
         response = self.client.post(url, data=json_data, content_type='application/json')
         self.assertEqual(status.HTTP_200_OK, response.status_code, response.data)
+
+        url = reverse('token_verify')
+        data = {
+            'token': response.data['access']
+        }
+        json_data = json.dumps(data)
+        response = self.client.post(url, data=json_data, content_type='application/json')
+        print(data)
+        self.assertEqual(1, response.data)
         return response.data['access']
 
     def test_get_token_wrong(self):
@@ -40,9 +49,9 @@ class AuthApiTestCase(APITestCase):
         url = reverse('auth_register')
         self.assertEqual(2, User.objects.all().count())
         data = {
-            "username": "test_user1",
+            # "username": "test_user1",
             "password": "qwsah12356782",
-            "password2": "qwsah12356782",
+            # "password2": "qwsah12356782",
             "email": "some1@google.com",
             "first_name": "Max",
             "last_name": "Popov",
@@ -51,7 +60,7 @@ class AuthApiTestCase(APITestCase):
         json_data = json.dumps(data)
         response = self.client.post(url, data=json_data, content_type='application/json')
         self.assertEqual(status.HTTP_201_CREATED, response.status_code, response.data)
-        self.assertEqual({"username": "test_user1",
+        self.assertEqual({ #"username": "test_user1",
                           "email": "some1@google.com",
                           "first_name": "Max",
                           "last_name": "Popov"}

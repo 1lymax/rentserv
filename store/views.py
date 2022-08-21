@@ -11,10 +11,7 @@ from vehicles.permissions import IsStaffOrReadOnly
 class CityViewSet(ModelViewSet):
     queryset = City.objects.all()
     serializer_class = CitySerializer
-    permission_classes = [IsAuthenticated]
-    renderer_classes = [JSONRenderer]
-
-    # permission_classes = [IsStaffOrReadOnly]
+    permission_classes = [IsStaffOrReadOnly]
 
     def perform_create(self, serializer):
         # Check for existence of the record with the same feature name

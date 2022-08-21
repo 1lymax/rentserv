@@ -14,7 +14,7 @@ class VehicleFeaturesCreateUpdateSerializer(ModelSerializer):
 class VehicleFeaturesViewSerializer(ModelSerializer):
     class Meta:
         model = VehicleFeature
-        fields = ('value', 'feature', 'unit') #, 'feature_name', 'unit_name')
+        fields = ('id', 'value', 'feature', 'unit') #, 'feature_name', 'unit_name')
 
 
 class VehicleImageSerializer(ModelSerializer):
@@ -32,7 +32,7 @@ class VehicleSerializer(ModelSerializer):
     class Meta:
         model = Vehicle
         fields = (
-            'name', 'vehicle_type', 'vehicle_type_name', 'price_cap', 'price_region', 'images', 'features', 'store')
+            'id', 'name', 'vehicle_type', 'vehicle_type_name', 'price_cap', 'price_region', 'images', 'features', 'store')
 
 
 # class VehicleFilter(filters.FilterSet):
@@ -47,17 +47,17 @@ class VehicleSerializer(ModelSerializer):
 class FeatureListSerializer(ModelSerializer):
     class Meta:
         model = FeatureList
-        fields = ['name']
+        fields = ['id', 'name']
 
 
 class MessurementUnitSerializer(ModelSerializer):
     class Meta:
         model = MessurementUnit
-        fields = ['name']
+        fields = ['id', 'name']
 
 
 class TypeSerializer(ModelSerializer):
     class Meta:
         model = Type
-        fields = ['name']
+        fields = ['id', 'name']
 

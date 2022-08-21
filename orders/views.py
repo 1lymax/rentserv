@@ -37,7 +37,10 @@ class OrderCreateViewSet(ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         serializer = OrderViewSerializer(data=request.data)
+
         if serializer.is_valid():
+            if request.user and request.user.is_authenticated:
+                serializer.validated_data['user'] = self.request.user
             order = serializer.save()
             cart = Cart(request.session)
             if len(cart)==0 and not request.user.is_staff:

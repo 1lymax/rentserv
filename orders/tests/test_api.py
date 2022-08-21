@@ -84,6 +84,8 @@ class OrderApiTestCase(APITestCase):
         self.assertEqual(serializer_data, response.data)
 
     def test_create_order(self):
+        # token = test_get_token(self.client, staff=False)
+        # self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + token)
         self.assertEqual(1, len(Order.objects.all()))
         self.assertEqual(0, len(OrderItem.objects.all().filter(order=2)))
         # add to cart
@@ -181,7 +183,7 @@ class OrderApiTestCase(APITestCase):
                          , response.data)
         self.assertEqual(1, len(Order.objects.all()))
 
-    def test_deleteitem_order(self):
+    def test_delete_orderitem(self):
         token = test_get_token(self.client)
         self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + token)
         self.assertEqual(1, len(Order.objects.all()))

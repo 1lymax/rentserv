@@ -36,7 +36,7 @@ class VehicleViewSet(ModelViewSet):
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_fields = ['vehicle_type', 'name',
                         'vehicle_type__name', 'features__feature', 'features__unit', 'features__value', 'store__city']
-    ordering_fields = ['name', 'vehicle_type_name']
+    ordering_fields = ['name', 'vehicle_type_name', 'price_cap']
     search_fields = ['name', 'vehicle_type_name']
 
     def filter_queryset(self, request):

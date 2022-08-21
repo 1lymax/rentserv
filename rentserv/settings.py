@@ -16,7 +16,6 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
@@ -26,7 +25,14 @@ SECRET_KEY = 'django-insecure--cwv$1p3!phkd^!)2-b*fx+h*e*q=t4a0)g6!_c5)kzr9q*3vg
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['http://localhost:3000',
+                 'http://localhost:8000'
+                 'localhost',
+                 '127.0.0.1'
+                 '127.0.0.1:8000'
+                 ]
+
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -41,10 +47,11 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_filters',
     'debug_toolbar',
+    'corsheaders',
+
     'django_rest_passwordreset',
     'phonenumbers',
     'phonenumber_field',
-
 
     'user',
     'vehicles',
@@ -62,6 +69,9 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'debug_toolbar_force.middleware.ForceDebugToolbarMiddleware',
+
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'rentserv.urls'
@@ -84,7 +94,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'rentserv.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
@@ -95,14 +104,12 @@ DATABASES = {
     }
 }
 
-
-
 AUTHENTICATION_BACKENDS = (
     # 'social_core.backends.github.GithubOAuth2',
-
+    # 'user.authentication.EmailAuthBackend',
     'django.contrib.auth.backends.ModelBackend',
+    # 'allauth.account.auth_backends.AuthenticationBackend',
 )
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
@@ -122,18 +129,16 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ru-ru'
 
 TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
@@ -145,8 +150,7 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
-#disable if not in DEBUG or if $USE_DEBUG_TOOLBAR is not set.
+# disable if not in DEBUG or if $USE_DEBUG_TOOLBAR is not set.
 USE_DEBUG_TOOLBAR = bool(int(os.getenv("USE_DEBUG_TOOLBAR", 0))) and DEBUG
 
 # ------------------------------------------------------
@@ -176,8 +180,9 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
 }
+USE_DEBUG_TOOLBAR = True
 
-#disable as well if running unit tests...
+# disable as well if running unit tests...
 pgm = os.path.basename(sys.argv[0])
 if not USE_DEBUG_TOOLBAR or pgm.startswith("test") or pgm.startswith("nosetests"):
     li = [app for app in INSTALLED_APPS if not app == "debug_toolbar"]
@@ -187,4 +192,15 @@ if not USE_DEBUG_TOOLBAR or pgm.startswith("test") or pgm.startswith("nosetests"
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-APPEND_SLASH = False
+APPEND_SLASH = True
+
+CORS_ORIGIN_ALLOW_ALL = False
+
+CORS_ORIGIN_WHITELIST = (
+    'http://localhost:3000',
+    'http://localhost:8000'
+)
+
+# ACCOUNT_AUTHENTICATION_METHOD = "email"
+# ACCOUNT_EMAIL_REQUIRED = True
+# ACCOUNT_USERNAME_REQUIRED = False
