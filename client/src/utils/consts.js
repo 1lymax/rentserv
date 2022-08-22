@@ -22,9 +22,6 @@ export const ADMIN = {
 			{
 				name: 'name', type: 'string', placeholder: 'Название'
 			},
-			{
-				name: 'type', type: 'string', placeholder: 'Тип'
-			},
 		]
 	},
 	feature: {
@@ -39,10 +36,16 @@ export const ADMIN = {
 		title: 'Транспорт',
 		fields: [
 			{
-				name: 'name', type: 'string', placeholder: 'Название'
+				name: 'name', type: 'string', placeholder: 'Название', width: '250px', cssClassName: "col-4"
 			},
 			{
-				name: 'vehicle_type', type: 'string', placeholder: 'Тип'
+				name: 'vehicle_type', type: 'select', placeholder: 'Тип', contextName: 'types', width: '180px', cssClassName: "col-3"
+			},
+			{
+				name: 'price_cap', type: 'string', placeholder: 'Цена (Столица)', width: '80px', cssClassName: "col-1"
+			},
+			{
+				name: 'price_region', type: 'string', placeholder: 'Цена (Регионы)', width: '80px', cssClassName: "col-1"
 			},
 		]
 	},

@@ -1,7 +1,7 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {Button, Col, Container, Image, Row} from "react-bootstrap";
 import {Context} from "../index";
-import setDependencyNames from "../utils/setDependencyNames";
+import setDependencyName from "../utils/setDependencyName";
 import {fetchOneVehicle} from "../http/storeAPI";
 import {useParams} from "react-router-dom";
 
@@ -59,7 +59,7 @@ const VehicleDetailPage = () => {
 							key={item.id}
 							style={{background: index % 2 === 0? 'lightgray' : 'transparent'}}
 						>
-							{setDependencyNames(features.descr, item.id).name}: {item.value} {setDependencyNames(features.units, item.unit).name}
+							{setDependencyName(features.descr, item.id).name}: {item.value} {setDependencyName(features.units, item.unit).name}
 						</Row>
 					)}
 				</Row>

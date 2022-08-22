@@ -1,15 +1,23 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {Col, Container, ListGroup, Row} from "react-bootstrap";
 import {Context} from "../index";
 import {observer} from "mobx-react-lite";
 import {authRoutes} from "../route";
 import {ADMIN_ROUTE} from "../utils/consts";
 import MainPage from "./Admin/MainPage";
+import {doFetch} from "../http/storeAPI";
 
 const Admin = observer(() => {
 	const [SelectedComponent, setSelectedComponent] = useState(MainPage)
 	const [selectedLink, setSelectedLink] = useState('')
-	const {user} = useContext(Context)
+	const contextScope = useContext(Context)
+	const user = contextScope.user
+
+	useEffect(() => {
+		for (const obj of Object.values(contextScope)) {
+			obj.noFetchContextFromBackend === undefined && doFetch(obj)
+		}
+	}, [contextScope]);
 
 	return (
 		<Container>

@@ -2,8 +2,8 @@ import {$authHost, $host} from "./index";
 import {API_ROUTES} from "../utils/consts";
 
 
-export const doUpdate = async (context, id, name) => {
-	const {data} = await $authHost.put(API_ROUTES.api + context.endpoint + '/' + id + '/', {name})
+export const doUpdate = async (context, id, updateData) => {
+	const {data} = await $authHost.put(API_ROUTES.api + context.endpoint + '/' + id + '/', updateData)
 	return data
 }
 

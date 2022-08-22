@@ -24,8 +24,6 @@ const Shop = observer(() => {
         doFetch(types)
     }, [types]);
 
-
-
     return (
         <Container>
             <Row className="mt-3">

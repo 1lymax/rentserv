@@ -5,6 +5,7 @@ export default class UserStore{
         this._isAuth = false
         this._user = {}
         this._isStaff = false
+        this.noFetchContextFromBackend = true
         makeAutoObservable(this)
     }
 
@@ -19,6 +20,7 @@ export default class UserStore{
     setIsStaff(bool) {
         this._isStaff = bool
     }
+
 
     get isAuth() {
         return this._isAuth

@@ -2,12 +2,3 @@
     margin-top: 5px;
     margin-bottom: 5px;
 }
-
-.dict__item {
-    background: transparent;
-    padding-right: 5px;
-}
-
-.dict__item:hover {
-    background: #f5f5f5;
-}
