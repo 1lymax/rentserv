@@ -11,10 +11,10 @@ import CreateVehicle from "../../components/modals/CreateVehicle";
 const Catalogs = observer (() => {
 	const [typeVisible, setTypeVisible] = useState(false)
 	const [featureVisible, setFeatureVisible] = useState(false)
-	// const [vehicleVisible, setVehicleVisible] = useState(false)
+	const [featureVehicleVisible, setFeatureVehicleVisible] = useState(false)
 	const [unitVisible, setUnitVisible] = useState(false)
 	const [cityVisible, setCityVisible] = useState(false)
-	const {cities, units, types, features, user} = useContext(Context)
+	const {cities, units, types, features, user, vehicleFeatures} = useContext(Context)
 
 	useEffect(() => {
 		doFetch(types)
@@ -32,6 +32,9 @@ const Catalogs = observer (() => {
 		doFetch(cities)
 	}, [cities]);
 
+	useEffect(() => {
+		doFetch(vehicleFeatures)
+	}, [vehicleFeatures]);
 
 	return (
 		<Container className="d-flex flex-column">
@@ -57,6 +60,12 @@ const Catalogs = observer (() => {
 						setModalVisible={setUnitVisible}
 						Create={CreateVehicle}
 					/>
+					<DictAccordion
+						context={vehicleFeatures}
+						modalVisible={featureVehicleVisible}
+						setModalVisible={setFeatureVehicleVisible}
+						Create={CreateVehicle}
+					/>
 					<h4 className="mt-4">Склады</h4>
 
 					<DictAccordion
@@ -65,6 +74,7 @@ const Catalogs = observer (() => {
 						setModalVisible={setCityVisible}
 						Create={CreateVehicle}
 					/>
+
 
 					{/*<DictAccordion*/}
 					{/*	scope={vehicles.self}*/}

@@ -20,7 +20,7 @@ const Admin = observer(() => {
 	}, [contextScope]);
 
 	return (
-		<Container>
+		<Container fluid>
 			{user.isStaff
 				? <Row className="mt-3">
 					<Col md={3}>

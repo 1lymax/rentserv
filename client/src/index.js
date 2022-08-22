@@ -8,6 +8,7 @@ import Stores from "./store/Stores";
 import Cities from "./store/Cities";
 import Types from "./store/Types";
 import Units from "./store/Units";
+import VehicleFeatures from "./store/VehicleFeatures";
 
 
 export const Context = createContext(null)
@@ -21,7 +22,8 @@ root.render(
 		stores: new Stores(),
 		cities: new Cities(),
 		types: new Types(),
-		units: new Units()
+		units: new Units(),
+		vehicleFeatures: new VehicleFeatures()
 	}}>
 		<App/>
 	</Context.Provider>

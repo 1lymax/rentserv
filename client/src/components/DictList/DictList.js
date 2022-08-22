@@ -1,19 +1,19 @@
 import React, {useContext, useState} from 'react';
-import {Button, Col, Row, Spinner} from "react-bootstrap";
+import {Button, Col, Container, Row, Spinner} from "react-bootstrap";
 import {doCreate, doDelete, doFetch, doUpdate} from "../../http/storeAPI";
 import InputControl from "../UI/Admin/InputControl";
 import {Context} from "../../index";
 import setDependencyName from "../../utils/setDependencyName";
 import classes from "./DictList.module.css"
 
-const DictList = ({context}) => {
+
+const DictList = ({context, showTitle}) => {
 	const [inputVisible, setInputVisible] = useState(0)
 	const [edit, setEdit] = useState(0)
 	const [add, setAdd] = useState(false)
 	const [fieldValues, setFieldValues] = useState({})
 	const [isLoading, setIsLoading] = useState('')
 	const contextScope = useContext(Context)
-
 	const handleChange = e => {
 		let name = e.name || e.target.name
 		let value = e.value || e.target.value
@@ -26,7 +26,7 @@ const DictList = ({context}) => {
 	const setCellValue = (item, set) => {
 		if (set.contextName) {
 			return setDependencyName(contextScope[set.contextName].data, item[set.name]).name
-		}else{
+		} else {
 			return item[set.name]
 		}
 	};
@@ -44,7 +44,6 @@ const DictList = ({context}) => {
 		setEdit(id)
 		if (id === edit && id) {
 			setIsLoading(true)
-			console.log('fieldValues', fieldValues)
 			doUpdate(context, id, fieldValues).then(() => {
 				doFetch(context)
 				hideAll()
@@ -78,40 +77,39 @@ const DictList = ({context}) => {
 
 	return (
 		<>
-			<Row className={["pt-3 pb-3", classes.dict__title].join(' ')}>
-			{context.settings.fields.map(sets =>
-				<Col key={sets.name} className={["ms-2", sets.cssClassName].join(' ')}
-				>
-					{sets.placeholder}
-				</Col>
-
-			)}
-				<Col className="col-2"></Col>
-			</Row>
+			{showTitle &&
+				<Row className={["pt-3 pb-3", classes.dict__title].join(' ')}>
+					{context.settings.fields.map(sets =>
+						<Col key={sets.name} className={["", sets.cssClassName].join(' ')}
+						>
+							{sets.placeholder}
+						</Col>
+					)}
+					<Col className="col-1"></Col>
+				</Row>
+			}
 			{context.data.map(item =>
-				<div key={item.id}
-					 className={["d-flex justify-content-between align-items-center", classes.dict__item].join(' ')}
-					 onMouseEnter={() => setInputVisible(item.id)}
-					 onMouseLeave={() => setInputVisible(0)}
-				>
-					<div style={{width: "auto"}} className="d-flex flex-row align-items-center">
-
-
+				<Container key={item.id}>
+					<Row className={["d-flex align-items-center", classes.dict__item].join(' ')}
+						 onMouseEnter={() => {
+							 setInputVisible(item.id)
+						 }}
+						 onMouseLeave={() => setInputVisible(0)}
+					>
 						{context.settings.fields.map(sets =>
-							<div key={sets.name} className="ms-1"
-								 style={{width: sets.width || "auto"}}
+							<Col key={sets.name}
+								 className={["", sets.cssClassName].join(' ')}
 							>
 								{edit === item.id
 									?
-										<InputControl
-											onChange={e => handleChange(e)}
-											value={fieldValues[sets.name]}
-											sets={sets}
-											selectOptions={sets.contextName && contextScope[sets.contextName].data}
-										/>
+									<InputControl
+										onChange={e => handleChange(e)}
+										value={fieldValues[sets.name]}
+										sets={sets}
+										selectOptions={sets.contextName && contextScope[sets.contextName].data}
+									/>
 									:
-									<div className="m-2 p-1"
-										 style={{width: sets.width || "auto"}}
+									<div className="m-1 p-1"
 										 onClick={() => {
 											 setFieldsArray(item)
 											 setAdd(false)
@@ -121,78 +119,87 @@ const DictList = ({context}) => {
 									</div>
 
 								}
-							</div>
+							</Col>
 						)}
 
-					</div>
+						{inputVisible === item.id
+							?
+							<Col className={"col-12 d-flex flex-row justify-content-end"} lg={2}>
+								<Button
+									variant={"outline-dark"}
+									className="m-1 p-1"
+									onClick={() => {
+										setFieldsArray(item)
+										setAdd(false)
+										editOrSave(item.id, item.name)
+									}}
+								>
+									{edit === item.id
+										? isLoading
+											?
+											<>
+												<Spinner
+													as="span"
+													animation="border"
+													size="sm"
+													role="status"
+													aria-hidden="true"
+												/> Сохр.
+											</>
+											: 'Сохр.'
+										: 'Редакт.'
+									}
+								</Button>
+								<Button
+									variant={"outline-dark"}
+									className="m-1 p-1"
+									onClick={() => {
+										setAdd(false)
+										deleteOrCancel(item.id)
+									}}
+								>
+									{edit === item.id ? 'Отм' : 'Удал.'}
+								</Button>
+							</Col>
+							:
+							<Col className={"col-1"}></Col>
 
-					{inputVisible === item.id
-						?
-						<div>
-							<Button
-								variant={"outline-dark"}
-								className="p-1"
-								onClick={() => {
-									setFieldsArray(item)
-									setAdd(false)
-									editOrSave(item.id, item.name)
-								}}
-							>
-								{edit === item.id
-									? isLoading
-										?
-										<>
-											<Spinner
-												as="span"
-												animation="border"
-												size="sm"
-												role="status"
-												aria-hidden="true"
-											/> Сохр.
-										</>
-										: 'Сохр.'
-									: 'Редакт.'
-								}
-							</Button>
-							<Button
-								variant={"outline-dark"}
-								className="p-1"
-								onClick={() => {
-									setAdd(false)
-									deleteOrCancel(item.id)
-								}}
-							>
-								{edit === item.id ? 'Отмена' : 'Удалить'}
-							</Button>
-						</div>
-						:
-						<div></div>
+						}
+					</Row>
+					{context.settings.dependencies &&
 
+						<Row>
+							{context.settings.dependencies.map(dependency =>
+								<DictList key={dependency.name}
+										  context={contextScope[dependency.name]}
+										  showTitle={false}
+								>
+								</DictList>
+							)
+							}
+						</Row>
 					}
-				</div>
+				</Container>
 			)}
 			{add
 				?
-				<div
-					className="d-flex justify-content-between align-content-center">
-					<div style={{width: "auto"}} className="d-flex flex-row align-items-center">
-						{context.settings.fields.map(sets =>
-							<div style={{width: sets.width || "auto"}}
-								 className="ms-1"
-								 key={sets.name}
-							>
-								<InputControl
-									onChange={e => handleChange(e)}
-									value={fieldValues[sets.name]}
-									sets={sets}
-									selectOptions={sets.contextName && contextScope[sets.contextName].data}
-								/>
-							</div>
-						)}
+				<Row className={["pt-2 pb-2 d-flex align-items-center"].join(' ')}>
+					{context.settings.fields.map(sets =>
+						<Col
+							key={sets.name}
+							className={["", sets.cssClassName].join(' ')}
+						>
+							<InputControl
+								onChange={e => handleChange(e)}
+								value={fieldValues[sets.name]}
+								sets={sets}
+								selectOptions={sets.contextName && contextScope[sets.contextName].data}
+							/>
+						</Col>
+					)}
 
 
-					</div>
-					<div>
+					<Col className={"col-12 d-flex flex-row justify-content-end"} lg={2}>
 						<Button
 							variant={"outline-dark"}
 							className="m-1 p-1"
@@ -212,7 +219,7 @@ const DictList = ({context}) => {
 										aria-hidden="true"
 									/> Сохраняю
 								</>
-								: 'Добавить'
+								: 'Доб.'
 
 							}
 						</Button>
@@ -221,11 +228,11 @@ const DictList = ({context}) => {
 							className="m-1 p-1"
 							onClick={() => setAdd(false)}
 						>
-							Отмена
+							Отм.
 						</Button>
-					</div>
+					</Col>
 
-				</div>
+				</Row>
 				:
 				<Button
 					variant={"outline-dark"}

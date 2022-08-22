@@ -1,6 +1,6 @@
 .dict__item {
     background: transparent;
-    padding-right: 5px;
+
     border: solid lightgray;
     border-width: 1px 0 0 0;
 }
@@ -14,4 +14,9 @@
     padding-top: 5px;
     padding-bottom: 5px;
 
+}
+
+.form-control {
+    margin: 0;
+    padding: 0;
 }

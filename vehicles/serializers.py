@@ -8,7 +8,7 @@ from vehicles.models import Vehicle, Type, FeatureList, VehicleFeature, VehicleI
 class VehicleFeaturesCreateUpdateSerializer(ModelSerializer):
     class Meta:
         model = VehicleFeature
-        fields = ('vehicle', 'value', 'feature', 'unit')
+        fields = ('id', 'vehicle', 'value', 'feature', 'unit')
 
 
 class VehicleFeaturesViewSerializer(ModelSerializer):
