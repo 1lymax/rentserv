@@ -5,6 +5,7 @@ import {observer} from "mobx-react-lite";
 import DictAccordion from "../../components/UI/DictAccordion/DictAccordion";
 import {doFetch} from "../../http/storeAPI";
 import CreateVehicle from "../../components/modals/CreateVehicle";
+import {ADMIN} from "../../utils/consts";
 
 const VehiclesAdmin = observer (() => {
 	const [vehicleVisible, setVehicleVisible] = useState(false)
@@ -21,7 +22,6 @@ const VehiclesAdmin = observer (() => {
 	// useEffect(() => {
 	// 	doFetch(vehicles)
 	// }, [vehicles]);
-
 	return (
 		<Container className="d-flex flex-column">
 			{user.isStaff
@@ -30,6 +30,7 @@ const VehiclesAdmin = observer (() => {
 					<h4 className="mt-3">Транспорт</h4>
 					<DictAccordion
 						context={contextScope['vehicles']}
+						conf={ADMIN.vehicle}
 						modalVisible={vehicleVisible}
 						setModalVisible={setVehicleVisible}
 						Create={CreateVehicle}

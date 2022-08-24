@@ -4,8 +4,7 @@ import DictList from "../../DictList/DictList";
 import {Accordion} from "react-bootstrap";
 
 
-const DictAccordion = observer(({context, modalVisible, setModalVisible, Create}) => {
-
+const DictAccordion = observer(({context, conf, modalVisible, setModalVisible, Create}) => {
 	return (
 		<Accordion className="mt-3">
 			<Accordion.Item eventKey="0">
@@ -15,6 +14,7 @@ const DictAccordion = observer(({context, modalVisible, setModalVisible, Create}
 				<Accordion.Body className="d-flex flex-column">
 					<DictList
 						context={context}
+						conf={conf}
 						showTitle={true}
 					/>
 					<Create show={modalVisible} onHide={() => setModalVisible(false)}/>

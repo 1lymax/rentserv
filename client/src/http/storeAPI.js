@@ -32,9 +32,6 @@ export const doFetch = async (context, ordering, filters) => {
 						...filters
 					}
 			})
-		if (context.endpoint === 'vehicle_feature') {
-			console.log('data on vehicle_feature', data)
-		}
 		return data
 	}catch (e){
 		console.log('doFetch error', e.response.data)

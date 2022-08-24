@@ -5,24 +5,35 @@ import InputControl from "../UI/Admin/InputControl";
 import {Context} from "../../index";
 import setDependencyName from "../../utils/setDependencyName";
 import classes from "./DictList.module.css"
+import {ADMIN} from "../../utils/consts";
 
 
-const DictList = ({context, isDependency, filters, ordering}) => {
+const DictList = ({context, conf, isDependency, filters, ordering}) => {
 	const [inputVisible, setInputVisible] = useState(0)
 	const [edit, setEdit] = useState(0)
 	const [add, setAdd] = useState(false)
 	const [fieldValues, setFieldValues] = useState({})
 	const [isLoading, setIsLoading] = useState(false)
-	const [dependencyArray, setDependencyArray] = useState([])
+	const [data, setData] = useState([])
 	const contextScope = useContext(Context)
 
 	useEffect(() => {
-		!isDependency &&
-		doFetch(context, ordering, filters)
-			.then(data => context.setData(data))
-		console.log('context', context, filters)
+		if (!isDependency) {
+			doFetch(context, ordering, filters)
+				.then(resp => context.setData(resp))
+				.then(setData(context.data))
+
+		} else {
+			doFetch(context, ordering, filters)
+				.then(resp => setData(resp))
+		}
+
 	}, []);
-	// const context = Object.assign(contextMain)
+
+	useEffect(() => {
+		!isDependency && setData(context.data)
+		console.log('makeUpdate')
+	}, [context.data]);
 
 	const handleChange = e => {
 		let name = e.name || e.target.name
@@ -35,6 +46,7 @@ const DictList = ({context, isDependency, filters, ordering}) => {
 
 	const setCellValue = (item, set) => {
 		if (set.contextName && contextScope[set.contextName].data.length) {
+
 			return setDependencyName(contextScope[set.contextName].data, item[set.name]).name
 		} else {
 			return item[set.name]
@@ -42,7 +54,7 @@ const DictList = ({context, isDependency, filters, ordering}) => {
 	};
 
 	const setFieldsArray = (item) => {
-		context.settings.fields.map(field => {
+		conf.fields.map(field => {
 			setFieldValues(prevState => ({
 				...prevState,
 				[field.name]: item[field.name] !== undefined ? item[field.name] : ''
@@ -85,30 +97,30 @@ const DictList = ({context, isDependency, filters, ordering}) => {
 		setIsLoading(false)
 	};
 
-	const fetchDependency = (id, field, context) => {
-		const params = {}
-		params[field] = id
-		return doFetch(context, '', params)
-			.then(data => {
-					setDependencyArray(prevState => (
-							[...prevState.filter(item => item.id !== id),
-
-								{
-									id: id,
-									data: data,
-								}]
-						)
-					)
-				}
-			)
-
-	};
+	// const fetchDependency = (id, field, context) => {
+	// 	const params = {}
+	// 	params[field] = id
+	// 	return doFetch(context, '', params)
+	// 		.then(data => {
+	// 				setDependencyArray(prevState => (
+	// 						[...prevState.filter(item => item.id !== id),
+	//
+	// 							{
+	// 								id: id,
+	// 								data: data,
+	// 							}]
+	// 					)
+	// 				)
+	// 			}
+	// 		)
+	//
+	// };
 
 	return (
 		<>
 			{!isDependency &&
 				<Row className={["pt-3 pb-3", classes.dict__title].join(' ')}>
-					{context.settings.fields.map(sets =>
+					{conf.fields.map(sets =>
 						<Col key={sets.name} className={["", sets.cssClassName].join(' ')}
 						>
 							{sets.placeholder}
@@ -117,13 +129,13 @@ const DictList = ({context, isDependency, filters, ordering}) => {
 					<Col className="col-1"></Col>
 				</Row>
 			}
-			{context.data.map(item =>
+			{data.map(item =>
 				<Container key={item.id}>
 					<Row className={["d-flex align-items-center", classes.dict__item].join(' ')}
 						 onMouseEnter={() => setInputVisible(item.id)}
 						 onMouseLeave={() => setInputVisible(0)}
 					>
-						{context.settings.fields.map(sets =>
+						{conf.fields.map(sets =>
 							<Col key={sets.name}
 								 className={["", sets.cssClassName].join(' ')}
 							>
@@ -193,16 +205,17 @@ const DictList = ({context, isDependency, filters, ordering}) => {
 
 						}
 					</Row>
-					{context.settings.dependencies &&
+					{conf.dependencies &&
 						<Row>
 
-							{context.settings.dependencies.map(dependency =>
+							{conf.dependencies.map(dep =>
 
-								<DictList key={dependency.name}
+								<DictList key={dep.name}
 										  isDependency={true}
-										  context={contextScope[dependency.name]}
+										  context={contextScope[dep.name]}
+										  conf={ADMIN[dep.name]}
 										  showTitle={false}
-										  filters={JSON.parse(`{"${dependency.field}":${item.id}}`)}
+										  filters={JSON.parse(`{"${dep.field}":${item.id}}`)}
 								>
 									{/*{fetchDependency(item.id, dependency.parent, contextScope[dependency.name])}*/}
 									{/*{console.log(item.id, dependency.parent, dependency)}*/}
@@ -217,7 +230,7 @@ const DictList = ({context, isDependency, filters, ordering}) => {
 			{add
 				?
 				<Row className={["pt-2 pb-2 d-flex align-items-center"].join(' ')}>
-					{context.settings.fields.map(sets =>
+					{conf.fields.map(sets =>
 						<Col
 							key={sets.name}
 							className={["", sets.cssClassName].join(' ')}

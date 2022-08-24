@@ -7,6 +7,7 @@ import CreateType from "../../components/modals/CreateType";
 import {doFetch} from "../../http/storeAPI";
 import CreateFeature from "../../components/modals/CreateFeature";
 import CreateVehicle from "../../components/modals/CreateVehicle";
+import {ADMIN} from "../../utils/consts";
 
 const Catalogs = observer (() => {
 	const [typeVisible, setTypeVisible] = useState(false)
@@ -56,6 +57,7 @@ const Catalogs = observer (() => {
 					<h4 className="mt-3">Транспорт</h4>
 					<DictAccordion
 						context={types}
+						conf={ADMIN.type}
 						modalVisible={typeVisible}
 						setModalVisible={setTypeVisible}
 						Create={CreateType}
@@ -63,6 +65,7 @@ const Catalogs = observer (() => {
 
 					<DictAccordion
 						context={features}
+						conf={ADMIN.feature}
 						modalVisible={featureVisible}
 						setModalVisible={setFeatureVisible}
 						Create={CreateFeature}
@@ -70,6 +73,7 @@ const Catalogs = observer (() => {
 
 					<DictAccordion
 						context={units}
+						conf={ADMIN.unit}
 						modalVisible={unitVisible}
 						setModalVisible={setUnitVisible}
 						Create={CreateVehicle}
@@ -77,6 +81,7 @@ const Catalogs = observer (() => {
 
 					<DictAccordion
 						context={vehicleFeatures}
+						conf={ADMIN.vehicleFeatures}
 						modalVisible={featureVehicleVisible}
 						setModalVisible={setFeatureVehicleVisible}
 						Create={CreateVehicle}
@@ -86,6 +91,7 @@ const Catalogs = observer (() => {
 
 					<DictAccordion
 						context={cities}
+						conf={ADMIN.city}
 						modalVisible={cityVisible}
 						setModalVisible={setCityVisible}
 						Create={CreateVehicle}
