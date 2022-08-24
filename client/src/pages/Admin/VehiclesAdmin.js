@@ -8,11 +8,19 @@ import CreateVehicle from "../../components/modals/CreateVehicle";
 
 const VehiclesAdmin = observer (() => {
 	const [vehicleVisible, setVehicleVisible] = useState(false)
-	const {vehicles, user} = useContext(Context)
+	const contextScope = useContext(Context)
+	const user = contextScope.user
 
 	useEffect(() => {
-		doFetch(vehicles)
-	}, [vehicles]);
+		for (const obj of Object.values(contextScope)) {
+			obj.noFetchContextFromBackend === undefined && doFetch(obj, '', '')
+				.then(data => obj.setData(data))
+		}
+	}, []);
+
+	// useEffect(() => {
+	// 	doFetch(vehicles)
+	// }, [vehicles]);
 
 	return (
 		<Container className="d-flex flex-column">
@@ -21,7 +29,7 @@ const VehiclesAdmin = observer (() => {
 				<>
 					<h4 className="mt-3">Транспорт</h4>
 					<DictAccordion
-						context={vehicles}
+						context={contextScope['vehicles']}
 						modalVisible={vehicleVisible}
 						setModalVisible={setVehicleVisible}
 						Create={CreateVehicle}

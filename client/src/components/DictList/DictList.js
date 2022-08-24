@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {Button, Col, Container, Row, Spinner} from "react-bootstrap";
 import {doCreate, doDelete, doFetch, doUpdate} from "../../http/storeAPI";
 import InputControl from "../UI/Admin/InputControl";
@@ -7,13 +7,23 @@ import setDependencyName from "../../utils/setDependencyName";
 import classes from "./DictList.module.css"
 
 
-const DictList = ({context, showTitle}) => {
+const DictList = ({context, isDependency, filters, ordering}) => {
 	const [inputVisible, setInputVisible] = useState(0)
 	const [edit, setEdit] = useState(0)
 	const [add, setAdd] = useState(false)
 	const [fieldValues, setFieldValues] = useState({})
-	const [isLoading, setIsLoading] = useState('')
+	const [isLoading, setIsLoading] = useState(false)
+	const [dependencyArray, setDependencyArray] = useState([])
 	const contextScope = useContext(Context)
+
+	useEffect(() => {
+		!isDependency &&
+		doFetch(context, ordering, filters)
+			.then(data => context.setData(data))
+		console.log('context', context, filters)
+	}, []);
+	// const context = Object.assign(contextMain)
+
 	const handleChange = e => {
 		let name = e.name || e.target.name
 		let value = e.value || e.target.value
@@ -24,7 +34,7 @@ const DictList = ({context, showTitle}) => {
 	};
 
 	const setCellValue = (item, set) => {
-		if (set.contextName) {
+		if (set.contextName && contextScope[set.contextName].data.length) {
 			return setDependencyName(contextScope[set.contextName].data, item[set.name]).name
 		} else {
 			return item[set.name]
@@ -40,26 +50,26 @@ const DictList = ({context, showTitle}) => {
 		})
 	};
 
-	const editOrSave = (id) => {
+	const handleEditOrSave = (id) => {
 		setEdit(id)
 		if (id === edit && id) {
 			setIsLoading(true)
 			doUpdate(context, id, fieldValues).then(() => {
-				doFetch(context)
+				doFetch(context).then(data => context.setData(data))
 				hideAll()
 			}).catch(e => {
 				console.log(e.response.data)
 			});
 		} else if (inputVisible === 0) {
 			doCreate(context, fieldValues).then(() => {
-				doFetch(context)
+				doFetch(context).then(data => context.setData(data))
 				setFieldsArray('')
 				hideAll()
 			})
 
 		}
 	}
-	const deleteOrCancel = (id) => {
+	const handleDelOrCancel = (id) => {
 		if (id === edit) {
 			hideAll()
 		} else {
@@ -75,9 +85,28 @@ const DictList = ({context, showTitle}) => {
 		setIsLoading(false)
 	};
 
+	const fetchDependency = (id, field, context) => {
+		const params = {}
+		params[field] = id
+		return doFetch(context, '', params)
+			.then(data => {
+					setDependencyArray(prevState => (
+							[...prevState.filter(item => item.id !== id),
+
+								{
+									id: id,
+									data: data,
+								}]
+						)
+					)
+				}
+			)
+
+	};
+
 	return (
 		<>
-			{showTitle &&
+			{!isDependency &&
 				<Row className={["pt-3 pb-3", classes.dict__title].join(' ')}>
 					{context.settings.fields.map(sets =>
 						<Col key={sets.name} className={["", sets.cssClassName].join(' ')}
@@ -91,9 +120,7 @@ const DictList = ({context, showTitle}) => {
 			{context.data.map(item =>
 				<Container key={item.id}>
 					<Row className={["d-flex align-items-center", classes.dict__item].join(' ')}
-						 onMouseEnter={() => {
-							 setInputVisible(item.id)
-						 }}
+						 onMouseEnter={() => setInputVisible(item.id)}
 						 onMouseLeave={() => setInputVisible(0)}
 					>
 						{context.settings.fields.map(sets =>
@@ -113,7 +140,7 @@ const DictList = ({context, showTitle}) => {
 										 onClick={() => {
 											 setFieldsArray(item)
 											 setAdd(false)
-											 editOrSave(item.id, sets)
+											 handleEditOrSave(item.id, sets)
 										 }}>
 										{setCellValue(item, sets)}
 									</div>
@@ -131,7 +158,7 @@ const DictList = ({context, showTitle}) => {
 									onClick={() => {
 										setFieldsArray(item)
 										setAdd(false)
-										editOrSave(item.id, item.name)
+										handleEditOrSave(item.id, item.name)
 									}}
 								>
 									{edit === item.id
@@ -155,7 +182,7 @@ const DictList = ({context, showTitle}) => {
 									className="m-1 p-1"
 									onClick={() => {
 										setAdd(false)
-										deleteOrCancel(item.id)
+										handleDelOrCancel(item.id)
 									}}
 								>
 									{edit === item.id ? 'Отм' : 'Удал.'}
@@ -167,15 +194,21 @@ const DictList = ({context, showTitle}) => {
 						}
 					</Row>
 					{context.settings.dependencies &&
-
 						<Row>
+
 							{context.settings.dependencies.map(dependency =>
+
 								<DictList key={dependency.name}
+										  isDependency={true}
 										  context={contextScope[dependency.name]}
 										  showTitle={false}
+										  filters={JSON.parse(`{"${dependency.field}":${item.id}}`)}
 								>
+									{/*{fetchDependency(item.id, dependency.parent, contextScope[dependency.name])}*/}
+									{/*{console.log(item.id, dependency.parent, dependency)}*/}
 								</DictList>
 							)
+
 							}
 						</Row>
 					}
@@ -205,7 +238,7 @@ const DictList = ({context, showTitle}) => {
 							className="m-1 p-1"
 							onClick={() => {
 								setEdit(-1)
-								editOrSave(undefined, fieldValues)
+								handleEditOrSave(undefined, fieldValues)
 							}}
 						>
 							{isLoading

@@ -14,27 +14,39 @@ const Catalogs = observer (() => {
 	const [featureVehicleVisible, setFeatureVehicleVisible] = useState(false)
 	const [unitVisible, setUnitVisible] = useState(false)
 	const [cityVisible, setCityVisible] = useState(false)
-	const {cities, units, types, features, user, vehicleFeatures} = useContext(Context)
+	const contextScope = useContext(Context)
+	const user = contextScope.user
 
 	useEffect(() => {
-		doFetch(types)
-	}, [types]);
+		for (const obj of Object.values(contextScope)) {
+			obj.noFetchContextFromBackend === undefined && doFetch(obj)
+				.then(data => obj.setData(data))
+		}
+	}, [contextScope]);
 
-	useEffect(() => {
-		doFetch(features)
-	}, [features]);
+	const {cities, units, types, features, vehicleFeatures} = useContext(Context)
 
-	useEffect(() => {
-		doFetch(units)
-	}, [units]);
+	// useEffect(() => {
+	// 	doFetch(types)
+	// }, [types]);
+	//
+	// useEffect(() => {
+	// 	doFetch(features)
+	// }, [features]);
+	//
+	// useEffect(() => {
+	// 	doFetch(units)
+	// }, [units]);
+	//
+	// useEffect(() => {
+	// 	doFetch(cities)
+	// }, [cities]);
+	//
+	// useEffect(() => {
+	// 	doFetch(vehicleFeatures)
+	// }, [vehicleFeatures]);
 
-	useEffect(() => {
-		doFetch(cities)
-	}, [cities]);
 
-	useEffect(() => {
-		doFetch(vehicleFeatures)
-	}, [vehicleFeatures]);
 
 	return (
 		<Container className="d-flex flex-column">
@@ -48,24 +60,28 @@ const Catalogs = observer (() => {
 						setModalVisible={setTypeVisible}
 						Create={CreateType}
 					/>
+
 					<DictAccordion
 						context={features}
 						modalVisible={featureVisible}
 						setModalVisible={setFeatureVisible}
 						Create={CreateFeature}
 					/>
+
 					<DictAccordion
 						context={units}
 						modalVisible={unitVisible}
 						setModalVisible={setUnitVisible}
 						Create={CreateVehicle}
 					/>
+
 					<DictAccordion
 						context={vehicleFeatures}
 						modalVisible={featureVehicleVisible}
 						setModalVisible={setFeatureVehicleVisible}
 						Create={CreateVehicle}
 					/>
+
 					<h4 className="mt-4">Склады</h4>
 
 					<DictAccordion

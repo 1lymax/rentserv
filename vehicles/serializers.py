@@ -11,6 +11,7 @@ class VehicleFeaturesCreateUpdateSerializer(ModelSerializer):
         fields = ('id', 'vehicle', 'value', 'feature', 'unit')
 
 
+
 class VehicleFeaturesViewSerializer(ModelSerializer):
     class Meta:
         model = VehicleFeature

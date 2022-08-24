@@ -52,7 +52,10 @@ export const ADMIN = {
 	vehicle: {
 		title: 'Транспорт',
 		dependencies: [
-			{name: 'vehicleFeatures'}
+			{name: 'vehicleFeatures', field: 'vehicle'}
+		],
+		dependsOf:[
+			{name: 'types'},
 		],
 		fields: [
 			{

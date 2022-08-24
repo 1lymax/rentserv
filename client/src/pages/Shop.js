@@ -18,10 +18,12 @@ const Shop = observer(() => {
     useEffect(() => {
         ordering['vehicle'] = vehicleSorting
         doFetch(vehicles, ordering)
+            .then(data => vehicles.setData(data))
     }, [vehicleSorting]);
 
     useEffect(() => {
         doFetch(types)
+            .then(data => types.setData(data))
     }, [types]);
 
     return (

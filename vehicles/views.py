@@ -64,6 +64,7 @@ class VehicleFeatureViewSet(ModelViewSet):
     serializer_class = VehicleFeaturesCreateUpdateSerializer
     permission_classes = [IsStaffOrReadOnly]
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filterset_fields = ['vehicle', 'feature']
 
     def perform_create(self, serializer):
         # Check for existence of the record with the same feature on the same vehicle

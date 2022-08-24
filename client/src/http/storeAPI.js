@@ -22,16 +22,19 @@ export const doCreate = async (context, createData) => {
 	return data
 }
 
-export const doFetch = async (context, ordering='') => {
+export const doFetch = async (context, ordering, filters) => {
 	try{
 		const {data} = await $host.get(
 			API_ROUTES.api + context.endpoint + '/',
 			{params:
 					{
-						ordering: ordering[context.endpoint]
+						...ordering,
+						...filters
 					}
 			})
-		context.setData(data)
+		if (context.endpoint === 'vehicle_feature') {
+			console.log('data on vehicle_feature', data)
+		}
 		return data
 	}catch (e){
 		console.log('doFetch error', e.response.data)
