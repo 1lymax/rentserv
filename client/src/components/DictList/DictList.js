@@ -15,6 +15,8 @@ const DictList = ({context, conf, isDependency, filters, ordering}) => {
 	const [fieldValues, setFieldValues] = useState({})
 	const [isLoading, setIsLoading] = useState(false)
 	const [data, setData] = useState([])
+	const [needFetch, setNeedFetch] = useState([])
+
 	const contextScope = useContext(Context)
 
 	useEffect(() => {
@@ -28,12 +30,19 @@ const DictList = ({context, conf, isDependency, filters, ordering}) => {
 				.then(resp => setData(resp))
 		}
 
-	}, []);
+	}, [needFetch]);
 
 	useEffect(() => {
 		!isDependency && setData(context.data)
 		console.log('makeUpdate')
 	}, [context.data]);
+
+	useEffect(() => {
+		isDependency &&
+		doFetch(context, ordering, filters)
+			.then(resp => setData(resp))
+	}, [needFetch]);
+
 
 	const handleChange = e => {
 		let name = e.name || e.target.name
@@ -67,14 +76,16 @@ const DictList = ({context, conf, isDependency, filters, ordering}) => {
 		if (id === edit && id) {
 			setIsLoading(true)
 			doUpdate(context, id, fieldValues).then(() => {
-				doFetch(context).then(data => context.setData(data))
+				//doFetch(context).then(data => context.setData(data))
+				setNeedFetch(Date.now())
 				hideAll()
 			}).catch(e => {
 				console.log(e.response.data)
 			});
 		} else if (inputVisible === 0) {
 			doCreate(context, fieldValues).then(() => {
-				doFetch(context).then(data => context.setData(data))
+				//doFetch(context).then(data => context.setData(data))
+				setNeedFetch(Date.now())
 				setFieldsArray('')
 				hideAll()
 			})
