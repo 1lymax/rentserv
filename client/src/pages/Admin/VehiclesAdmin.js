@@ -19,9 +19,6 @@ const VehiclesAdmin = observer (() => {
 		}
 	}, []);
 
-	// useEffect(() => {
-	// 	doFetch(vehicles)
-	// }, [vehicles]);
 	return (
 		<Container className="d-flex flex-column">
 			{user.isStaff

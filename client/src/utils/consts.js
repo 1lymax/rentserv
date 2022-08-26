@@ -18,6 +18,8 @@ export const API_ROUTES = {
 export const ADMIN = {
 	type: {
 		title: 'Типы транспортных средств',
+		selfName: 'type',
+		addButtonTitle: '+ тип',
 		fields: [
 			{
 				name: 'name', type: 'string', placeholder: 'Название'
@@ -26,12 +28,12 @@ export const ADMIN = {
 	},
 	vehicleFeatures: {
 		title: 'Характеристики транспортных средств',
+		selfName: 'vehicleFeatures',
+		addButtonTitle: '+ характиристика',
+		dependsOn: 'vehicle',
 		fields: [
 			{
-				name: 'vehicle', type: 'select', placeholder: 'Транспорт', contextName: 'vehicles', cssClassName: "col-4 col-lg-3"
-			},
-			{
-				name: 'feature', type: 'select', placeholder: 'Характеристика', contextName: 'features', cssClassName: "col-4 col-lg-3"
+				name: 'feature', type: 'select', placeholder: 'Характеристика', contextName: 'features', cssClassName: "col-5 col-lg-4"
 			},
 			{
 				name: 'value', type: 'string', placeholder: 'Величина', cssClassName: "col-2"
@@ -39,10 +41,15 @@ export const ADMIN = {
 			{
 				name: 'unit', type: 'select', placeholder: 'Ед. изм.', contextName: 'units', cssClassName: "col-2"
 			},
+			{
+				name: 'vehicle', type: 'select', placeholder: 'Транспорт', contextName: 'vehicles', cssClassName: "col-3 col-lg-2"
+			},
 		]
 	},
 	feature: {
 		title: 'Характеристики',
+		selfName: 'feature',
+		addButtonTitle: '+ характеристика',
 		fields: [
 			{
 				name: 'name', type: 'string'
@@ -51,11 +58,10 @@ export const ADMIN = {
 	},
 	vehicle: {
 		title: 'Транспорт',
+		addButtonTitle: '+ транспорт',
+		selfName: 'vehicle',
 		dependencies: [
 			{name: 'vehicleFeatures', field: 'vehicle'}
-		],
-		dependsOf:[
-			{name: 'types'},
 		],
 		fields: [
 			{
@@ -74,6 +80,8 @@ export const ADMIN = {
 	},
 	unit: {
 		title: 'Единицы измерения',
+		selfName: 'unit',
+		addButtonTitle: '+ ед. изм.',
 		fields: [
 			{
 				name: 'name', type: 'string'
@@ -82,6 +90,8 @@ export const ADMIN = {
 	},
 	city: {
 		title: 'Города',
+		selfName: 'city',
+		addButtonTitle: '+ город',
 		fields: [
 			{
 				name: 'name', type: 'string'

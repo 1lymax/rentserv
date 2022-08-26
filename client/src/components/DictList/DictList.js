@@ -6,9 +6,11 @@ import {Context} from "../../index";
 import setDependencyName from "../../utils/setDependencyName";
 import classes from "./DictList.module.css"
 import {ADMIN} from "../../utils/consts";
+import {observer} from "mobx-react-lite";
+import {makeAutoObservable} from "mobx";
 
 
-const DictList = ({context, conf, isDependency, filters, ordering}) => {
+const DictList = observer(({context, conf, isDependencyTable, filters, ordering}) => {
 	const [inputVisible, setInputVisible] = useState(0)
 	const [edit, setEdit] = useState(0)
 	const [add, setAdd] = useState(false)
@@ -16,33 +18,14 @@ const DictList = ({context, conf, isDependency, filters, ordering}) => {
 	const [isLoading, setIsLoading] = useState(false)
 	const [data, setData] = useState([])
 	const [needFetch, setNeedFetch] = useState([])
+	const [focusElement, setFocusElement] = useState([])
 
 	const contextScope = useContext(Context)
 
 	useEffect(() => {
-		if (!isDependency) {
-			doFetch(context, ordering, filters)
-				.then(resp => context.setData(resp))
-				.then(setData(context.data))
-
-		} else {
-			doFetch(context, ordering, filters)
-				.then(resp => setData(resp))
-		}
-
-	}, [needFetch]);
-
-	useEffect(() => {
-		!isDependency && setData(context.data)
-		console.log('makeUpdate')
-	}, [context.data]);
-
-	useEffect(() => {
-		isDependency &&
 		doFetch(context, ordering, filters)
 			.then(resp => setData(resp))
 	}, [needFetch]);
-
 
 	const handleChange = e => {
 		let name = e.name || e.target.name
@@ -55,11 +38,17 @@ const DictList = ({context, conf, isDependency, filters, ordering}) => {
 
 	const setCellValue = (item, set) => {
 		if (set.contextName && contextScope[set.contextName].data.length) {
-
-			return setDependencyName(contextScope[set.contextName].data, item[set.name]).name
+			if (isNeedDependencyValue(set.name)) {
+				return setDependencyName(contextScope[set.contextName].data, item[set.name]).name
+			}
 		} else {
 			return item[set.name]
 		}
+
+	};
+
+	const isNeedDependencyValue = (CellName) => {
+		return !isDependencyTable || CellName !== context.settings.dependsOn
 	};
 
 	const setFieldsArray = (item) => {
@@ -76,7 +65,6 @@ const DictList = ({context, conf, isDependency, filters, ordering}) => {
 		if (id === edit && id) {
 			setIsLoading(true)
 			doUpdate(context, id, fieldValues).then(() => {
-				//doFetch(context).then(data => context.setData(data))
 				setNeedFetch(Date.now())
 				hideAll()
 			}).catch(e => {
@@ -84,14 +72,13 @@ const DictList = ({context, conf, isDependency, filters, ordering}) => {
 			});
 		} else if (inputVisible === 0) {
 			doCreate(context, fieldValues).then(() => {
-				//doFetch(context).then(data => context.setData(data))
 				setNeedFetch(Date.now())
-				setFieldsArray('')
+				setFieldsArray(isDependencyTable? filters: [])
 				hideAll()
 			})
-
 		}
 	}
+
 	const handleDelOrCancel = (id) => {
 		if (id === edit) {
 			hideAll()
@@ -107,29 +94,9 @@ const DictList = ({context, conf, isDependency, filters, ordering}) => {
 		setInputVisible(0)
 		setIsLoading(false)
 	};
-
-	// const fetchDependency = (id, field, context) => {
-	// 	const params = {}
-	// 	params[field] = id
-	// 	return doFetch(context, '', params)
-	// 		.then(data => {
-	// 				setDependencyArray(prevState => (
-	// 						[...prevState.filter(item => item.id !== id),
-	//
-	// 							{
-	// 								id: id,
-	// 								data: data,
-	// 							}]
-	// 					)
-	// 				)
-	// 			}
-	// 		)
-	//
-	// };
-
 	return (
 		<>
-			{!isDependency &&
+			{!isDependencyTable &&
 				<Row className={["pt-3 pb-3", classes.dict__title].join(' ')}>
 					{conf.fields.map(sets =>
 						<Col key={sets.name} className={["", sets.cssClassName].join(' ')}
@@ -141,10 +108,11 @@ const DictList = ({context, conf, isDependency, filters, ordering}) => {
 				</Row>
 			}
 			{data.map(item =>
-				<Container key={item.id}>
-					<Row className={["d-flex align-items-center", classes.dict__item].join(' ')}
-						 onMouseEnter={() => setInputVisible(item.id)}
-						 onMouseLeave={() => setInputVisible(0)}
+				<Container key={item.id} className={["",].join(' ')}>
+					<Row
+						className={["d-flex align-items-center", isDependencyTable && 'ms-4', classes.dict__item].join(' ')}
+						onMouseEnter={() => setInputVisible(item.id)}
+						onMouseLeave={() => setInputVisible(0)}
 					>
 						{conf.fields.map(sets =>
 							<Col key={sets.name}
@@ -154,7 +122,9 @@ const DictList = ({context, conf, isDependency, filters, ordering}) => {
 									?
 									<InputControl
 										onChange={e => handleChange(e)}
+										hidden={isNeedDependencyValue(sets.name)}
 										value={fieldValues[sets.name]}
+										autoFocus={item.id === focusElement[0] && sets.name === focusElement[1]}
 										sets={sets}
 										selectOptions={sets.contextName && contextScope[sets.contextName].data}
 									/>
@@ -163,6 +133,7 @@ const DictList = ({context, conf, isDependency, filters, ordering}) => {
 										 onClick={() => {
 											 setFieldsArray(item)
 											 setAdd(false)
+											 setFocusElement([item.id, sets.name])
 											 handleEditOrSave(item.id, sets)
 										 }}>
 										{setCellValue(item, sets)}
@@ -174,10 +145,11 @@ const DictList = ({context, conf, isDependency, filters, ordering}) => {
 
 						{inputVisible === item.id
 							?
-							<Col className={"col-12 d-flex flex-row justify-content-end"} lg={2}>
+							<Col className={"col-12 d-flex flex-row justify-content-end"} lg={2}
+							>
 								<Button
 									variant={"outline-dark"}
-									className="m-1 p-1"
+									className="ms-1 p-1"
 									onClick={() => {
 										setFieldsArray(item)
 										setAdd(false)
@@ -202,7 +174,7 @@ const DictList = ({context, conf, isDependency, filters, ordering}) => {
 								</Button>
 								<Button
 									variant={"outline-dark"}
-									className="m-1 p-1"
+									className="ms-1 p-1"
 									onClick={() => {
 										setAdd(false)
 										handleDelOrCancel(item.id)
@@ -212,8 +184,8 @@ const DictList = ({context, conf, isDependency, filters, ordering}) => {
 								</Button>
 							</Col>
 							:
-							<Col className={"col-1"}></Col>
-
+							<Col className={"col-1"}
+							></Col>
 						}
 					</Row>
 					{conf.dependencies &&
@@ -222,17 +194,13 @@ const DictList = ({context, conf, isDependency, filters, ordering}) => {
 							{conf.dependencies.map(dep =>
 
 								<DictList key={dep.name}
-										  isDependency={true}
+										  isDependencyTable={true}
 										  context={contextScope[dep.name]}
 										  conf={ADMIN[dep.name]}
 										  showTitle={false}
 										  filters={JSON.parse(`{"${dep.field}":${item.id}}`)}
-								>
-									{/*{fetchDependency(item.id, dependency.parent, contextScope[dependency.name])}*/}
-									{/*{console.log(item.id, dependency.parent, dependency)}*/}
-								</DictList>
+								/>
 							)
-
 							}
 						</Row>
 					}
@@ -240,7 +208,7 @@ const DictList = ({context, conf, isDependency, filters, ordering}) => {
 			)}
 			{add
 				?
-				<Row className={["pt-2 pb-2 d-flex align-items-center"].join(' ')}>
+				<Row className={["pt-2 pb-2 d-flex align-items-center", isDependencyTable && 'ms-4'].join(' ')}>
 					{conf.fields.map(sets =>
 						<Col
 							key={sets.name}
@@ -249,6 +217,7 @@ const DictList = ({context, conf, isDependency, filters, ordering}) => {
 							<InputControl
 								onChange={e => handleChange(e)}
 								value={fieldValues[sets.name]}
+								add
 								sets={sets}
 								selectOptions={sets.contextName && contextScope[sets.contextName].data}
 							/>
@@ -291,22 +260,24 @@ const DictList = ({context, conf, isDependency, filters, ordering}) => {
 
 				</Row>
 				:
-				<Button
-					variant={"outline-dark"}
-					className="mt-1 p-1"
-					style={{minWidth: "100px", width: "30%"}}
-					onClick={() => {
-						setIsLoading(true)
-						setFieldsArray([])
-						setAdd(true)
-						hideAll()
-					}}
-				>
-					Добавить
-				</Button>
+				<Row className={["mb-1", isDependencyTable && 'ms-4'].join(' ')}>
+					<Button
+						variant={"outline-dark"}
+						className="mt-1 p-1"
+						style={{minWidth: "50px", width: "20%"}}
+						onClick={() => {
+							setIsLoading(true)
+							setFieldsArray(isDependencyTable? filters : [])
+							setAdd(true)
+							hideAll()
+						}}
+					>
+						{conf.addButtonTitle}
+					</Button>
+				</Row>
 			}
 		</>
 	);
-};
+});
 
 export default DictList;
