@@ -1,4 +1,4 @@
-function setDependencyName(a, idToSearch) {
+const setDependencyName = (a, idToSearch) => {
 	a = a.filter(item => {
 		return item.id === idToSearch
 	})

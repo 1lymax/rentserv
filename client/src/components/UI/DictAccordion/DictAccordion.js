@@ -1,10 +1,10 @@
 import React from 'react';
 import {observer} from "mobx-react-lite";
-import DictList from "../../DictList/DictList";
+import EditTable from "../../EditTable/EditTable";
 import {Accordion} from "react-bootstrap";
 
 
-const DictAccordion = observer(({context, conf, modalVisible, setModalVisible, Create}) => {
+const DictAccordion = observer(({context, conf, modalVisible, setModalVisible, filters, Create}) => {
 	return (
 		<Accordion className="mt-3">
 			<Accordion.Item eventKey="0">
@@ -12,8 +12,9 @@ const DictAccordion = observer(({context, conf, modalVisible, setModalVisible, C
 					{context.settings.title} ({context.data.length})
 				</Accordion.Header>
 				<Accordion.Body className="d-flex flex-column">
-					<DictList
+					<EditTable
 						context={context}
+						filters={filters}
 						conf={conf}
 						showTitle={true}
 					/>

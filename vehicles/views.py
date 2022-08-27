@@ -2,6 +2,7 @@ from django.db.models import F
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import serializers
 from rest_framework.filters import SearchFilter, OrderingFilter
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 
@@ -25,6 +26,17 @@ class TypeViewSet(ModelViewSet):
         else:
             raise serializers.ValidationError("This name is already exists")
 
+def get_drinks(number_of_guests: int) -> int:
+    # write your code here
+    number_of_drinks = 0
+    for i in range(1, number_of_guests+1, 1):
+        number_of_drinks += i
+    return number_of_drinks
+    pass
+
+print('get_drinks(3)', get_drinks(5))
+
+
 
 
 class VehicleViewSet(ModelViewSet):
@@ -32,12 +44,15 @@ class VehicleViewSet(ModelViewSet):
         vehicle_type_name=F('vehicle_type__name')
     ).prefetch_related('images').prefetch_related('features').prefetch_related('store').distinct()
     serializer_class = VehicleSerializer
+    pagination_class = PageNumberPagination
+    page_size = 2
     permission_classes = [IsStaffOrReadOnly]
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-    filterset_fields = ['vehicle_type', 'name',
+    filterset_fields = ['id', 'vehicle_type', 'name',
                         'vehicle_type__name', 'features__feature', 'features__unit', 'features__value', 'store__city']
     ordering_fields = ['name', 'vehicle_type_name', 'price_cap']
     search_fields = ['name', 'vehicle_type_name']
+
 
     def filter_queryset(self, request):
         self.queryset = super().filter_queryset(request)

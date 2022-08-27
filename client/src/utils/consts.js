@@ -22,7 +22,7 @@ export const ADMIN = {
 		addButtonTitle: '+ тип',
 		fields: [
 			{
-				name: 'name', type: 'string', placeholder: 'Название'
+				name: 'name', type: 'string', placeholder: 'Название', cssClassName: "col-10"
 			},
 		]
 	},
@@ -33,13 +33,13 @@ export const ADMIN = {
 		dependsOn: 'vehicle',
 		fields: [
 			{
-				name: 'feature', type: 'select', placeholder: 'Характеристика', contextName: 'features', cssClassName: "col-5 col-lg-4"
+				name: 'feature', backendFiltersetField: 'features__feature', type: 'select', placeholder: 'Характеристика', contextName: 'features', cssClassName: "col-5 col-lg-4"
 			},
 			{
-				name: 'value', type: 'string', placeholder: 'Величина', cssClassName: "col-2"
+				name: 'value', backendFiltersetField: 'features__value', type: 'string', placeholder: 'Величина', cssClassName: "col-2"
 			},
 			{
-				name: 'unit', type: 'select', placeholder: 'Ед. изм.', contextName: 'units', cssClassName: "col-2"
+				name: 'unit', backendFiltersetField: 'features__unit', type: 'select', placeholder: 'Ед. изм.', contextName: 'units', cssClassName: "col-2"
 			},
 			{
 				name: 'vehicle', type: 'select', placeholder: 'Транспорт', contextName: 'vehicles', cssClassName: "col-3 col-lg-2"
@@ -61,14 +61,14 @@ export const ADMIN = {
 		addButtonTitle: '+ транспорт',
 		selfName: 'vehicle',
 		dependencies: [
-			{name: 'vehicleFeatures', field: 'vehicle'}
+			{name: 'vehicleFeatures', field: 'vehicle',},
 		],
 		fields: [
 			{
-				name: 'name', type: 'string', placeholder: 'Название', width: '250px', cssClassName: "col-4 col-lg-3"
+				name: 'name', type: 'string', placeholder: 'Название', cssClassName: "col-4 col-lg-3"
 			},
 			{
-				name: 'vehicle_type', type: 'select', placeholder: 'Тип', contextName: 'types', width: '180px', cssClassName: "col-4 col-lg-3"
+				name: 'vehicle_type', type: 'select', placeholder: 'Тип', contextName: 'types', cssClassName: "col-4 col-lg-3"
 			},
 			{
 				name: 'price_cap', type: 'string', placeholder: 'Цена (Столица)', width: '80px', cssClassName: "col-2"

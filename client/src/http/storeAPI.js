@@ -32,7 +32,8 @@ export const doFetch = async (context, ordering, filters) => {
 						...filters
 					}
 			})
-		return data
+
+		return data.results
 	}catch (e){
 		console.log('doFetch error', e.response.data)
 	}

@@ -4,20 +4,19 @@ import {doCreate, doDelete, doFetch, doUpdate} from "../../http/storeAPI";
 import InputControl from "../UI/Admin/InputControl";
 import {Context} from "../../index";
 import setDependencyName from "../../utils/setDependencyName";
-import classes from "./DictList.module.css"
+import classes from "./EditTable.module.css"
 import {ADMIN} from "../../utils/consts";
 import {observer} from "mobx-react-lite";
-import {makeAutoObservable} from "mobx";
 
 
-const DictList = observer(({context, conf, isDependencyTable, filters, ordering}) => {
-	const [inputVisible, setInputVisible] = useState(0)
-	const [edit, setEdit] = useState(0)
+const EditTable = observer(({context, conf, isDependencyTable, filters, ordering}) => {
 	const [add, setAdd] = useState(false)
-	const [fieldValues, setFieldValues] = useState({})
-	const [isLoading, setIsLoading] = useState(false)
+	const [edit, setEdit] = useState(0)
 	const [data, setData] = useState([])
+	const [isLoading, setIsLoading] = useState(false)
 	const [needFetch, setNeedFetch] = useState([])
+	const [fieldValues, setFieldValues] = useState({})
+	const [inputVisible, setInputVisible] = useState(0)
 	const [focusElement, setFocusElement] = useState([])
 
 	const contextScope = useContext(Context)
@@ -25,7 +24,7 @@ const DictList = observer(({context, conf, isDependencyTable, filters, ordering}
 	useEffect(() => {
 		doFetch(context, ordering, filters)
 			.then(resp => setData(resp))
-	}, [needFetch]);
+	}, [needFetch, filters]);
 
 	const handleChange = e => {
 		let name = e.name || e.target.name
@@ -37,9 +36,10 @@ const DictList = observer(({context, conf, isDependencyTable, filters, ordering}
 	};
 
 	const setCellValue = (item, set) => {
-		if (set.contextName && contextScope[set.contextName].data.length) {
+		if (set.contextName && contextScope[set.contextName] && contextScope[set.contextName].data.length) {
 			if (isNeedDependencyValue(set.name)) {
-				return setDependencyName(contextScope[set.contextName].data, item[set.name]).name
+				let result = setDependencyName(contextScope[set.contextName].data, item[set.name])
+				return result && result.name
 			}
 		} else {
 			return item[set.name]
@@ -98,10 +98,10 @@ const DictList = observer(({context, conf, isDependencyTable, filters, ordering}
 		<>
 			{!isDependencyTable &&
 				<Row className={["pt-3 pb-3", classes.dict__title].join(' ')}>
-					{conf.fields.map(sets =>
-						<Col key={sets.name} className={["", sets.cssClassName].join(' ')}
+					{conf.fields.map(set =>
+						<Col key={set.name} className={["", set.cssClassName].join(' ')}
 						>
-							{sets.placeholder}
+							{set.placeholder}
 						</Col>
 					)}
 					<Col className="col-1"></Col>
@@ -114,29 +114,30 @@ const DictList = observer(({context, conf, isDependencyTable, filters, ordering}
 						onMouseEnter={() => setInputVisible(item.id)}
 						onMouseLeave={() => setInputVisible(0)}
 					>
-						{conf.fields.map(sets =>
-							<Col key={sets.name}
-								 className={["", sets.cssClassName].join(' ')}
+						{conf.fields.map(set =>
+							<Col key={set.name}
+								 className={["", set.cssClassName].join(' ')}
 							>
 								{edit === item.id
 									?
 									<InputControl
+										inputName={set.name}
 										onChange={e => handleChange(e)}
-										hidden={isNeedDependencyValue(sets.name)}
-										value={fieldValues[sets.name]}
-										autoFocus={item.id === focusElement[0] && sets.name === focusElement[1]}
-										sets={sets}
-										selectOptions={sets.contextName && contextScope[sets.contextName].data}
+										hidden={isNeedDependencyValue(set.name)}
+										value={fieldValues[set.name]}
+										autoFocus={item.id === focusElement[0] && set.name === focusElement[1]}
+										set={set}
+										selectOptions={set.contextName && contextScope[set.contextName].data}
 									/>
 									:
 									<div className="m-1 p-1"
 										 onClick={() => {
 											 setFieldsArray(item)
 											 setAdd(false)
-											 setFocusElement([item.id, sets.name])
-											 handleEditOrSave(item.id, sets)
+											 setFocusElement([item.id, set.name])
+											 handleEditOrSave(item.id, set)
 										 }}>
-										{setCellValue(item, sets)}
+										{setCellValue(item, set)}
 									</div>
 
 								}
@@ -193,12 +194,12 @@ const DictList = observer(({context, conf, isDependencyTable, filters, ordering}
 
 							{conf.dependencies.map(dep =>
 
-								<DictList key={dep.name}
-										  isDependencyTable={true}
-										  context={contextScope[dep.name]}
-										  conf={ADMIN[dep.name]}
-										  showTitle={false}
-										  filters={JSON.parse(`{"${dep.field}":${item.id}}`)}
+								<EditTable key={dep.name}
+										   isDependencyTable={true}
+										   context={contextScope[dep.name]}
+										   conf={ADMIN[dep.name]}
+										   showTitle={false}
+										   filters={JSON.parse(`{"${dep.field}":${item.id}}`)}
 								/>
 							)
 							}
@@ -209,17 +210,18 @@ const DictList = observer(({context, conf, isDependencyTable, filters, ordering}
 			{add
 				?
 				<Row className={["pt-2 pb-2 d-flex align-items-center", isDependencyTable && 'ms-4'].join(' ')}>
-					{conf.fields.map(sets =>
+					{conf.fields.map(set =>
 						<Col
-							key={sets.name}
-							className={["", sets.cssClassName].join(' ')}
+							key={set.name}
+							className={["", set.cssClassName].join(' ')}
 						>
 							<InputControl
+								inputName={set.name}
 								onChange={e => handleChange(e)}
-								value={fieldValues[sets.name]}
+								value={fieldValues[set.name]}
 								add
-								sets={sets}
-								selectOptions={sets.contextName && contextScope[sets.contextName].data}
+								set={set}
+								selectOptions={set.contextName && contextScope[set.contextName].data}
 							/>
 						</Col>
 					)}
@@ -280,4 +282,4 @@ const DictList = observer(({context, conf, isDependencyTable, filters, ordering}
 	);
 });
 
-export default DictList;
+export default EditTable;
