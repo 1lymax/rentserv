@@ -8,11 +8,11 @@ const InputControl = observer(({set, value, inputName, hidden, add, isClearable,
 		<Form>
 			{set.type === 'string' &&
 				<Form.Control
-					onChange={e => onChange(e)}
 					value={value}
+					name={inputName}
+					onChange={e => onChange(e)}
 					placeholder={set.placeholder}
 					autoFocus={autoFocus}
-					name={inputName}
 				/>
 			}
 			{set.type === 'select' && (hidden || add) &&
@@ -26,7 +26,7 @@ const InputControl = observer(({set, value, inputName, hidden, add, isClearable,
 					autoFocus={autoFocus}
 					menuIsOpen={true}
 					placeholder={set.placeholder}
-					onChange={e => onChange(e ? {'name': set.name, 'value': e.id}: {'name': set.name, value: ''})}
+					onChange={e => onChange(e ? {name: inputName, 'value': e.id}: {name: inputName, value: ''})}
 				/>
 			}
 
