@@ -48,7 +48,7 @@ class VehicleViewSet(ModelViewSet):
     page_size = 2
     permission_classes = [IsStaffOrReadOnly]
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-    filterset_fields = ['id', 'vehicle_type', 'name',
+    filterset_fields = ['id', 'vehicle_type', 'name', 'price_cap', 'price_region',
                         'vehicle_type__name', 'features__feature', 'features__unit', 'features__value', 'store__city']
     ordering_fields = ['name', 'vehicle_type_name', 'price_cap']
     search_fields = ['name', 'vehicle_type_name']

@@ -37,7 +37,6 @@ const Filter = ({conf, filterCallback}) => {
 						inputName={set.name}
 						onChange={e => handleChange(e)}
 						value={fieldValues[set.name] ? fieldValues[set.name] : ''}
-						//autoFocus={item.id === focusElement[0] && sets.name === focusElement[1]}
 						selectOptions={set.contextName && contextScope[set.contextName].data}
 					/>
 				)}
