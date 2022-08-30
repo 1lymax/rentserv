@@ -94,6 +94,7 @@ const EditTable = observer(({context, conf, isDependencyTable, filters, ordering
 		setInputVisible(0)
 		setIsLoading(false)
 	};
+
 	return (
 		<>
 			{!isDependencyTable &&

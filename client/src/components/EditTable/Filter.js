@@ -10,10 +10,10 @@ const Filter = ({conf, filterCallback}) => {
 	console.log(fieldValues)
 	useEffect(() => {
 		filterCallback(fieldValues)
-	}, [fieldValues])
+	}, [fieldValues, filterCallback])
 
 	const handleChange = e => {
-		let value
+		let value = ''
 		let name = e.name || e.target.name;
 		if ('value' in e) value = e.value
 		if ('target' in e && 'value' in e.target) value = e.target.value
@@ -46,16 +46,16 @@ const Filter = ({conf, filterCallback}) => {
 					key={set.name}
 					className="d-flex flex-row justify-content-between align-items-center"
 				>
-					{ADMIN[set.name].fields.map(dependency =>
-						<div key={dependency.name}>
+					{ADMIN[set.name].fields.map(dep =>
+						<div key={dep.name}>
 							<InputControl
-								set={dependency}
+								set={dep}
 								isClearable={true}
 								onChange={e => handleChange(e)}
-								add={dependency.name !== conf.selfName}
-								inputName={dependency.backendFiltersetField}
-								value={fieldValues[dependency.backendFiltersetField] ? fieldValues[dependency.backendFiltersetField] : ''}
-								selectOptions={dependency.contextName && contextScope[dependency.contextName].data}
+								add={dep.name !== conf.selfName}
+								inputName={dep.backendFiltersetField}
+								value={fieldValues[dep.backendFiltersetField] ? fieldValues[dep.backendFiltersetField] : ''}
+								selectOptions={dep.contextName && contextScope[dep.contextName].data}
 							/>
 						</div>
 					)}

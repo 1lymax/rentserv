@@ -26,18 +26,16 @@ class TypeViewSet(ModelViewSet):
         else:
             raise serializers.ValidationError("This name is already exists")
 
-def get_drinks(number_of_guests: int) -> int:
+
+def is_jumping(number: int) -> str:
     # write your code here
-    number_of_drinks = 0
-    for i in range(1, number_of_guests+1, 1):
-        number_of_drinks += i
-    return number_of_drinks
-    pass
+    for x in range(0, len(str(number))-1):
+        if int(str(number)[x]) - int(str(number)[x+1]) > 1: return "NOT JUMPING"
+        if int(str(number)[x+1]) - int(str(number)[x]) > 1: return "NOT JUMPING"
+        if int(str(number)[x+1]) == int(str(number)[x]): return "NOT JUMPING"
+    return "JUMPING"
 
-print('get_drinks(3)', get_drinks(5))
-
-
-
+print(is_jumping(77))
 
 class VehicleViewSet(ModelViewSet):
     queryset = Vehicle.objects.all().annotate(
