@@ -7,7 +7,6 @@ const Filter = ({conf, filterCallback}) => {
 	const [fieldValues, setFieldValues] = useState({}	)
 
 	const contextScope = useContext(Context)
-	console.log(fieldValues)
 	useEffect(() => {
 		filterCallback(fieldValues)
 	}, [fieldValues, filterCallback])

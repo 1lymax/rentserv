@@ -21,7 +21,7 @@ const Catalogs = observer (() => {
 	useEffect(() => {
 		for (const obj of Object.values(contextScope)) {
 			obj.noFetchContextFromBackend === undefined && doFetch(obj)
-				.then(data => obj.setData(data))
+				.then(data => obj.setData(data.results))
 		}
 	}, [contextScope]);
 

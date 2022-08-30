@@ -18,22 +18,13 @@ const EditTable = observer(({context, conf, isDependencyTable, filters, ordering
 	const [fieldValues, setFieldValues] = useState({})
 	const [inputVisible, setInputVisible] = useState(0)
 	const [focusElement, setFocusElement] = useState([])
-
+	const [showDependency, setShowDependency] = useState({0: false})
 	const contextScope = useContext(Context)
 
 	useEffect(() => {
 		doFetch(context, ordering, filters)
-			.then(resp => setData(resp))
-	}, [needFetch, filters]);
-
-	const handleChange = e => {
-		let name = e.name || e.target.name
-		let value = e.value || e.target.value
-		setFieldValues(prevState => ({
-			...prevState,
-			[name]: value
-		}));
-	};
+			.then(resp => setData(resp.results))
+	}, [needFetch]);
 
 	const setCellValue = (item, set) => {
 		if (set.contextName && contextScope[set.contextName] && contextScope[set.contextName].data.length) {
@@ -46,7 +37,6 @@ const EditTable = observer(({context, conf, isDependencyTable, filters, ordering
 		}
 
 	};
-
 	const isNeedDependencyValue = (CellName) => {
 		return !isDependencyTable || CellName !== context.settings.dependsOn
 	};
@@ -73,7 +63,7 @@ const EditTable = observer(({context, conf, isDependencyTable, filters, ordering
 		} else if (inputVisible === 0) {
 			doCreate(context, fieldValues).then(() => {
 				setNeedFetch(Date.now())
-				setFieldsArray(isDependencyTable? filters: [])
+				setFieldsArray(isDependencyTable ? filters : [])
 				hideAll()
 			})
 		}
@@ -84,10 +74,27 @@ const EditTable = observer(({context, conf, isDependencyTable, filters, ordering
 			hideAll()
 		} else {
 			doDelete(context, id).then(() => {
-				doFetch(context)
+				setNeedFetch(Date.now())
 			})
 		}
 	}
+
+	const handleInputChange = e => {
+		let name = e.name || e.target.name
+		let value = e.value || e.target.value
+		setFieldValues(prevState => ({
+			...prevState,
+			[name]: value
+		}));
+	};
+
+	const handleShowDependency = (id) => {
+		setShowDependency(prevState => (
+				{...prevState, [id]: !showDependency[id]}
+			)
+		)
+		console.log(showDependency)
+	};
 
 	const hideAll = () => {
 		setEdit(0)
@@ -123,7 +130,7 @@ const EditTable = observer(({context, conf, isDependencyTable, filters, ordering
 									?
 									<InputControl
 										inputName={set.name}
-										onChange={e => handleChange(e)}
+										onChange={e => handleInputChange(e)}
 										hidden={isNeedDependencyValue(set.name)}
 										value={fieldValues[set.name]}
 										autoFocus={item.id === focusElement[0] && set.name === focusElement[1]}
@@ -191,26 +198,34 @@ const EditTable = observer(({context, conf, isDependencyTable, filters, ordering
 						}
 					</Row>
 					{conf.dependencies &&
-						<Row>
-
+						<>
 							{conf.dependencies.map(dep =>
+								<Row key={dep.name}>
+									<Col className="col-12 ms-4" onClick={() => handleShowDependency(item.id)}
+									>
+										Характеристики {!showDependency[item.id] ? '>>>' : '<<<'}
+									</Col>
+									<Col className="col-12"
+										 hidden={!showDependency[item.id]}>
 
-								<EditTable key={dep.name}
-										   isDependencyTable={true}
-										   context={contextScope[dep.name]}
-										   conf={ADMIN[dep.name]}
-										   showTitle={false}
-										   filters={JSON.parse(`{"${dep.field}":${item.id}}`)}
-								/>
+										<EditTable
+											isDependencyTable={true}
+											context={contextScope[dep.name]}
+											conf={ADMIN[dep.name]}
+											showTitle={false}
+											filters={JSON.parse(`{"${dep.field}":${item.id}}`)}
+										/>
+									</Col>
+								</Row>
 							)
 							}
-						</Row>
+						</>
 					}
 				</Container>
 			)}
 			{add
 				?
-				<Row className={["pt-2 pb-2 d-flex align-items-center", isDependencyTable && 'ms-4'].join(' ')}>
+				<Row className={["pt-2 pb-2 d-flex align-items-center", isDependencyTable ? 'ms-4' : 'mb-4'].join(' ')}>
 					{conf.fields.map(set =>
 						<Col
 							key={set.name}
@@ -218,7 +233,7 @@ const EditTable = observer(({context, conf, isDependencyTable, filters, ordering
 						>
 							<InputControl
 								inputName={set.name}
-								onChange={e => handleChange(e)}
+								onChange={e => handleInputChange(e)}
 								value={fieldValues[set.name]}
 								add
 								set={set}
@@ -270,7 +285,7 @@ const EditTable = observer(({context, conf, isDependencyTable, filters, ordering
 						style={{minWidth: "50px", width: "20%"}}
 						onClick={() => {
 							setIsLoading(true)
-							setFieldsArray(isDependencyTable? filters : [])
+							setFieldsArray(isDependencyTable ? filters : [])
 							setAdd(true)
 							hideAll()
 						}}
