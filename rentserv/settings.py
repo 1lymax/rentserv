@@ -35,7 +35,6 @@ ALLOWED_HOSTS = ['http://localhost:3000',
 ALLOWED_HOSTS = ['*']
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -59,6 +58,7 @@ INSTALLED_APPS = [
     'orders'
 
 ]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

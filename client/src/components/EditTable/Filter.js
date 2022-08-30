@@ -19,7 +19,7 @@ const Filter = ({conf, filterCallback}) => {
 
 		setFieldValues(prevState => ({
 			...prevState,
-			[name]: value
+			[name]: value,
 		}));
 	};
 	return (

@@ -61,7 +61,7 @@ export const ADMIN = {
 		addButtonTitle: '+ транспорт',
 		selfName: 'vehicle',
 		dependencies: [
-			{name: 'vehicleFeatures', field: 'vehicle',},
+			{name: 'vehicleFeatures', field: 'vehicle', inlineTitle: 'Характеристики'},
 		],
 		fields: [
 			{

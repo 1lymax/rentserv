@@ -24,7 +24,7 @@ const EditTable = observer(({context, conf, isDependencyTable, filters, ordering
 	useEffect(() => {
 		doFetch(context, ordering, filters)
 			.then(resp => setData(resp.results))
-	}, [needFetch]);
+	}, [needFetch, filters]);
 
 	const setCellValue = (item, set) => {
 		if (set.contextName && contextScope[set.contextName] && contextScope[set.contextName].data.length) {
@@ -201,9 +201,9 @@ const EditTable = observer(({context, conf, isDependencyTable, filters, ordering
 						<>
 							{conf.dependencies.map(dep =>
 								<Row key={dep.name}>
-									<Col className="col-12 ms-4" onClick={() => handleShowDependency(item.id)}
+									<Col className="col-12 ms-4" style={{cursor: 'pointer'}} onClick={() => handleShowDependency(item.id)}
 									>
-										Характеристики {!showDependency[item.id] ? '>>>' : '<<<'}
+										{dep.inlineTitle} {!showDependency[item.id] ? '>>>' : '<<<'}
 									</Col>
 									<Col className="col-12"
 										 hidden={!showDependency[item.id]}>
@@ -213,7 +213,7 @@ const EditTable = observer(({context, conf, isDependencyTable, filters, ordering
 											context={contextScope[dep.name]}
 											conf={ADMIN[dep.name]}
 											showTitle={false}
-											filters={JSON.parse(`{"${dep.field}":${item.id}}`)}
+											filters={{[dep.field]: item.id}}
 										/>
 									</Col>
 								</Row>

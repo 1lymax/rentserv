@@ -23,7 +23,7 @@ const Admin = observer(() => {
 		<Container fluid>
 			{user.isStaff
 				? <Row className="mt-3">
-					<Col md={3}>
+					<Col md={2}>
 						<ListGroup as="ul">
 							{authRoutes.map(item =>
 								item.path !== ADMIN_ROUTE &&
@@ -45,7 +45,7 @@ const Admin = observer(() => {
 						</ListGroup>
 
 					</Col>
-					<Col md={9}>
+					<Col md={10}>
 						<SelectedComponent/>
 					</Col>
 				</Row>

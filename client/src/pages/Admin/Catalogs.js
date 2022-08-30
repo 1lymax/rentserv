@@ -27,28 +27,6 @@ const Catalogs = observer (() => {
 
 	const {cities, units, types, features, vehicleFeatures} = useContext(Context)
 
-	// useEffect(() => {
-	// 	doFetch(types)
-	// }, [types]);
-	//
-	// useEffect(() => {
-	// 	doFetch(features)
-	// }, [features]);
-	//
-	// useEffect(() => {
-	// 	doFetch(units)
-	// }, [units]);
-	//
-	// useEffect(() => {
-	// 	doFetch(cities)
-	// }, [cities]);
-	//
-	// useEffect(() => {
-	// 	doFetch(vehicleFeatures)
-	// }, [vehicleFeatures]);
-
-
-
 	return (
 		<Container className="d-flex flex-column">
 			{user.isStaff
@@ -96,17 +74,6 @@ const Catalogs = observer (() => {
 						setModalVisible={setCityVisible}
 						Create={CreateVehicle}
 					/>
-
-
-					{/*<DictAccordion*/}
-					{/*	scope={vehicles.self}*/}
-					{/*	context={vehicles}*/}
-					{/*	title={'Транспорт'}*/}
-					{/*	modalVisible={vehicleVisible}*/}
-					{/*	setModalVisible={setVehicleVisible}*/}
-					{/*	Create={CreateVehicle}*/}
-					{/*	endpoint='vehicle'*/}
-					{/*/>*/}
 				</>
 				:
 				<div>

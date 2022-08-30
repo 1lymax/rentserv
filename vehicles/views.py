@@ -27,16 +27,6 @@ class TypeViewSet(ModelViewSet):
             raise serializers.ValidationError("This name is already exists")
 
 
-def is_jumping(number: int) -> str:
-    # write your code here
-    for x in range(0, len(str(number))-1):
-        if int(str(number)[x]) - int(str(number)[x+1]) > 1: return "NOT JUMPING"
-        if int(str(number)[x+1]) - int(str(number)[x]) > 1: return "NOT JUMPING"
-        if int(str(number)[x+1]) == int(str(number)[x]): return "NOT JUMPING"
-    return "JUMPING"
-
-print(is_jumping(77))
-
 class VehicleViewSet(ModelViewSet):
     queryset = Vehicle.objects.all().annotate(
         vehicle_type_name=F('vehicle_type__name')
@@ -49,7 +39,7 @@ class VehicleViewSet(ModelViewSet):
     filterset_fields = ['id', 'vehicle_type', 'name', 'price_cap', 'price_region',
                         'vehicle_type__name', 'features__feature', 'features__unit', 'features__value', 'store__city']
     ordering_fields = ['name', 'vehicle_type_name', 'price_cap']
-    search_fields = ['name', 'vehicle_type_name']
+    search_fields = ['name', 'vehicle_type_name', ]
 
 
     def filter_queryset(self, request):
