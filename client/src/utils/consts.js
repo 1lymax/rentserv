@@ -92,7 +92,7 @@ export const ADMIN = {
 				name: 'vehicle', type: 'select', placeholder: 'Транспорт', contextName: 'vehicle', cssClassName: "col-4 col-lg-3"
 			},
 			{
-				name: 'city', type: 'select', placeholder: 'Город', contextName: 'city', cssClassName: "col-4 col-lg-3"
+				name: 'city', type: 'select', backendFiltersetField: 'store__city', placeholder: 'Город', contextName: 'city', cssClassName: "col-4 col-lg-3"
 			},
 			{
 				name: 'quantity', type: 'string', placeholder: 'Кол-во', cssClassName: "col-4 col-lg-3"

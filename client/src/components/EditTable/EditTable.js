@@ -17,7 +17,7 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering}) => 
 	const [fieldValues, setFieldValues] = useState({})
 	const [inputVisible, setInputVisible] = useState(0)
 	const [focusElement, setFocusElement] = useState([])
-	const [showDependency, setShowDependency] = useState({0: false})
+	const [showDependency, setShowDependency] = useState({'': false})
 	const contextScope = useContext(Context)
 	const conf = context.settings
 
@@ -94,7 +94,6 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering}) => 
 				{...prevState, [id]: !showDependency[id]}
 			)
 		)
-		console.log(showDependency)
 	};
 
 	const hideAll = () => {
@@ -202,11 +201,11 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering}) => 
 						<>
 							{conf.dependencies.map(dep =>
 								<Row key={dep.name}>
-									<Col className="col-12 ms-4" style={{cursor: 'pointer'}} onClick={() => handleShowDependency(item.id)}
+									<Col className="col-12 ms-4" style={{cursor: 'pointer'}} onClick={() => handleShowDependency(dep.name+item.id)}
 									>
-										{dep.inlineTitle} {!showDependency[item.id] ? '>>' : '<<'}
+										{dep.inlineTitle} {!showDependency[dep.name+item.id] ? '>>' : '<<'}
 									</Col>
-									<Col className="col-12" hidden={!showDependency[item.id]}>
+									<Col className="col-12" hidden={!showDependency[dep.name+item.id]}>
 										<EditTable
 											isDependencyTable={true}
 											context={contextScope[dep.name]}
