@@ -4,7 +4,7 @@ import EditTable from "../../EditTable/EditTable";
 import {Accordion} from "react-bootstrap";
 
 
-const DictAccordion = observer(({context, conf, modalVisible, setModalVisible, filters, Create}) => {
+const DictAccordion = observer(({context, conf, filters}) => {
 	return (
 		<Accordion className="mt-3">
 			<Accordion.Item eventKey="0">
@@ -16,10 +16,9 @@ const DictAccordion = observer(({context, conf, modalVisible, setModalVisible, f
 						context={context}
 						filters={filters}
 						conf={conf}
-						arrayFilterIndex={context.settings.selfName}
 						showTitle={true}
 					/>
-					<Create show={modalVisible} onHide={() => setModalVisible(false)}/>
+					{/*<Create show={modalVisible} onHide={() => setModalVisible(false)}/>*/}
 				</Accordion.Body>
 			</Accordion.Item>
 		</Accordion>

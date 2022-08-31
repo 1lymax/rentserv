@@ -3,18 +3,13 @@ import {Container} from "react-bootstrap";
 import {Context} from "../../index";
 import {observer} from "mobx-react-lite";
 import DictAccordion from "../../components/UI/DictAccordion/DictAccordion";
-import CreateType from "../../components/modals/CreateType";
 import {doFetch} from "../../http/storeAPI";
-import CreateFeature from "../../components/modals/CreateFeature";
-import CreateVehicle from "../../components/modals/CreateVehicle";
-import {ADMIN} from "../../utils/consts";
 
-const Catalogs = observer (() => {
+const Catalogs = observer(() => {
 	const [typeVisible, setTypeVisible] = useState(false)
 	const [featureVisible, setFeatureVisible] = useState(false)
 	const [featureVehicleVisible, setFeatureVehicleVisible] = useState(false)
 	const [unitVisible, setUnitVisible] = useState(false)
-	const [cityVisible, setCityVisible] = useState(false)
 	const contextScope = useContext(Context)
 	const user = contextScope.user
 
@@ -25,8 +20,6 @@ const Catalogs = observer (() => {
 		}
 	}, [contextScope]);
 
-	const {cities, units, types, features, vehicleFeatures} = useContext(Context)
-
 	return (
 		<Container className="d-flex flex-column">
 			{user.isStaff
@@ -34,46 +27,38 @@ const Catalogs = observer (() => {
 				<>
 					<h4 className="mt-3">Транспорт</h4>
 					<DictAccordion
-						context={types}
-						conf={ADMIN.type}
+						context={contextScope.type}
 						modalVisible={typeVisible}
 						setModalVisible={setTypeVisible}
-						Create={CreateType}
 					/>
 
 					<DictAccordion
-						context={features}
-						conf={ADMIN.feature}
+						context={contextScope.feature}
 						modalVisible={featureVisible}
 						setModalVisible={setFeatureVisible}
-						Create={CreateFeature}
 					/>
 
 					<DictAccordion
-						context={units}
-						conf={ADMIN.unit}
+						context={contextScope.unit}
 						modalVisible={unitVisible}
 						setModalVisible={setUnitVisible}
-						Create={CreateVehicle}
 					/>
 
 					<DictAccordion
-						context={vehicleFeatures}
-						conf={ADMIN.vehicleFeatures}
+						context={contextScope.vehicleFeature}
 						modalVisible={featureVehicleVisible}
 						setModalVisible={setFeatureVehicleVisible}
-						Create={CreateVehicle}
 					/>
 
-					<h4 className="mt-4">Склады</h4>
+					{/*<h4 className="mt-4">Склады</h4>*/}
 
-					<DictAccordion
-						context={cities}
-						conf={ADMIN.city}
-						modalVisible={cityVisible}
-						setModalVisible={setCityVisible}
-						Create={CreateVehicle}
-					/>
+					{/*<DictAccordion*/}
+					{/*	context={cities}*/}
+					{/*	conf={ADMIN.city}*/}
+					{/*	modalVisible={cityVisible}*/}
+					{/*	setModalVisible={setCityVisible}*/}
+					{/*	Create={CreateVehicle}*/}
+					{/*/>*/}
 				</>
 				:
 				<div>

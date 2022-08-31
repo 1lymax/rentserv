@@ -17,13 +17,13 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
 	<Context.Provider value={{
 		user: new UserStore(),
-		features: new Features(),
-		vehicles: new Vehicles(),
-		stores: new Stores(),
-		cities: new Cities(),
-		types: new Types(),
-		units: new Units(),
-		vehicleFeatures: new VehicleFeatures()
+		feature: new Features(),
+		vehicle: new Vehicles(),
+		store: new Stores(),
+		city: new Cities(),
+		type: new Types(),
+		unit: new Units(),
+		vehicleFeature: new VehicleFeatures()
 	}}>
 		<App/>
 	</Context.Provider>

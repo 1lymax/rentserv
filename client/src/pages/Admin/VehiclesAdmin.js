@@ -31,8 +31,7 @@ const VehiclesAdmin = observer (() => {
 						filterCallback={setFilters}
 					/>
 					<DictAccordion
-						context={contextScope['vehicles']}
-						conf={ADMIN.vehicle}
+						context={contextScope.vehicle}
 						filters={filters}
 						modalVisible={vehicleVisible}
 						setModalVisible={setVehicleVisible}

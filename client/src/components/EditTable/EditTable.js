@@ -5,11 +5,10 @@ import InputControl from "../UI/Admin/InputControl";
 import {Context} from "../../index";
 import setDependencyName from "../../utils/setDependencyName";
 import classes from "./EditTable.module.css"
-import {ADMIN} from "../../utils/consts";
 import {observer} from "mobx-react-lite";
 
 
-const EditTable = observer(({context, conf, isDependencyTable, arrayFilterIndex, filters, ordering}) => {
+const EditTable = observer(({context, isDependencyTable, filters, ordering}) => {
 	const [add, setAdd] = useState(false)
 	const [edit, setEdit] = useState(0)
 	const [data, setData] = useState([])
@@ -20,11 +19,13 @@ const EditTable = observer(({context, conf, isDependencyTable, arrayFilterIndex,
 	const [focusElement, setFocusElement] = useState([])
 	const [showDependency, setShowDependency] = useState({0: false})
 	const contextScope = useContext(Context)
+	const conf = context.settings
 
 	useEffect(() => {
-		doFetch(context, ordering, filters[arrayFilterIndex])
+		doFetch(context, ordering, filters)
 			.then(resp => setData(resp.results))
-	}, [needFetch, filters[arrayFilterIndex]]);
+
+	}, [needFetch]);
 
 	const setCellValue = (item, set) => {
 		if (set.contextName && contextScope[set.contextName] && contextScope[set.contextName].data.length) {
@@ -209,10 +210,8 @@ const EditTable = observer(({context, conf, isDependencyTable, arrayFilterIndex,
 										<EditTable
 											isDependencyTable={true}
 											context={contextScope[dep.name]}
-											conf={ADMIN[dep.name]}
 											showTitle={false}
-											arrayFilterIndex={dep.name+'_'+item.id}
-											filters={{[dep.name+'_'+item.id]:{[dep.field]: item.id}}}
+											filters={{[dep.field]: item.id}}
 										/>
 									</Col>
 								</Row>

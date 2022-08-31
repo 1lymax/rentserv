@@ -26,23 +26,23 @@ export const ADMIN = {
 			},
 		]
 	},
-	vehicleFeatures: {
+	vehicleFeature: {
 		title: 'Характеристики транспортных средств',
-		selfName: 'vehicleFeatures',
+		selfName: 'vehicleFeature',
 		addButtonTitle: '+ характиристика',
 		dependsOn: 'vehicle',
 		fields: [
 			{
-				name: 'feature', backendFiltersetField: 'features__feature', type: 'select', placeholder: 'Характеристика', contextName: 'features', cssClassName: "col-5 col-lg-4"
+				name: 'feature', backendFiltersetField: 'features__feature', type: 'select', placeholder: 'Характеристика', contextName: 'feature', cssClassName: "col-5 col-lg-4"
 			},
 			{
 				name: 'value', backendFiltersetField: 'features__value', type: 'string', placeholder: 'Величина', cssClassName: "col-2"
 			},
 			{
-				name: 'unit', backendFiltersetField: 'features__unit', type: 'select', placeholder: 'Ед. изм.', contextName: 'units', cssClassName: "col-2"
+				name: 'unit', backendFiltersetField: 'features__unit', type: 'select', placeholder: 'Ед. изм.', contextName: 'unit', cssClassName: "col-2"
 			},
 			{
-				name: 'vehicle', type: 'select', placeholder: 'Транспорт', contextName: 'vehicles', cssClassName: "col-3 col-lg-2"
+				name: 'vehicle', type: 'select', placeholder: 'Транспорт', contextName: 'vehicle', cssClassName: "col-3 col-lg-2"
 			},
 		]
 	},
@@ -61,20 +61,41 @@ export const ADMIN = {
 		addButtonTitle: '+ транспорт',
 		selfName: 'vehicle',
 		dependencies: [
-			{name: 'vehicleFeatures', field: 'vehicle', inlineTitle: 'Характеристики'},
+			{name: 'vehicleFeature', field: 'vehicle', inlineTitle: 'Характеристики'},
+			{name: 'store', field: 'vehicle', inlineTitle: 'Наличие'},
 		],
 		fields: [
 			{
 				name: 'name', type: 'string', placeholder: 'Название', cssClassName: "col-4 col-lg-3"
 			},
 			{
-				name: 'vehicle_type', type: 'select', placeholder: 'Тип', contextName: 'types', cssClassName: "col-4 col-lg-3"
+				name: 'vehicle_type', type: 'select', placeholder: 'Тип', contextName: 'type', cssClassName: "col-4 col-lg-3"
 			},
 			{
 				name: 'price_cap', type: 'string', placeholder: 'Цена (Столица)', width: '80px', cssClassName: "col-2"
 			},
 			{
 				name: 'price_region', type: 'string', placeholder: 'Цена (Регионы)', width: '80px', cssClassName: "col-2"
+			},
+		]
+	},
+	store: {
+		title: 'Склады',
+		selfName: 'store',
+		addButtonTitle: '+ на склад',
+		dependsOn: 'city',
+		dependencies: [
+			//{name: 'city', field: 'city', inlineTitle: 'Наличие'},
+		],
+		fields: [
+			{
+				name: 'vehicle', type: 'select', placeholder: 'Транспорт', contextName: 'vehicle', cssClassName: "col-4 col-lg-3"
+			},
+			{
+				name: 'city', type: 'select', placeholder: 'Город', contextName: 'city', cssClassName: "col-4 col-lg-3"
+			},
+			{
+				name: 'quantity', type: 'string', placeholder: 'Кол-во', cssClassName: "col-4 col-lg-3"
 			},
 		]
 	},
@@ -92,13 +113,13 @@ export const ADMIN = {
 		title: 'Города',
 		selfName: 'city',
 		addButtonTitle: '+ город',
+		dependencies: [
+			{name: 'store', field: 'city', inlineTitle: 'Наличие'},
+		],
 		fields: [
 			{
-				name: 'name', type: 'string'
+				name: 'name', type: 'string', placeholder: 'Название города', cssClassName: "col-6 col-lg-5"
 			},
 		]
-	},
-	store: {
-		title: 'Склады',
 	}
 }
