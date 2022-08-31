@@ -16,7 +16,6 @@ const DictAccordion = observer(({context, conf, modalVisible, setModalVisible, f
 						context={context}
 						filters={filters}
 						conf={conf}
-						arrayFilterIndex={context.settings.selfName}
 						showTitle={true}
 					/>
 					<Create show={modalVisible} onHide={() => setModalVisible(false)}/>

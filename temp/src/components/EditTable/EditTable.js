@@ -9,7 +9,7 @@ import {ADMIN} from "../../utils/consts";
 import {observer} from "mobx-react-lite";
 
 
-const EditTable = observer(({context, conf, isDependencyTable, arrayFilterIndex, filters, ordering}) => {
+const EditTable = observer(({context, conf, isDependencyTable, filters, ordering}) => {
 	const [add, setAdd] = useState(false)
 	const [edit, setEdit] = useState(0)
 	const [data, setData] = useState([])
@@ -18,13 +18,22 @@ const EditTable = observer(({context, conf, isDependencyTable, arrayFilterIndex,
 	const [fieldValues, setFieldValues] = useState({})
 	const [inputVisible, setInputVisible] = useState(0)
 	const [focusElement, setFocusElement] = useState([])
-	const [showDependency, setShowDependency] = useState({0: false})
+
 	const contextScope = useContext(Context)
 
 	useEffect(() => {
-		doFetch(context, ordering, filters[arrayFilterIndex])
-			.then(resp => setData(resp.results))
-	}, [needFetch, filters[arrayFilterIndex]]);
+		doFetch(context, ordering, filters)
+			.then(resp => setData(resp))
+	}, [needFetch, filters]);
+
+	const handleChange = e => {
+		let name = e.name || e.target.name
+		let value = e.value || e.target.value
+		setFieldValues(prevState => ({
+			...prevState,
+			[name]: value
+		}));
+	};
 
 	const setCellValue = (item, set) => {
 		if (set.contextName && contextScope[set.contextName] && contextScope[set.contextName].data.length) {
@@ -37,6 +46,7 @@ const EditTable = observer(({context, conf, isDependencyTable, arrayFilterIndex,
 		}
 
 	};
+
 	const isNeedDependencyValue = (CellName) => {
 		return !isDependencyTable || CellName !== context.settings.dependsOn
 	};
@@ -63,7 +73,7 @@ const EditTable = observer(({context, conf, isDependencyTable, arrayFilterIndex,
 		} else if (inputVisible === 0) {
 			doCreate(context, fieldValues).then(() => {
 				setNeedFetch(Date.now())
-				setFieldsArray(isDependencyTable ? filters : [])
+				setFieldsArray(isDependencyTable? filters: [])
 				hideAll()
 			})
 		}
@@ -74,34 +84,16 @@ const EditTable = observer(({context, conf, isDependencyTable, arrayFilterIndex,
 			hideAll()
 		} else {
 			doDelete(context, id).then(() => {
-				setNeedFetch(Date.now())
+				doFetch(context)
 			})
 		}
 	}
-
-	const handleInputChange = e => {
-		let name = e.name || e.target.name
-		let value = e.value || e.target.value
-		setFieldValues(prevState => ({
-			...prevState,
-			[name]: value
-		}));
-	};
-
-	const handleShowDependency = (id) => {
-		setShowDependency(prevState => (
-				{...prevState, [id]: !showDependency[id]}
-			)
-		)
-		console.log(showDependency)
-	};
 
 	const hideAll = () => {
 		setEdit(0)
 		setInputVisible(0)
 		setIsLoading(false)
 	};
-
 	return (
 		<>
 			{!isDependencyTable &&
@@ -130,7 +122,7 @@ const EditTable = observer(({context, conf, isDependencyTable, arrayFilterIndex,
 									?
 									<InputControl
 										inputName={set.name}
-										onChange={e => handleInputChange(e)}
+										onChange={e => handleChange(e)}
 										hidden={isNeedDependencyValue(set.name)}
 										value={fieldValues[set.name]}
 										autoFocus={item.id === focusElement[0] && set.name === focusElement[1]}
@@ -198,33 +190,26 @@ const EditTable = observer(({context, conf, isDependencyTable, arrayFilterIndex,
 						}
 					</Row>
 					{conf.dependencies &&
-						<>
+						<Row>
+
 							{conf.dependencies.map(dep =>
-								<Row key={dep.name}>
-									<Col className="col-12 ms-4" style={{cursor: 'pointer'}} onClick={() => handleShowDependency(item.id)}
-									>
-										{dep.inlineTitle} {!showDependency[item.id] ? '>>' : '<<'}
-									</Col>
-									<Col className="col-12" hidden={!showDependency[item.id]}>
-										<EditTable
-											isDependencyTable={true}
-											context={contextScope[dep.name]}
-											conf={ADMIN[dep.name]}
-											showTitle={false}
-											arrayFilterIndex={dep.name+'_'+item.id}
-											filters={{[dep.name+'_'+item.id]:{[dep.field]: item.id}}}
-										/>
-									</Col>
-								</Row>
+
+								<EditTable key={dep.name}
+										   isDependencyTable={true}
+										   context={contextScope[dep.name]}
+										   conf={ADMIN[dep.name]}
+										   showTitle={false}
+										   filters={JSON.parse(`{"${dep.field}":${item.id}}`)}
+								/>
 							)
 							}
-						</>
+						</Row>
 					}
 				</Container>
 			)}
 			{add
 				?
-				<Row className={["pt-2 pb-2 d-flex align-items-center", isDependencyTable ? 'ms-4' : 'mb-4'].join(' ')}>
+				<Row className={["pt-2 pb-2 d-flex align-items-center", isDependencyTable && 'ms-4'].join(' ')}>
 					{conf.fields.map(set =>
 						<Col
 							key={set.name}
@@ -232,7 +217,7 @@ const EditTable = observer(({context, conf, isDependencyTable, arrayFilterIndex,
 						>
 							<InputControl
 								inputName={set.name}
-								onChange={e => handleInputChange(e)}
+								onChange={e => handleChange(e)}
 								value={fieldValues[set.name]}
 								add
 								set={set}
@@ -284,7 +269,7 @@ const EditTable = observer(({context, conf, isDependencyTable, arrayFilterIndex,
 						style={{minWidth: "50px", width: "20%"}}
 						onClick={() => {
 							setIsLoading(true)
-							setFieldsArray(isDependencyTable ? filters : [])
+							setFieldsArray(isDependencyTable? filters : [])
 							setAdd(true)
 							hideAll()
 						}}
