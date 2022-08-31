@@ -8,7 +8,7 @@ import classes from "./EditTable.module.css"
 import {observer} from "mobx-react-lite";
 
 
-const EditTable = observer(({context, isDependencyTable, filters, ordering}) => {
+const EditTable = observer(({context, isDependencyTable, filters, ordering, parentContext}) => {
 	const [add, setAdd] = useState(false)
 	const [edit, setEdit] = useState(0)
 	const [data, setData] = useState([])
@@ -39,7 +39,8 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering}) => 
 
 	};
 	const isNeedDependencyValue = (CellName) => {
-		return !isDependencyTable || CellName !== context.settings.dependsOn
+		const isParent = typeof parentContext !== 'undefined' && CellName === parentContext.selfName
+		return !isDependencyTable || !isParent
 	};
 
 	const setFieldsArray = (item) => {
@@ -105,7 +106,7 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering}) => 
 	return (
 		<>
 			{!isDependencyTable &&
-				<Row className={["pt-3 pb-3", classes.dict__title].join(' ')}>
+				<Row className={["", classes.dict__title].join(' ')}>
 					{conf.fields.map(set =>
 						<Col key={set.name} className={["", set.cssClassName].join(' ')}
 						>
@@ -117,107 +118,113 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering}) => 
 			}
 			{data.map(item =>
 				<Container key={item.id} className={["",].join(' ')}>
-					<Row
-						className={["d-flex align-items-center", isDependencyTable && 'ms-4', classes.dict__item].join(' ')}
-						onMouseEnter={() => setInputVisible(item.id)}
-						onMouseLeave={() => setInputVisible(0)}
-					>
-						{conf.fields.map(set =>
-							<Col key={set.name}
-								 className={["", set.cssClassName].join(' ')}
-							>
-								{edit === item.id
-									?
-									<InputControl
-										inputName={set.name}
-										onChange={e => handleInputChange(e)}
-										hidden={isNeedDependencyValue(set.name)}
-										value={fieldValues[set.name]}
-										autoFocus={item.id === focusElement[0] && set.name === focusElement[1]}
-										set={set}
-										selectOptions={set.contextName && contextScope[set.contextName].data}
-									/>
-									:
-									<div className="m-1 p-1"
-										 onClick={() => {
-											 setFieldsArray(item)
-											 setAdd(false)
-											 setFocusElement([item.id, set.name])
-											 handleEditOrSave(item.id, set)
-										 }}>
-										{setCellValue(item, set)}
-									</div>
-
-								}
-							</Col>
-						)}
-
-						{inputVisible === item.id
-							?
-							<Col className={"col-12 d-flex flex-row justify-content-end"} lg={2}
-							>
-								<Button
-									variant={"outline-dark"}
-									className="ms-1 p-1"
-									onClick={() => {
-										setFieldsArray(item)
-										setAdd(false)
-										handleEditOrSave(item.id, item.name)
-									}}
+					<Row className={!isDependencyTable && classes.dict__item}>
+						<Row
+							className={["d-flex align-items-center", isDependencyTable && 'ms-4'].join(' ')}
+							onMouseEnter={() => setInputVisible(item.id)}
+							onMouseLeave={() => setInputVisible(0)}
+						>
+							{conf.fields.map(set =>
+								<Col key={set.name}
+									 className={["", set.cssClassName].join(' ')}
 								>
 									{edit === item.id
-										? isLoading
-											?
-											<>
-												<Spinner
-													as="span"
-													animation="border"
-													size="sm"
-													role="status"
-													aria-hidden="true"
-												/> Сохр.
-											</>
-											: 'Сохр.'
-										: 'Редакт.'
+										?
+										<InputControl
+											inputName={set.name}
+											onChange={e => handleInputChange(e)}
+											hidden={isNeedDependencyValue(set.name)}
+											value={fieldValues[set.name]}
+											autoFocus={item.id === focusElement[0] && set.name === focusElement[1]}
+											set={set}
+											selectOptions={set.contextName && contextScope[set.contextName].data}
+										/>
+										:
+										<div className="m-1 p-1"
+											 onClick={() => {
+												 setFieldsArray(item)
+												 setAdd(false)
+												 setFocusElement([item.id, set.name])
+												 handleEditOrSave(item.id, set)
+											 }}>
+											{setCellValue(item, set)}
+										</div>
+
 									}
-								</Button>
-								<Button
-									variant={"outline-dark"}
-									className="ms-1 p-1"
-									onClick={() => {
-										setAdd(false)
-										handleDelOrCancel(item.id)
-									}}
+								</Col>
+							)}
+
+							{inputVisible === item.id
+								?
+								<Col className={"col-12 d-flex flex-row justify-content-end"} lg={2}
 								>
-									{edit === item.id ? 'Отм' : 'Удал.'}
-								</Button>
-							</Col>
-							:
-							<Col className={"col-1"}
-							></Col>
+									<Button
+										variant={"outline-dark"}
+										className="ms-1 p-1"
+										onClick={() => {
+											setFieldsArray(item)
+											setAdd(false)
+											handleEditOrSave(item.id, item.name)
+										}}
+									>
+										{edit === item.id
+											? isLoading
+												?
+												<>
+													<Spinner
+														as="span"
+														animation="border"
+														size="sm"
+														role="status"
+														aria-hidden="true"
+													/> Сохр.
+												</>
+												: 'Сохр.'
+											: 'Редакт.'
+										}
+									</Button>
+									<Button
+										variant={"outline-dark"}
+										className="ms-1 p-1"
+										onClick={() => {
+											setAdd(false)
+											handleDelOrCancel(item.id)
+										}}
+									>
+										{edit === item.id ? 'Отм' : 'Удал.'}
+									</Button>
+								</Col>
+								:
+								<Col className={"col-1"}
+								></Col>
+							}
+						</Row>
+						{conf.dependencies &&
+							<>
+								{conf.dependencies.map(dep =>
+									<Row key={dep.name}
+										className={["ms-4 me-4 flex-shrink-1", showDependency[dep.name + item.id] ? classes.dict__item : ''].join(' ')}
+									>
+										<Col style={{cursor: 'pointer'}}
+											 onClick={() => handleShowDependency(dep.name + item.id)}
+										>
+											{dep.inlineTitle} {!showDependency[dep.name + item.id] ? '>>' : '<<'}
+										</Col>
+										<Col className="col-12" hidden={!showDependency[dep.name + item.id]}>
+											<EditTable
+												isDependencyTable={true}
+												parentContext={conf}
+												context={contextScope[dep.name]}
+												showTitle={false}
+												filters={{[dep.field]: item.id}}
+											/>
+										</Col>
+									</Row>
+								)
+								}
+							</>
 						}
 					</Row>
-					{conf.dependencies &&
-						<>
-							{conf.dependencies.map(dep =>
-								<Row key={dep.name}>
-									<Col className="col-12 ms-4" style={{cursor: 'pointer'}} onClick={() => handleShowDependency(dep.name+item.id)}
-									>
-										{dep.inlineTitle} {!showDependency[dep.name+item.id] ? '>>' : '<<'}
-									</Col>
-									<Col className="col-12" hidden={!showDependency[dep.name+item.id]}>
-										<EditTable
-											isDependencyTable={true}
-											context={contextScope[dep.name]}
-											showTitle={false}
-											filters={{[dep.field]: item.id}}
-										/>
-									</Col>
-								</Row>
-							)
-							}
-						</>
-					}
 				</Container>
 			)}
 			{add
