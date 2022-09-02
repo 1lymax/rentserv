@@ -13,13 +13,14 @@ const VehiclesAdmin = observer (() => {
 	const contextScope = useContext(Context)
 	const [filters, setFilters] = useState({})
 	const user = contextScope.user
-
+	console.log(Context)
 	useEffect(() => {
 		for (const obj of Object.values(contextScope)) {
 			obj.noFetchContextFromBackend === undefined && doFetch(obj, '', '')
 				.then(data => obj.setData(data.results))
 		}
 	}, []);
+
 	return (
 		<Container className="d-flex flex-column">
 			{user.isStaff

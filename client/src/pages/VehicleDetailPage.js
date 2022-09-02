@@ -1,19 +1,28 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {Button, Col, Container, Image, Row} from "react-bootstrap";
 import {Context} from "../index";
-import setDependencyName from "../utils/setDependencyName";
-import {fetchOneVehicle} from "../http/storeAPI";
+import {doFetch, fetchOneVehicle} from "../http/storeAPI";
 import {useParams} from "react-router-dom";
 
 
 const VehicleDetailPage = () => {
 	const [vehicle, setVehicle] = useState({images: [{image: ''}], features:[]})
+
 	const {id} = useParams()
-	const {features} = useContext(Context)
+	const {feature, unit} = useContext(Context)
 	const {images} = vehicle;
-	const vehicleFeature = vehicle.features;
+	const vehicleFeature = vehicle.features
+
 	useEffect(() => {
 		fetchOneVehicle(id).then(data => setVehicle(data))
+	}, [id]);
+
+	useEffect(() => {
+		doFetch(feature).then(data => feature.setData(data.results))
+	}, [id]);
+
+	useEffect(() => {
+		doFetch(unit).then(data => unit.setData(data.results))
 	}, [id]);
 
 	return (
@@ -57,9 +66,10 @@ const VehicleDetailPage = () => {
 					{vehicleFeature.map((item, index) =>
 						<Row
 							key={item.id}
+							className="p-3"
 							style={{background: index % 2 === 0? 'lightgray' : 'transparent'}}
 						>
-							{setDependencyName(features.descr, item.id).name}: {item.value} {setDependencyName(features.units, item.unit).name}
+							{feature.data.filter(i => i.id === item.feature)[0].name}: {item.value} {unit.data.filter(i => i.id === item.unit)[0].name}
 						</Row>
 					)}
 				</Row>

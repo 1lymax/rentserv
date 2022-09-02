@@ -12,13 +12,6 @@ const Admin = observer(() => {
 	const contextScope = useContext(Context)
 	const user = contextScope.user
 
-	// useEffect(() => {
-	// 	for (const obj of Object.values(contextScope)) {
-	// 		obj.noFetchContextFromBackend === undefined && doFetch(obj)
-	// 			.then(data => obj.setData(data))
-	// 	}
-	// }, [contextScope]);
-
 	return (
 		<Container fluid>
 			{user.isStaff

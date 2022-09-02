@@ -5,8 +5,8 @@ import {Row} from "react-bootstrap";
 import VehicleItem from "./VehicleItem";
 
 const VehicleList = observer(({filterParams}) => {
-	const {vehicles} = useContext(Context)
-	let vehiclesFiltered = [...vehicles.data]
+	const {vehicle} = useContext(Context)
+	let vehiclesFiltered = [...vehicle.data]
 	if (filterParams.vehicle_type) {
 		vehiclesFiltered = vehiclesFiltered.filter(vehicle => {
 			return vehicle.vehicle_type === filterParams.vehicle_type

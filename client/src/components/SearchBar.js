@@ -4,13 +4,14 @@ import {Context} from "../index";
 import MultiSelect from "./UI/MultiSelect/MultiSelect";
 
 const SearchBar = observer(({onChange}) => {
-	const {types} = useContext(Context)
+	const {type} = useContext(Context)
 	return (
 		<MultiSelect isMulti={false}
+					 isClearable={true}
 					 className="basic-multi-select"
-					 options={types.data}
+					 options={type.data}
 					 placeholder={'Тип...'}
-					 onChange={e => onChange(e)}
+					 onChange={e => e ? onChange(e) : onChange('')}
 		/>
 	);
 })
