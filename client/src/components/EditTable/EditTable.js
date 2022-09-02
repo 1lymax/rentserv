@@ -18,8 +18,6 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 	const [fieldValues, setFieldValues] = useState({})
 	const [inputVisible, setInputVisible] = useState(0)
 	const [focusElement, setFocusElement] = useState([])
-	const [showDependency, setShowDependency] = useState({'': false})
-	const [dependencyRenderArray, setDependencyRenderArray] = useState([])
 	const contextScope = useContext(Context)
 	const conf = context.settings
 
@@ -59,6 +57,7 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 		if (id === edit && id) {
 			setIsLoading(true)
 			doUpdate(context, id, fieldValues).then(() => {
+				doFetch(context).then(resp => context.setData(resp.results))
 				setNeedFetch(Date.now())
 				hideAll()
 			}).catch(e => {
@@ -66,6 +65,7 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 			});
 		} else if (inputVisible === 0) {
 			doCreate(context, fieldValues).then(() => {
+				doFetch(context).then(resp => context.setData(resp.results))
 				setNeedFetch(Date.now())
 				setFieldsArray(isDependencyTable ? filters : [])
 				hideAll()
@@ -92,27 +92,6 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 		}));
 	};
 
-	const handleShowDependency = (dependency, item) => {
-		setShowDependency(prevState => (
-				{...prevState, [dependency.name + item.id]: !showDependency[dependency.name + item.id]}
-			)
-		)
-		setDependencyRenderArray(prevState => (
-			{
-				...prevState,
-				[dependency.name + item.id]:
-					<EditTable
-						isDependencyTable={true}
-						parentContext={conf}
-						context={contextScope[dependency.name]}
-						showTitle={false}
-						filters={{[dependency.field]: item.id}}
-					/>
-
-			}
-		))
-	};
-
 	const hideAll = () => {
 		setEdit(0)
 		setInputVisible(0)
@@ -133,8 +112,8 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 				</Row>
 			}
 			{data.length === 0 &&
-				<div className="d-flex justify-content-center">
-					<h5>Нет данных</h5>
+				<div className="d-flex justify-content-center m-1 text-black-50">
+					<h5>Данные отстуствуют</h5>
 				</div>
 			}
 			{data.length > 0 && data.map(item =>
@@ -161,7 +140,7 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 											selectOptions={set.contextName && contextScope[set.contextName].data}
 										/>
 										:
-										<div className="m-1 p-1"
+										<div className="m-1 p-1" style={{cursor: "cell"}}
 											 onClick={() => {
 												 setFieldsArray(item)
 												 setAdd(false)
@@ -223,28 +202,26 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 						{conf.dependencies &&
 							<>
 								{conf.dependencies.map(dep =>
-										<Row key={dep.name}
-											 className={["ms-4 me-4 flex-shrink-1", showDependency[dep.name + item.id] ? classes.dict__item : ''].join(' ')}
-										>
-											<Col style={{cursor: 'pointer'}}
-												 onClick={() => handleShowDependency(dep, item)}
-											>
-												{dep.inlineTitle} {!showDependency[dep.name + item.id] ? '>>' : '<<'}
-											</Col>
-											<Col className="col-12" hidden={!showDependency[dep.name + item.id]}>
-												{dependencyRenderArray[dep.name + item.id]}
-											</Col>
-										</Row>
+										// <Row key={dep.name}
+										// 	 className={["ms-4 me-4 flex-shrink-1", showDependency[dep.name + item.id] ? classes.dict__item : ''].join(' ')}
+										// >
+										// 	<Col style={{cursor: 'pointer'}} onClick={() => handleShowDependency(dep, item)} >
+										// 		{dep.inlineTitle} {!showDependency[dep.name + item.id] ? '>>' : '<<'}
+										// 	</Col>
+										// 	<Col className="col-12" hidden={!showDependency[dep.name + item.id]}>
+										// 		{dependencyRenderArray[dep.name + item.id]}
+										// 	</Col>
+										// </Row>
 
-									// <DependencyRowTable
-									// key={dep.name}
-									// contextScope={contextScope}
-									// dependency={dep}
-									// item={item}
+									<DependencyRowTable
+									key={dep.name}
+									contextScope={contextScope}
+									dependency={dep}
+									item={item}
 									// showDependency={showDependency}
 									// handleShowDependency={handleShowDependency}
-									// conf={conf}
-									// />
+									conf={conf}
+									/>
 								)
 								}
 							</>

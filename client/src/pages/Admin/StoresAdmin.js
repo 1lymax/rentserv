@@ -19,7 +19,6 @@ const StoresAdmin = observer(() => {
 			obj.noFetchContextFromBackend === undefined && doFetch(obj, '', '')
 				.then(data => obj.setData(data.results))
 		}
-		console.log('contextScope', contextScope)
 	}, []);
 	return (
 		<Container className="d-flex flex-column">

@@ -22,23 +22,29 @@ const Filter = ({conf, filterCallback}) => {
 			...prevState,
 			[name]: value,
 		}));
+		console.log(fieldValues)
 	};
+
 	return (
 		<div>
 			<div
-				className="d-flex flex-row justify-content-between align-items-center"
+				className="d-flex justify-content-start align-items-center"
 			>
 				{conf.fields.map(set =>
-					<InputControl
-						add
-						set={set}
-						isClearable={true}
+					<div
 						key={set.name}
-						inputName={set.name}
-						onChange={e => handleChange(e)}
-						value={fieldValues[set.name] ? fieldValues[set.name] : ''}
-						selectOptions={set.contextName && contextScope[set.contextName].data}
-					/>
+						className="me-2"
+					>
+						<InputControl
+							add
+							set={set}
+							isClearable={true}
+							inputName={set.name}
+							onChange={e => handleChange(e)}
+							value={fieldValues[set.name] ? fieldValues[set.name] : ''}
+							selectOptions={set.contextName && contextScope[set.contextName].data}
+						/>
+					</div>
 				)}
 			</div>
 
@@ -59,8 +65,8 @@ const Filter = ({conf, filterCallback}) => {
 									isClearable={true}
 									onChange={e => handleChange(e)}
 									add={dep.name !== conf.selfName}
-									inputName={dep.backendFiltersetField}
-									value={fieldValues[dep.backendFiltersetField] ? fieldValues[dep.backendFiltersetField] : ''}
+									inputName={dep.backendFiltersetField ? dep.backendFiltersetField : dep.name}
+									value={fieldValues[dep.backendFiltersetField] ? fieldValues[dep.backendFiltersetField] : fieldValues[dep.name]}
 									selectOptions={dep.contextName && contextScope[dep.contextName].data}
 								/>
 							</div>
@@ -69,6 +75,9 @@ const Filter = ({conf, filterCallback}) => {
 					</Col>
 				</Row>
 			)}
+			{/*<div>*/}
+			{/*	<Button variant={"outline-dark"} onClick={e => setFieldValues({})}>Сбросить</Button>*/}
+			{/*</div>*/}
 
 		</div>
 	);
