@@ -8,7 +8,6 @@ const SearchBar = observer(({onChange}) => {
 	return (
 		<MultiSelect isMulti={false}
 					 isClearable={true}
-					 className="basic-multi-select"
 					 options={type.data}
 					 placeholder={'Тип...'}
 					 onChange={e => e ? onChange(e) : onChange('')}

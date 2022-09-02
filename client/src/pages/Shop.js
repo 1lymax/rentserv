@@ -37,17 +37,21 @@ const Shop = observer(() => {
 					<SearchBar onChange={setSelectedType}></SearchBar>
 				</Col>
 				<Col md={9}>
-					<MultiSelect
-						isMulti={false}
-						isClearable={true}
-						placeholder={'Сортировка'}
-						options={sortingOptions}
-						getOptionValue={(option) => `${option.value}`}
-						getOptionLabel={(option) => `${option.name}`}
-						value={vehicleSorting}
-						onChange={e => e ? setVehicleSorting(e.value) : setVehicleSorting(undefined)}
-					/>
-					<VehicleList filterParams={filterParams}></VehicleList>
+					<div style={{maxWidth: "180px"}}>
+						<MultiSelect
+							isMulti={false}
+							isClearable={true}
+							placeholder={'Сортировка'}
+							options={sortingOptions}
+							getOptionValue={(option) => `${option.value}`}
+							getOptionLabel={(option) => `${option.name}`}
+							value={vehicleSorting}
+							onChange={e => e ? setVehicleSorting(e.value) : setVehicleSorting(undefined)}
+						/>
+					</div>
+					<div>
+						<VehicleList filterParams={filterParams}></VehicleList>
+					</div>
 
 				</Col>
 			</Row>
