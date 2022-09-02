@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {Button, Col, Container, Row, Spinner} from "react-bootstrap";
+import {Col, Container, Row} from "react-bootstrap";
 import {doCreate, doDelete, doFetch, doUpdate} from "../../http/storeAPI";
 import InputControl from "../UI/Admin/InputControl";
 import {Context} from "../../index";
@@ -7,6 +7,8 @@ import setDependencyName from "../../utils/setDependencyName";
 import classes from "./EditTable.module.css"
 import {observer} from "mobx-react-lite";
 import DependencyRowTable from "./DependencyRowTable";
+import SpinnerButton from "../UI/SpinnerButton/SpinnerButton";
+import OutlineButton from "../UI/OutlineButton/OutlineButton";
 
 
 const EditTable = observer(({context, isDependencyTable, filters, ordering, parentContext}) => {
@@ -158,9 +160,7 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 								?
 								<Col className={"col-12 d-flex flex-row justify-content-end"} lg={2}
 								>
-									<Button
-										variant={"outline-dark"}
-										className="ms-1 p-1"
+									<OutlineButton
 										onClick={() => {
 											setFieldsArray(item)
 											setAdd(false)
@@ -168,31 +168,18 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 										}}
 									>
 										{edit === item.id
-											? isLoading
-												?
-												<>
-													<Spinner
-														as="span"
-														animation="border"
-														size="sm"
-														role="status"
-														aria-hidden="true"
-													/> Сохр.
-												</>
-												: 'Сохр.'
+											? isLoading ? <SpinnerButton data={'Сохр.'}/> : 'Сохр.'
 											: 'Редакт.'
 										}
-									</Button>
-									<Button
-										variant={"outline-dark"}
-										className="ms-1 p-1"
+									</OutlineButton>
+									<OutlineButton
 										onClick={() => {
 											setAdd(false)
 											handleDelOrCancel(item.id)
 										}}
 									>
 										{edit === item.id ? 'Отм' : 'Удал.'}
-									</Button>
+									</OutlineButton>
 								</Col>
 								:
 								<Col className={"col-1"}
@@ -202,24 +189,11 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 						{conf.dependencies &&
 							<>
 								{conf.dependencies.map(dep =>
-										// <Row key={dep.name}
-										// 	 className={["ms-4 me-4 flex-shrink-1", showDependency[dep.name + item.id] ? classes.dict__item : ''].join(' ')}
-										// >
-										// 	<Col style={{cursor: 'pointer'}} onClick={() => handleShowDependency(dep, item)} >
-										// 		{dep.inlineTitle} {!showDependency[dep.name + item.id] ? '>>' : '<<'}
-										// 	</Col>
-										// 	<Col className="col-12" hidden={!showDependency[dep.name + item.id]}>
-										// 		{dependencyRenderArray[dep.name + item.id]}
-										// 	</Col>
-										// </Row>
-
 									<DependencyRowTable
 									key={dep.name}
 									contextScope={contextScope}
 									dependency={dep}
 									item={item}
-									// showDependency={showDependency}
-									// handleShowDependency={handleShowDependency}
 									conf={conf}
 									/>
 								)
@@ -248,46 +222,26 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 						</Col>
 					)}
 
-
 					<Col className={"col-12 d-flex flex-row justify-content-end"} lg={2}>
-						<Button
-							variant={"outline-dark"}
-							className="m-1 p-1"
+						<OutlineButton
 							onClick={() => {
 								setEdit(-1)
 								handleEditOrSave(undefined, fieldValues)
 							}}
 						>
-							{isLoading
-								?
-								<>
-									<Spinner
-										as="span"
-										animation="border"
-										size="sm"
-										role="status"
-										aria-hidden="true"
-									/> Сохраняю
-								</>
-								: 'Доб.'
-
-							}
-						</Button>
-						<Button
-							variant={"outline-dark"}
-							className="m-1 p-1"
+							{isLoading ? <SpinnerButton data={'Сохраняю'}/> : 'Доб.'}
+						</OutlineButton>
+						<OutlineButton
 							onClick={() => setAdd(false)}
 						>
 							Отм.
-						</Button>
+						</OutlineButton>
 					</Col>
 
 				</Row>
 				:
 				<Row className={["mb-1", isDependencyTable && 'ms-4'].join(' ')}>
-					<Button
-						variant={"outline-dark"}
-						className="mt-1 p-1"
+					<OutlineButton
 						style={{minWidth: "50px", width: "20%"}}
 						onClick={() => {
 							setIsLoading(true)
@@ -297,7 +251,7 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 						}}
 					>
 						{conf.addButtonTitle}
-					</Button>
+					</OutlineButton>
 				</Row>
 			}
 		</>
