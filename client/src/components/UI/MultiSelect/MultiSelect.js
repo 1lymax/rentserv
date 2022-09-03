@@ -1,6 +1,7 @@
 import {observer} from "mobx-react-lite";
 import Select from "react-select";
 import classes from './MultiSelect.module.css'
+// import {Autocomplete, TextField} from "@mui/material";
 
 const MultiSelect = observer(({
 								  isMulti, isClearable, onChange, options,
@@ -23,6 +24,18 @@ const MultiSelect = observer(({
 				classNamePrefix="myselect"
 				onChange={e => onChange(e)}
 			/>
+			{/*<Autocomplete*/}
+
+			{/*	disablePortal*/}
+			{/*	options={options}*/}
+			{/*	size="small"*/}
+			{/*	defaultValue={options[options.findIndex(item => item.id === value)]}*/}
+			{/*	getOptionLabel={getOptionLabel ? getOptionLabel : (option) => `${option.name}`}*/}
+			{/*	//sx={{ width: 300 }}*/}
+			{/*	//value={options.id}*/}
+			{/*	renderInput={(params) =>*/}
+			{/*		<TextField {...params} name={name} label={placeholder} />}*/}
+			{/*/>*/}
 		</>
 	);
 });

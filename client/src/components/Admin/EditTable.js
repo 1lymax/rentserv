@@ -7,9 +7,15 @@ import {Context} from "../../index";
 import {observer} from "mobx-react-lite";
 import setDependencyName from "../../utils/setDependencyName";
 import DependencyRowTable from "./DependencyRowTable";
-import SpinnerButton from "../UI/SpinnerButton/SpinnerButton";
 import OutlineButton from "../UI/OutlineButton/OutlineButton";
 import classes from "./EditTable.module.css"
+import {IconButton} from "@mui/material";
+import DeleteIcon from '@mui/icons-material/Delete';
+import CancelIcon from '@mui/icons-material/Cancel';
+import EditIcon from '@mui/icons-material/Edit';
+import SaveIcon from '@mui/icons-material/Save';
+import LoadingButton from '@mui/lab/LoadingButton'
+import {AddToPhotos} from "@mui/icons-material";
 
 
 const EditTable = observer(({context, isDependencyTable, filters, ordering, parentContext}) => {
@@ -50,7 +56,7 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 		conf.fields.map(field => {
 			setFieldValues(prevState => ({
 				...prevState,
-				[field.name]: item[field.name] !== undefined ? item[field.name] : ''
+				[field.name]: item && item[field.name] !== undefined ? item[field.name] : ''
 			}));
 		})
 	};
@@ -160,46 +166,48 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 							{inputVisible === item.id
 								?
 								<Col className={"col-12 d-flex flex-row justify-content-end"} lg={2}>
-									<OutlineButton onClick={() => {
-										setFieldsArray(item)
-										setAdd(false)
-										handleEditOrSave(item.id, item.name)
-									}}
-									>
-										{edit === item.id
-											? isLoading ? <SpinnerButton data={'Сохр.'}/> : 'Сохр.'
-											: 'Редакт.'
-										}
-									</OutlineButton>
-									<OutlineButton onClick={() => {
+									{isLoading
+										? <LoadingButton loading/>
+										: <IconButton onClick={() => {
+											setFieldsArray(item)
+											setAdd(false)
+											handleEditOrSave(item.id, item.name)
+										}}
+										>
+											{edit === item.id ? <SaveIcon/> : <EditIcon/>}
+										</IconButton>
+									}
+									< IconButton onClick={() => {
 										setAdd(false)
 										handleDelOrCancel(item.id)
 									}}
 									>
-										{edit === item.id ? 'Отм' : 'Удал.'}
-									</OutlineButton>
+										{edit === item.id ? <CancelIcon/> : <DeleteIcon/>}
+									</IconButton>
 								</Col>
 								:
 								<Col className={"col-1"}
 								></Col>
 							}
 						</Row>
-						{conf.dependencies && conf.dependencies.map(dep =>
-							<DependencyRowTable
-								conf={conf}
-								item={item}
-								key={dep.name}
-								dependency={dep}
-								contextScope={contextScope}
-							/>
-						)
+						{
+							conf.dependencies && conf.dependencies.map(dep =>
+								<DependencyRowTable
+									conf={conf}
+									item={item}
+									key={dep.name}
+									dependency={dep}
+									contextScope={contextScope}
+								/>
+							)
 						}
 					</Row>
 				</Container>
 			)}
 			{add
 				?
-				<Row className={["pt-2 pb-2 d-flex align-items-center", isDependencyTable ? 'ms-4' : 'mb-4'].join(' ')}>
+				<Row
+					className={["pt-2 pb-2 d-flex align-items-center", isDependencyTable ? 'ms-4' : 'mb-4'].join(' ')}>
 					{conf.fields.map(set =>
 						<Col
 							key={set.name}
@@ -217,30 +225,36 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 					)}
 
 					<Col className={"col-12 d-flex flex-row justify-content-end"} lg={2}>
-						<OutlineButton onClick={() => {
-							setEdit(-1)
-							handleEditOrSave(undefined, fieldValues)
-						}}
-						>
-							{isLoading ? <SpinnerButton data={'Сохраняю'}/> : 'Доб.'}
-						</OutlineButton>
-						<OutlineButton onClick={() => setAdd(false)}>
-							Отм.
-						</OutlineButton>
+						{isLoading
+							? <LoadingButton loading/>
+							: <IconButton onClick={() => {
+								setEdit(-1)
+								handleEditOrSave(undefined, fieldValues)
+							}}
+							>
+								<SaveIcon/>
+							</IconButton>
+						}
+						<IconButton onClick={() => setAdd(false)}>
+							<CancelIcon/>
+						</IconButton>
 					</Col>
 
 				</Row>
 				:
 				<Row className={["mb-1", isDependencyTable && 'ms-4'].join(' ')}>
-					<OutlineButton onClick={() => {
+					<OutlineButton
+						size="small"
+						startIcon={<AddToPhotos/>}
+						style={{minWidth: "50px", width: "20%"}}
+						onClick={() => {
 						setIsLoading(true)
-						setFieldsArray(isDependencyTable ? filters : [])
+						setFieldsArray(isDependencyTable ? filters : {})
 						setAdd(true)
 						hideAll()
 					}}
-								   style={{minWidth: "50px", width: "20%"}}
 					>
-						{conf.addButtonTitle}
+						 Добавить{/*conf.addButtonTitle*/}
 					</OutlineButton>
 				</Row>
 			}

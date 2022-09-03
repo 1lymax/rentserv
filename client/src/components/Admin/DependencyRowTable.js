@@ -28,16 +28,17 @@ const DependencyRowTable = ({contextScope, dependency, item, conf}) => {
 	};
 
 	const getContent = (dependency, item) => {
+		console.log('getContent', dependency, item)
 		return ADMIN[dependency.name].imageContent
 			? <ImageList
 				context={contextScope[dependency.name]}
-				filter={{[dependency.field]: item.id}}
+				filters={{[dependency.field]: item.id}}
 			/>
 			: <EditTable
 				isDependencyTable={true}
 				parentContext={conf}
 				context={contextScope[dependency.name]}
-				filter={{[dependency.field]: item.id}}
+				filters={{[dependency.field]: item.id}}
 			/>
 	};
 
