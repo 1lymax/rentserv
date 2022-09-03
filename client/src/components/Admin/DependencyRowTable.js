@@ -2,6 +2,8 @@ import React, {useState} from 'react';
 import classes from "./EditTable.module.css";
 import {Col, Row} from "react-bootstrap";
 import EditTable from "./EditTable";
+import {ADMIN} from "../../utils/consts";
+import ImageList from "./ImageList";
 
 const DependencyRowTable = ({contextScope, dependency, item, conf}) => {
 	const [showDependency, setShowDependency] = useState({'': false})
@@ -19,14 +21,24 @@ const DependencyRowTable = ({contextScope, dependency, item, conf}) => {
 			{
 				...prevState,
 				[dependency.name + item.id]:
-					<EditTable
-						isDependencyTable={true}
-						parentContext={conf}
-						context={contextScope[dependency.name]}
-						filters={{[dependency.field]: item.id}}
-					/>
+					getContent(dependency, item)
+
 			}
 		))
+	};
+
+	const getContent = (dependency, item) => {
+		return ADMIN[dependency.name].imageContent
+			? <ImageList
+				context={contextScope[dependency.name]}
+				filter={{[dependency.field]: item.id}}
+			/>
+			: <EditTable
+				isDependencyTable={true}
+				parentContext={conf}
+				context={contextScope[dependency.name]}
+				filter={{[dependency.field]: item.id}}
+			/>
 	};
 
 	return (

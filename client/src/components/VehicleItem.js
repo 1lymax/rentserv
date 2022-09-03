@@ -8,11 +8,11 @@ const VehicleItem = ({vehicle}) => {
 	const imagesObj = images.reduce((acc,curr)=> (acc[curr]=curr),{});
 	const navigate = useNavigate()
 	return (
-		<Col md={3} className="mt-3" onClick={() => navigate(ITEMDETAIL_ROUTE + '/' + vehicle.id)}>
-			<Card style={{width: 150, cursor: "pointer"}} border={"light"}>
+		<Col lg={3} md={4} sm={5} className="mt-3" onClick={() => navigate(ITEMDETAIL_ROUTE + '/' + vehicle.id)}>
+			<Card style={{width: 180, cursor: "pointer"}} border={"light"}>
 				<Image
-					width={150}
-					height={150}
+					width={180}
+					height={180}
 					src={imagesObj.image
 						? imagesObj.image
 						: "https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png"}

@@ -31,7 +31,7 @@ const Shop = observer(() => {
 	}, []);
 
 	return (
-		<Container>
+		<Container fluid={"xl"}>
 			<Row className="mt-3">
 				<Col md={3}>
 					<SearchBar onChange={setSelectedType}></SearchBar>

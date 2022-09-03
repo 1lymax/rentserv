@@ -6,10 +6,17 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 
-from vehicles.models import Vehicle, Type, VehicleFeature, FeatureList, MessurementUnit
+from vehicles.models import Vehicle, Type, VehicleFeature, FeatureList, MessurementUnit, VehicleImage
 from vehicles.permissions import IsStaffOrReadOnly
 from vehicles.serializers import VehicleSerializer, TypeSerializer, VehicleFeaturesCreateUpdateSerializer, \
-    FeatureListSerializer, MessurementUnitSerializer
+    FeatureListSerializer, MessurementUnitSerializer, VehicleImageSerializer
+
+
+class VehicleImageViewSet(ModelViewSet):
+    queryset = VehicleImage.objects.all()
+    serializer_class = VehicleImageSerializer
+    permission_classes = [IsStaffOrReadOnly]
+    filterset_fields = ['id', 'vehicle',]
 
 
 class TypeViewSet(ModelViewSet):

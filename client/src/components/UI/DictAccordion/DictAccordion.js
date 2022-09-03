@@ -1,6 +1,6 @@
 import React from 'react';
 import {observer} from "mobx-react-lite";
-import EditTable from "../../EditTable/EditTable";
+import EditTable from "../../Admin/EditTable";
 import {Accordion} from "react-bootstrap";
 
 

@@ -10,12 +10,15 @@ export const API_ROUTES = {
 	feature: 'feature',
 	vehicle: 'vehicle',
 	unit: 'unit',
+	vehicleImage: 'vehicleImage',
 	vehicleFeature: 'vehicle_feature',
 	city: 'city',
 	store: 'store',
 }
 
 export const ADMIN = {
+	newImage: process.env.REACT_APP_API_URL+'media/image.png',
+
 	type: {
 		title: 'Типы транспортных средств',
 		selfName: 'type',
@@ -23,6 +26,21 @@ export const ADMIN = {
 		fields: [
 			{
 				name: 'name', type: 'string', placeholder: 'Название', cssClassName: "col-10"
+			},
+		]
+	},
+	vehicleImage: {
+		title: 'Изображения',
+		imageContent: true,
+		maxImages: 10,
+		selfName: 'vehicleImage',
+		addButtonTitle: '+ изо',
+		fields: [
+			{
+				name: 'image', type: 'string', placeholder: 'Изображение', cssClassName: "col-10"
+			},
+			{
+				name: 'vehicle', type: 'select', placeholder: 'Транспорт'
 			},
 		]
 	},
@@ -63,6 +81,7 @@ export const ADMIN = {
 		dependencies: [
 			{name: 'vehicleFeature', field: 'vehicle', inlineTitle: 'Характеристики'},
 			{name: 'store', field: 'vehicle', inlineTitle: 'Наличие'},
+			{name: 'vehicleImage', field: 'vehicle', inlineTitle: 'Изображения'},
 		],
 		fields: [
 			{

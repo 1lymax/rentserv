@@ -21,6 +21,12 @@ class VehicleFeaturesViewSerializer(ModelSerializer):
 class VehicleImageSerializer(ModelSerializer):
     class Meta:
         model = VehicleImage
+        fields = ('id', 'vehicle', 'image')
+
+
+class VehicleImageSerializer(ModelSerializer):
+    class Meta:
+        model = VehicleImage
         exclude = ['vehicle']
 
 

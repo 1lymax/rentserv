@@ -3,7 +3,7 @@ import {observer} from "mobx-react-lite";
 import {Context} from "../../index";
 import {doFetch} from "../../http/storeAPI";
 import {Container} from "react-bootstrap";
-import Filter from "../../components/EditTable/Filter";
+import Filter from "../../components/Admin/Filter";
 import {ADMIN} from "../../utils/consts";
 import DictAccordion from "../../components/UI/DictAccordion/DictAccordion";
 import CreateVehicle from "../../components/modals/CreateVehicle";

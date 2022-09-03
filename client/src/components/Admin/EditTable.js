@@ -1,14 +1,15 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {Col, Container, Row} from "react-bootstrap";
+
 import {doCreate, doDelete, doFetch, doUpdate} from "../../http/storeAPI";
 import InputControl from "../UI/Admin/InputControl";
 import {Context} from "../../index";
-import setDependencyName from "../../utils/setDependencyName";
-import classes from "./EditTable.module.css"
 import {observer} from "mobx-react-lite";
+import setDependencyName from "../../utils/setDependencyName";
 import DependencyRowTable from "./DependencyRowTable";
 import SpinnerButton from "../UI/SpinnerButton/SpinnerButton";
 import OutlineButton from "../UI/OutlineButton/OutlineButton";
+import classes from "./EditTable.module.css"
 
 
 const EditTable = observer(({context, isDependencyTable, filters, ordering, parentContext}) => {
@@ -158,25 +159,22 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 
 							{inputVisible === item.id
 								?
-								<Col className={"col-12 d-flex flex-row justify-content-end"} lg={2}
-								>
-									<OutlineButton
-										onClick={() => {
-											setFieldsArray(item)
-											setAdd(false)
-											handleEditOrSave(item.id, item.name)
-										}}
+								<Col className={"col-12 d-flex flex-row justify-content-end"} lg={2}>
+									<OutlineButton onClick={() => {
+										setFieldsArray(item)
+										setAdd(false)
+										handleEditOrSave(item.id, item.name)
+									}}
 									>
 										{edit === item.id
 											? isLoading ? <SpinnerButton data={'Сохр.'}/> : 'Сохр.'
 											: 'Редакт.'
 										}
 									</OutlineButton>
-									<OutlineButton
-										onClick={() => {
-											setAdd(false)
-											handleDelOrCancel(item.id)
-										}}
+									<OutlineButton onClick={() => {
+										setAdd(false)
+										handleDelOrCancel(item.id)
+									}}
 									>
 										{edit === item.id ? 'Отм' : 'Удал.'}
 									</OutlineButton>
@@ -186,19 +184,15 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 								></Col>
 							}
 						</Row>
-						{conf.dependencies &&
-							<>
-								{conf.dependencies.map(dep =>
-									<DependencyRowTable
-									key={dep.name}
-									contextScope={contextScope}
-									dependency={dep}
-									item={item}
-									conf={conf}
-									/>
-								)
-								}
-							</>
+						{conf.dependencies && conf.dependencies.map(dep =>
+							<DependencyRowTable
+								conf={conf}
+								item={item}
+								key={dep.name}
+								dependency={dep}
+								contextScope={contextScope}
+							/>
+						)
 						}
 					</Row>
 				</Container>
@@ -212,28 +206,25 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 							className={["", set.cssClassName].join(' ')}
 						>
 							<InputControl
-								inputName={set.name}
-								onChange={e => handleInputChange(e)}
-								value={fieldValues[set.name]}
 								add
 								set={set}
+								inputName={set.name}
+								value={fieldValues[set.name]}
+								onChange={e => handleInputChange(e)}
 								selectOptions={set.contextName && contextScope[set.contextName].data}
 							/>
 						</Col>
 					)}
 
 					<Col className={"col-12 d-flex flex-row justify-content-end"} lg={2}>
-						<OutlineButton
-							onClick={() => {
-								setEdit(-1)
-								handleEditOrSave(undefined, fieldValues)
-							}}
+						<OutlineButton onClick={() => {
+							setEdit(-1)
+							handleEditOrSave(undefined, fieldValues)
+						}}
 						>
 							{isLoading ? <SpinnerButton data={'Сохраняю'}/> : 'Доб.'}
 						</OutlineButton>
-						<OutlineButton
-							onClick={() => setAdd(false)}
-						>
+						<OutlineButton onClick={() => setAdd(false)}>
 							Отм.
 						</OutlineButton>
 					</Col>
@@ -241,14 +232,13 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 				</Row>
 				:
 				<Row className={["mb-1", isDependencyTable && 'ms-4'].join(' ')}>
-					<OutlineButton
-						style={{minWidth: "50px", width: "20%"}}
-						onClick={() => {
-							setIsLoading(true)
-							setFieldsArray(isDependencyTable ? filters : [])
-							setAdd(true)
-							hideAll()
-						}}
+					<OutlineButton onClick={() => {
+						setIsLoading(true)
+						setFieldsArray(isDependencyTable ? filters : [])
+						setAdd(true)
+						hideAll()
+					}}
+								   style={{minWidth: "50px", width: "20%"}}
 					>
 						{conf.addButtonTitle}
 					</OutlineButton>

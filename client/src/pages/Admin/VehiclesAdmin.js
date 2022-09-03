@@ -6,7 +6,7 @@ import DictAccordion from "../../components/UI/DictAccordion/DictAccordion";
 import {doFetch} from "../../http/storeAPI";
 import CreateVehicle from "../../components/modals/CreateVehicle";
 import {ADMIN} from "../../utils/consts";
-import Filter from "../../components/EditTable/Filter";
+import Filter from "../../components/Admin/Filter";
 
 const VehiclesAdmin = observer (() => {
 	const [vehicleVisible, setVehicleVisible] = useState(false)
