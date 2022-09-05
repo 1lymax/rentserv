@@ -85,7 +85,7 @@ export const ADMIN = {
 		],
 		fields: [
 			{
-				name: 'name', type: 'string', placeholder: 'Название', cssClassName: "col-4 col-lg-3"
+				name: 'name', type: 'string', placeholder: 'Название', cssClassName: "col-4 col-lg-3 flex-grow-1"
 			},
 			{
 				name: 'vehicle_type', type: 'select', placeholder: 'Тип', contextName: 'type', cssClassName: "col-4 col-lg-3"

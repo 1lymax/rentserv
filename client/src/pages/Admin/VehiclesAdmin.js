@@ -1,15 +1,14 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {Container} from "react-bootstrap";
+
 import {Context} from "../../index";
 import {observer} from "mobx-react-lite";
-import DictAccordion from "../../components/UI/DictAccordion/DictAccordion";
 import {doFetch} from "../../http/storeAPI";
-import CreateVehicle from "../../components/modals/CreateVehicle";
 import {ADMIN} from "../../utils/consts";
 import Filter from "../../components/Admin/Filter";
+import EditTable from "../../components/Admin/EditTable";
+import {Container} from "@mui/material";
 
-const VehiclesAdmin = observer (() => {
-	const [vehicleVisible, setVehicleVisible] = useState(false)
+const VehiclesAdmin = observer(() => {
 	const contextScope = useContext(Context)
 	const [filters, setFilters] = useState({})
 	const user = contextScope.user
@@ -30,12 +29,10 @@ const VehiclesAdmin = observer (() => {
 						conf={ADMIN.vehicle}
 						filterCallback={setFilters}
 					/>
-					<DictAccordion
+					<EditTable
 						context={contextScope.vehicle}
 						filters={filters}
-						modalVisible={vehicleVisible}
-						setModalVisible={setVehicleVisible}
-						Create={CreateVehicle}
+						showTitle={true}
 					/>
 				</>
 				:

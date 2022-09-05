@@ -4,13 +4,13 @@ import ImageItem from "./ImageItem";
 import {doFetch} from "../../http/storeAPI";
 import {ADMIN} from "../../utils/consts";
 
-const ImageList = ({context, filter}) => {
+const ImageList = ({context, filters}) => {
 	const [data, setData] = useState([{id: 0, image: ADMIN.newImage}])
 	// const [file, setFile] = useState(null)
 	// const [needFetch, setNeedFetch] = useState(0)
 
 	useEffect(() => {
-		doFetch(context, '', filter)
+		doFetch(context, '', filters)
 			.then(resp => setData(resp.results))
 		//addNewImagePlacement()
 	}, []);

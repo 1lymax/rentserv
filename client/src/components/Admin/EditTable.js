@@ -6,7 +6,6 @@ import InputControl from "../UI/Admin/InputControl";
 import {Context} from "../../index";
 import {observer} from "mobx-react-lite";
 import setDependencyName from "../../utils/setDependencyName";
-import DependencyRowTable from "./DependencyRowTable";
 import OutlineButton from "../UI/OutlineButton/OutlineButton";
 import classes from "./EditTable.module.css"
 import {IconButton} from "@mui/material";
@@ -16,6 +15,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
 import LoadingButton from '@mui/lab/LoadingButton'
 import {AddToPhotos} from "@mui/icons-material";
+import DependencyShow from "./DependencyShow";
 
 
 const EditTable = observer(({context, isDependencyTable, filters, ordering, parentContext}) => {
@@ -134,38 +134,41 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 							onMouseLeave={() => setInputVisible(0)}
 						>
 							{conf.fields.map(set =>
-								<Col key={set.name}
-									 className={["", set.cssClassName].join(' ')}
-								>
-									{edit === item.id
-										?
-										<InputControl
-											inputName={set.name}
-											onChange={e => handleInputChange(e)}
-											hidden={isNeedDependencyValue(set.name)}
-											value={fieldValues[set.name]}
-											autoFocus={item.id === focusElement[0] && set.name === focusElement[1]}
-											set={set}
-											selectOptions={set.contextName && contextScope[set.contextName].data}
-										/>
-										:
-										<div className="m-1 p-1" style={{cursor: "cell"}}
-											 onClick={() => {
-												 setFieldsArray(item)
-												 setAdd(false)
-												 setFocusElement([item.id, set.name])
-												 handleEditOrSave(item.id, set)
-											 }}>
-											{setCellValue(item, set)}
-										</div>
+								<React.Fragment key={set.name}>
+									{isNeedDependencyValue(set.name)
+										? <Col className={["", set.cssClassName].join(' ')}>
+											{item.id === edit
+												?
+												<InputControl
+													inputName={set.name}
+													onChange={e => handleInputChange(e)}
+													hidden={isNeedDependencyValue(set.name)}
+													value={fieldValues[set.name]}
+													autoFocus={item.id === focusElement[0] && set.name === focusElement[1]}
+													set={set}
+													selectOptions={set.contextName && contextScope[set.contextName].data}
+												/>
+												:
+												<div className="m-1 p-1" style={{cursor: "cell"}}
+													 onClick={() => {
+														 setFieldsArray(item)
+														 setAdd(false)
+														 setFocusElement([item.id, set.name])
+														 handleEditOrSave(item.id, set)
+													 }}>
+													{setCellValue(item, set)}
+												</div>
 
+											}
+										</Col>
+										: ''
 									}
-								</Col>
+								</React.Fragment>
 							)}
 
 							{inputVisible === item.id
 								?
-								<Col className={"col-12 d-flex flex-row justify-content-end"} lg={2}>
+								<Col className={"col-12 d-flex flex-row justify-content-end pe-1"} lg={1}>
 									{isLoading
 										? <LoadingButton loading/>
 										: <IconButton onClick={() => {
@@ -186,21 +189,11 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 									</IconButton>
 								</Col>
 								:
-								<Col className={"col-1"}
-								></Col>
+								<Col className={"col-lg-1"}></Col>
 							}
 						</Row>
-						{
-							conf.dependencies && conf.dependencies.map(dep =>
-								<DependencyRowTable
-									conf={conf}
-									item={item}
-									key={dep.name}
-									dependency={dep}
-									contextScope={contextScope}
-								/>
-							)
-						}
+						{}
+						<DependencyShow conf={conf} item={item} contextScope={contextScope}/>
 					</Row>
 				</Container>
 			)}
@@ -224,7 +217,7 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 						</Col>
 					)}
 
-					<Col className={"col-12 d-flex flex-row justify-content-end"} lg={2}>
+					<Col className={"col-12 d-flex flex-row justify-content-end pe-1"} lg={1}>
 						{isLoading
 							? <LoadingButton loading/>
 							: <IconButton onClick={() => {
@@ -235,26 +228,24 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 								<SaveIcon/>
 							</IconButton>
 						}
-						<IconButton onClick={() => setAdd(false)}>
-							<CancelIcon/>
-						</IconButton>
+						<IconButton onClick={() => setAdd(false)}><CancelIcon/></IconButton>
 					</Col>
 
 				</Row>
 				:
-				<Row className={["mb-1", isDependencyTable && 'ms-4'].join(' ')}>
+				<Row className={["mb-1", isDependencyTable && 'ms-5'].join(' ')}>
 					<OutlineButton
 						size="small"
 						startIcon={<AddToPhotos/>}
 						style={{minWidth: "50px", width: "20%"}}
 						onClick={() => {
-						setIsLoading(true)
-						setFieldsArray(isDependencyTable ? filters : {})
-						setAdd(true)
-						hideAll()
-					}}
+							setIsLoading(true)
+							setFieldsArray(isDependencyTable ? filters : {})
+							setAdd(true)
+							hideAll()
+						}}
 					>
-						 Добавить{/*conf.addButtonTitle*/}
+						Добавить{/*conf.addButtonTitle*/}
 					</OutlineButton>
 				</Row>
 			}
