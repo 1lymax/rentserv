@@ -149,7 +149,7 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 													selectOptions={set.contextName && contextScope[set.contextName].data}
 												/>
 												:
-												<div className="m-1 p-1" style={{cursor: "cell"}}
+												<div className="d-flex align-items-center m-1" style={{cursor: "cell", minHeight: "40px", paddingLeft: "7px"}}
 													 onClick={() => {
 														 setFieldsArray(item)
 														 setAdd(false)
