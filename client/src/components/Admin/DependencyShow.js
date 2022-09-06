@@ -46,7 +46,7 @@ const DependencyShow = ({contextScope, item, conf}) => {
 	return (
 		<React.Fragment>
 			{conf.dependencies && conf.dependencies.length > 0 &&
-				<TableContainer component={Paper}>
+				<TableContainer component={Paper} sx={{overflowX: "unset"}}>
 					<Table>
 						<TableBody>
 							<TableRow sx={{'& > *': {borderBottom: 'unset'}}}>

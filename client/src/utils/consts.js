@@ -18,6 +18,8 @@ export const API_ROUTES = {
 
 export const ADMIN = {
 	newImage: process.env.REACT_APP_API_URL+'media/image.png',
+	imageCardWidth: 200,
+	imageCardHeight: 200,
 
 	type: {
 		title: 'Типы транспортных средств',
@@ -34,6 +36,7 @@ export const ADMIN = {
 		imageContent: true,
 		maxImages: 10,
 		selfName: 'vehicleImage',
+		dependsOn: 'vehicle',
 		addButtonTitle: '+ изо',
 		fields: [
 			{
