@@ -1,8 +1,12 @@
+import os
+import random
+import time
+
 from django.db import models
 
 
 # Create your models here.
-from rest_framework.exceptions import ErrorDetail
+from rentserv import settings
 
 
 class Type(models.Model):
@@ -40,13 +44,16 @@ class Vehicle(models.Model):
     def __str__(self):
         return self.name
 
+def content_file_name(instance, filename):
+    ext = filename.split('.')[-1]
+    filename = "%s.%s" % (instance.vehicle.name, ext)
+    print(dir(instance))
+    filename = filename.lower().replace(" ", "_")
+    return os.path.join('vehicle/', filename)
 
 class VehicleImage(models.Model):
-
     vehicle = models.ForeignKey(Vehicle, on_delete=models.CASCADE, related_name='images')
-    image = models.ImageField(upload_to='vehicle/', blank=True)
-
-
+    image = models.ImageField(upload_to=content_file_name, blank=True, )
 
 
 class VehicleFeature(models.Model):
@@ -55,7 +62,5 @@ class VehicleFeature(models.Model):
     value = models.CharField(max_length=100)
     unit = models.ForeignKey(MessurementUnit, on_delete=models.SET_NULL, null=True)
 
-
     def __str__(self):
         return f'{self.vehicle} -- {self.feature}, {self.value} {self.unit}'
-

@@ -24,12 +24,6 @@ class VehicleImageSerializer(ModelSerializer):
         fields = ('id', 'vehicle', 'image')
 
 
-class VehicleImageSerializer(ModelSerializer):
-    class Meta:
-        model = VehicleImage
-        exclude = ['vehicle']
-
-
 class VehicleSerializer(ModelSerializer):
     vehicle_type_name = serializers.CharField(read_only=True)
     images = VehicleImageSerializer(many=True, read_only=True)

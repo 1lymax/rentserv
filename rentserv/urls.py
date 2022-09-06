@@ -1,9 +1,9 @@
+from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import SimpleRouter
 
-import orders.urls
-from orders.views import OrderViewSet
+from rentserv import settings
 from store.views import CityViewSet, StoreCreateUpdateGetSet
 from vehicles.views import VehicleViewSet, TypeViewSet, VehicleFeatureViewSet, FeatureListViewSet, \
     MessurementUnitViewSet, VehicleImageViewSet
@@ -30,3 +30,7 @@ urlpatterns = [
 ]
 
 urlpatterns += router.urls
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL,
+                          document_root=settings.MEDIA_ROOT)

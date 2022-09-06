@@ -6,16 +6,19 @@ import {ADMIN} from "../../utils/consts";
 import ImageList from "./ImageList";
 import EditTable from "./EditTable";
 import DependencyRowTable from "./DependencyRowTable";
+import UnfoldMoreIcon from '@mui/icons-material/UnfoldMore';
 
 const DependencyShow = ({contextScope, item, conf}) => {
 	const [showDependency, setShowDependency] = useState({'': false})
 	const [dependencyRenderArray, setDependencyRenderArray] = useState([])
+	const [showAll, setShowAll] = useState(false)
 
-	const handleShowDependency = (dependency, item) => {
+
+	const handleShowDependency = (dependency, item, handleAll, handleAllValue) => {
 		setShowDependency(prevState => (
 				{
 					...prevState, [dependency.name + item.id]:
-						!showDependency[dependency.name + item.id]
+						handleAll ? handleAllValue : !showDependency[dependency.name + item.id]
 				}
 			)
 		)
@@ -28,6 +31,13 @@ const DependencyShow = ({contextScope, item, conf}) => {
 			}
 		))
 	};
+
+	const handleShowAll = () => {
+		conf.dependencies && conf.dependencies.map(i => {
+			handleShowDependency(i, item, true, !showAll)
+		})
+		setShowAll(!showAll)
+	}
 
 	const getContent = (dependency, item) => {
 		return ADMIN[dependency.name].imageContent
@@ -52,14 +62,18 @@ const DependencyShow = ({contextScope, item, conf}) => {
 							<TableRow sx={{'& > *': {borderBottom: 'unset'}}}>
 								<TableCell style={{paddingBottom: 0, paddingTop: 0}}>
 									<Box sx={{display: 'flex', flexDirection: 'row'}}>
+										<IconButton size="small" onClick={()=> handleShowAll()}>
+											<UnfoldMoreIcon/>
+										</IconButton>
+
 										{conf.dependencies && conf.dependencies.map(dependency =>
 											<div key={dependency.name}
 												 onClick={() => handleShowDependency(dependency, item)}
 												 style={{cursor: "pointer", paddingInline: "0.6rem"}}>
 												<IconButton size="small">
-													{showDependency[dependency.name + item.id] ?
-														<KeyboardArrowUpIcon/> :
-														<KeyboardArrowDownIcon/>}
+													{showDependency[dependency.name + item.id]
+														? <KeyboardArrowUpIcon/>
+														: <KeyboardArrowDownIcon/>}
 												</IconButton>
 												{dependency.inlineTitle}
 											</div>

@@ -1,9 +1,13 @@
+import json
+
+from django.db.migrations import serializer
 from django.db.models import F
+from django.http import HttpResponse
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import serializers
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.pagination import PageNumberPagination
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.parsers import MultiPartParser
 from rest_framework.viewsets import ModelViewSet
 
 from vehicles.models import Vehicle, Type, VehicleFeature, FeatureList, MessurementUnit, VehicleImage
@@ -17,7 +21,14 @@ class VehicleImageViewSet(ModelViewSet):
     serializer_class = VehicleImageSerializer
     permission_classes = [IsStaffOrReadOnly]
     filterset_fields = ['id', 'vehicle',]
+    parser_classes = [MultiPartParser]
 
+    def perform_create(self, serializer):
+        data = serializer.validated_data
+        if data['image'] and data['vehicle']:
+            serializer.save()
+        else:
+            raise serializers.ValidationError("Invalid request")
 
 class TypeViewSet(ModelViewSet):
     queryset = Type.objects.all()
