@@ -8,7 +8,6 @@ import {observer} from "mobx-react-lite";
 import setDependencyName from "../../utils/setDependencyName";
 import OutlineButton from "../UI/OutlineButton/OutlineButton";
 import classes from "./EditTable.module.css"
-import {IconButton} from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import CancelIcon from '@mui/icons-material/Cancel';
 import EditIcon from '@mui/icons-material/Edit';
@@ -16,6 +15,7 @@ import SaveIcon from '@mui/icons-material/Save';
 import LoadingButton from '@mui/lab/LoadingButton'
 import {AddToPhotos} from "@mui/icons-material";
 import DependencyShow from "./DependencyShow";
+import IButton from "../UI/IconButton/IButton";
 
 
 const EditTable = observer(({context, isDependencyTable, filters, ordering, parentContext}) => {
@@ -171,22 +171,22 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 								<Col className={"col-12 d-flex flex-row justify-content-end pe-1"} lg={1}>
 									{isLoading
 										? <LoadingButton loading/>
-										: <IconButton onClick={() => {
+										: <IButton onClick={() => {
 											setFieldsArray(item)
 											setAdd(false)
 											handleEditOrSave(item.id, item.name)
 										}}
 										>
 											{edit === item.id ? <SaveIcon/> : <EditIcon/>}
-										</IconButton>
+										</IButton>
 									}
-									< IconButton onClick={() => {
+									< IButton onClick={() => {
 										setAdd(false)
 										handleDelOrCancel(item.id)
 									}}
 									>
 										{edit === item.id ? <CancelIcon/> : <DeleteIcon/>}
-									</IconButton>
+									</IButton>
 								</Col>
 								:
 								<Col className={"col-lg-1"}></Col>
@@ -220,15 +220,15 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 					<Col className={"col-12 d-flex flex-row justify-content-end pe-1"} lg={1}>
 						{isLoading
 							? <LoadingButton loading/>
-							: <IconButton onClick={() => {
+							: <IButton onClick={() => {
 								setEdit(-1)
 								handleEditOrSave(undefined, fieldValues)
 							}}
 							>
 								<SaveIcon/>
-							</IconButton>
+							</IButton>
 						}
-						<IconButton onClick={() => setAdd(false)}><CancelIcon/></IconButton>
+						<IButton onClick={() => setAdd(false)}><CancelIcon/></IButton>
 					</Col>
 
 				</Row>

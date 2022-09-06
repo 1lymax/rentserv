@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Box, Collapse, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableRow} from "@mui/material";
+import {Box, Collapse, Paper, Table, TableBody, TableCell, TableContainer, TableRow} from "@mui/material";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import {ADMIN} from "../../utils/consts";
@@ -7,6 +7,7 @@ import ImageList from "./ImageList";
 import EditTable from "./EditTable";
 import DependencyRowTable from "./DependencyRowTable";
 import UnfoldMoreIcon from '@mui/icons-material/UnfoldMore';
+import IButton from "../UI/IconButton/IButton";
 
 const DependencyShow = ({contextScope, item, conf}) => {
 	const [showDependency, setShowDependency] = useState({'': false})
@@ -62,19 +63,19 @@ const DependencyShow = ({contextScope, item, conf}) => {
 							<TableRow sx={{'& > *': {borderBottom: 'unset'}}}>
 								<TableCell style={{paddingBottom: 0, paddingTop: 0}}>
 									<Box sx={{display: 'flex', flexDirection: 'row'}}>
-										<IconButton size="small" onClick={()=> handleShowAll()}>
+										<IButton size="small" onClick={()=> handleShowAll()}>
 											<UnfoldMoreIcon/>
-										</IconButton>
+										</IButton>
 
 										{conf.dependencies && conf.dependencies.map(dependency =>
 											<div key={dependency.name}
 												 onClick={() => handleShowDependency(dependency, item)}
 												 style={{cursor: "pointer", paddingInline: "0.6rem"}}>
-												<IconButton size="small">
+												<IButton size="small">
 													{showDependency[dependency.name + item.id]
 														? <KeyboardArrowUpIcon/>
 														: <KeyboardArrowDownIcon/>}
-												</IconButton>
+												</IButton>
 												{dependency.inlineTitle}
 											</div>
 										)}
@@ -92,6 +93,15 @@ const DependencyShow = ({contextScope, item, conf}) => {
 									)}
 								</TableCell>
 							</TableRow>
+							{showAll &&
+								<TableRow>
+									<TableCell>
+										<IButton size="small" onClick={() => handleShowAll()}>
+											<UnfoldMoreIcon/>
+										</IButton>
+									</TableCell>
+								</TableRow>
+							}
 						</TableBody>
 					</Table>
 
