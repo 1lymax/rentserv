@@ -1,0 +1,16 @@
+.drop_module {
+    width: 190px;
+    height: 190px;
+
+}
+.drop_area {
+    width: 190px;
+    height: 190px;
+    border: dashed 3px royalblue;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    cursor: pointer;
+}

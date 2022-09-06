@@ -16,11 +16,8 @@ const ImageList = ({context, filters}) => {
 				.then(resp => setData(resp.results))
 		}, [needFetch]);
 
-		const handleImageUpload = (e) => {
-
+		const handleImageUpload = (file) => {
 			let reader = new FileReader();
-			let file = e.target.files[0];
-
 			reader.onloadend = () => {
 				setUploadedFile({
 					file: file,
@@ -28,7 +25,6 @@ const ImageList = ({context, filters}) => {
 				});
 			}
 			reader.readAsDataURL(file)
-
 		};
 
 		const handleAction = (action, id) => {
