@@ -1,7 +1,8 @@
 import React from 'react';
-import {Card, Col, Image} from "react-bootstrap";
+import {Col, Image} from "react-bootstrap";
 import {useNavigate} from "react-router-dom";
 import {ITEMDETAIL_ROUTE} from "../utils/consts";
+import {Card} from "@mui/material";
 
 const VehicleItem = ({vehicle}) => {
 	const {images} = vehicle

@@ -1,12 +1,6 @@
 import os
-import random
-import time
 
 from django.db import models
-
-
-# Create your models here.
-from rentserv import settings
 
 
 class Type(models.Model):
@@ -39,7 +33,6 @@ class Vehicle(models.Model):
     price_cap = models.DecimalField(max_digits=7, decimal_places=0, null=True)
     price_region = models.DecimalField(max_digits=7, decimal_places=0, null=True)
 
-    # vehicle_feature = models.ForeignKey()
 
     def __str__(self):
         return self.name
@@ -47,7 +40,6 @@ class Vehicle(models.Model):
 def content_file_name(instance, filename):
     ext = filename.split('.')[-1]
     filename = "%s.%s" % (instance.vehicle.name, ext)
-    print(dir(instance))
     filename = filename.lower().replace(" ", "_")
     return os.path.join('vehicle/', filename)
 

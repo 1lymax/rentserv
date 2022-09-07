@@ -15,7 +15,10 @@ const VehiclesAdmin = observer(() => {
 	useEffect(() => {
 		for (const obj of Object.values(contextScope)) {
 			obj.noFetchContextFromBackend === undefined && doFetch(obj, '', '')
-				.then(data => obj.setData(data.results))
+				.then(data => {
+					obj.setData(data.results)
+					obj.aggregate && obj.setAggregate(data.aggregate)
+				})
 		}
 	}, []);
 
@@ -28,6 +31,8 @@ const VehiclesAdmin = observer(() => {
 					<Filter
 						conf={ADMIN.vehicle}
 						filterCallback={setFilters}
+						aggregate={contextScope.vehicle.aggregate}
+
 					/>
 					<EditTable
 						context={contextScope.vehicle}

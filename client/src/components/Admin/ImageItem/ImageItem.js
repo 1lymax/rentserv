@@ -31,7 +31,7 @@ const ImageItem = ({image, id, newPlacement, handleImageUpload, handleAction, is
 							  children={
 								  <div className={classes.drop_area}>
 									  <AddPhotoAlternateIcon sx={{fontSize: 50}} color='primary'/>
-									  <div>{fileTypes.map(i=>i && i+', ')}</div>
+									  <div>{fileTypes.join(', ')}</div>
 								  </div>}
 				/>
 				// <IconButton component={"label"}>

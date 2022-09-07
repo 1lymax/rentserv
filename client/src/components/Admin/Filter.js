@@ -4,7 +4,7 @@ import {ADMIN} from "../../utils/consts";
 import {Context} from "../../index";
 import {Col, Row} from "react-bootstrap";
 
-const Filter = ({conf, filterCallback}) => {
+const Filter = ({conf, filterCallback, aggregate}) => {
 	const [fieldValues, setFieldValues] = useState({})
 
 	const contextScope = useContext(Context)
@@ -17,14 +17,20 @@ const Filter = ({conf, filterCallback}) => {
 		let name = e.name || e.target.name;
 		if ('value' in e) value = e.value
 		if ('target' in e && 'value' in e.target) value = e.target.value
-
+		if (typeof value === "object" && value.length === 2) {
+			setFieldValues(prevState => ({
+				...prevState,
+				['min_'+name]: value[0],
+				['max_'+name]: value[1],
+			}));
+			return
+		}
 		setFieldValues(prevState => ({
 			...prevState,
 			[name]: value,
 		}));
-		console.log(fieldValues)
 	};
-
+	// contextScope.vehicle.data && console.log(contextScope.vehicles.data.price_cap)
 	return (
 		<div>
 			<div
@@ -37,7 +43,10 @@ const Filter = ({conf, filterCallback}) => {
 					>
 						<InputControl
 							add
+							filterComponent
 							set={set}
+							min={aggregate ? aggregate['min_'+set.name] : 0}
+							max={aggregate ? aggregate['max_'+set.name] : 0}
 							isClearable={true}
 							inputName={set.name}
 							onChange={e => handleChange(e)}
@@ -62,6 +71,7 @@ const Filter = ({conf, filterCallback}) => {
 							>
 								<InputControl
 									set={dep}
+									filterComponent
 									isClearable={true}
 									onChange={e => handleChange(e)}
 									add={dep.name !== conf.selfName}

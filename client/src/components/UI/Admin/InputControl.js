@@ -1,32 +1,68 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Form} from "react-bootstrap";
 import {observer} from "mobx-react-lite";
 import MultiSelect from "../MultiSelect/MultiSelect";
+import {Box, Slider, Typography} from "@mui/material";
 
-const InputControl = observer(({set, value, inputName, hidden, add, isClearable, autoFocus, onChange, selectOptions}) => {
+const InputControl = observer((props) => {
+	const inputType = props.set.filter ? props.set.filter : props.set.type
+	let sliderMin = props.min ? props.min: 0
+	let sliderMax = props.max ? props.max: 100000
+	const [sliderValue, setSliderValue] = useState([sliderMin, sliderMax]);
+
+	const handleSliderChange = (e) => {
+		setSliderValue(e.target.value)
+		props.onChange(e)
+	}
+
 	return (
 		<Form>
-			{set.type === 'string' &&
+			{props.filterComponent && inputType === 'autocomplete' &&
+				<>Autocomplete</>
+			}
+			{props.filterComponent && inputType === 'slider' &&
+				<Box sx={{width: 200, marginX: '20px'}}>
+					<Typography gutterBottom>
+						{props.set.placeholder}
+					</Typography>
+					<Slider
+						name={props.inputName}
+						min={sliderMin}
+						max={sliderMax}
+						marks={[
+							{value: sliderMin, label: sliderMin},
+							{value: sliderMax, label: sliderMax}
+						]}
+						value={sliderValue}
+						onChange={handleSliderChange}
+						valueLabelDisplay="auto"
+					/>
+				</Box>
+			}
+			{(!props.filterComponent || (props.filterComponent && !props.set.filter)) && props.set.type === 'string' &&
 				<Form.Control
-					value={value}
-					name={inputName}
-					onChange={e => onChange(e)}
-					placeholder={set.placeholder}
-					autoFocus={autoFocus}
+					value={props.value}
+					name={props.inputName}
+					onChange={e => props.onChange(e)}
+					placeholder={props.set.placeholder}
+					autoFocus={props.autoFocus}
 				/>
 			}
-			{set.type === 'select' && (hidden || add) &&
+			{(!props.filterComponent || (props.filterComponent && !props.set.filter)) && props.set.type === 'select' && (props.hidden || props.add) &&
 				<MultiSelect
 					isMulti={false}
-					isClearable={isClearable}
+					isClearable={props.isClearable}
 					className="basic-multi-select"
-					options={selectOptions}
-					value={value}
-					name={inputName}
-					autoFocus={autoFocus}
+					options={props.selectOptions}
+					value={props.value}
+					name={props.inputName}
+					autoFocus={props.autoFocus}
 					menuIsOpen={true}
-					placeholder={set.placeholder}
-					onChange={e => onChange(e ? {name: inputName, 'value': e.id}: {name: inputName, value: ''})}
+					placeholder={props.set.placeholder}
+					onChange={e => props.onChange(e ? {name: props.inputName, 'value': e.id} : {
+						name: props.inputName,
+						value: ''
+					})}
 				/>
 			}
 

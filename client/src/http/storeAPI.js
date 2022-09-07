@@ -22,14 +22,15 @@ export const doCreate = async (context, createData) => {
 	return data
 }
 
-export const doFetch = async (context, ordering, filters) => {
+export const doFetch = async (context, ordering, filters, pagination) => {
 	try{
 		const {data} = await $host.get(
 			API_ROUTES.api + context.endpoint + '/',
 			{params:
 					{
 						...ordering,
-						...filters
+						...filters,
+						...pagination
 					}
 			})
 		return data

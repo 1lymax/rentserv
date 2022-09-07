@@ -16,6 +16,11 @@ export const API_ROUTES = {
 	store: 'store',
 }
 
+export const PAGINATION = {
+	backendPageSize: 'page_size',
+	rowsPerPageDefault: 5
+}
+
 export const ADMIN = {
 	newImage: process.env.REACT_APP_API_URL+'media/image.png',
 	imageCardWidth: 200,
@@ -88,16 +93,16 @@ export const ADMIN = {
 		],
 		fields: [
 			{
-				name: 'name', type: 'string', placeholder: 'Название', cssClassName: "col-4 col-lg-3 flex-grow-1"
+				name: 'name', type: 'string', filter: 'autocomplete', placeholder: 'Название', cssClassName: "col-4 col-lg-3 flex-grow-1"
 			},
 			{
 				name: 'vehicle_type', type: 'select', placeholder: 'Тип', contextName: 'type', cssClassName: "col-4 col-lg-3"
 			},
 			{
-				name: 'price_cap', type: 'string', placeholder: 'Цена (Столица)', width: '80px', cssClassName: "col-2"
+				name: 'price_cap', type: 'string', filter: 'slider', placeholder: 'Цена (Столица)', width: '80px', cssClassName: "col-2"
 			},
 			{
-				name: 'price_region', type: 'string', placeholder: 'Цена (Регионы)', width: '80px', cssClassName: "col-2"
+				name: 'price_region', type: 'string', filter: 'slider', placeholder: 'Цена (Регионы)', width: '80px', cssClassName: "col-2"
 			},
 		]
 	},

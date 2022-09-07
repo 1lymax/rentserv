@@ -4,6 +4,7 @@ import {ADMIN, API_ROUTES} from "../utils/consts";
 export default class Vehicles {
 	constructor() {
 		this._data = []
+		this._aggregate = []
 		this.endpoint = API_ROUTES.vehicle
 		this.settings = ADMIN.vehicle
 
@@ -16,5 +17,13 @@ export default class Vehicles {
 
 	get data() {
 		return this._data
+	}
+
+	setAggregate(data) {
+		this._aggregate = data
+	}
+
+	get aggregate() {
+		return this._aggregate
 	}
 }

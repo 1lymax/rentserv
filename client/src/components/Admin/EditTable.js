@@ -1,27 +1,34 @@
 import React, {useContext, useEffect, useState} from 'react';
+import {observer} from "mobx-react-lite";
 import {Col, Container, Row} from "react-bootstrap";
 
-import {doCreate, doDelete, doFetch, doUpdate} from "../../http/storeAPI";
-import InputControl from "../UI/Admin/InputControl";
-import {Context} from "../../index";
-import {observer} from "mobx-react-lite";
-import setDependencyName from "../../utils/setDependencyName";
-import OutlineButton from "../UI/OutlineButton/OutlineButton";
-import classes from "./EditTable.module.css"
 import DeleteIcon from '@mui/icons-material/Delete';
 import CancelIcon from '@mui/icons-material/Cancel';
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
 import LoadingButton from '@mui/lab/LoadingButton'
 import {AddToPhotos} from "@mui/icons-material";
+
+import setDependencyName from "../../utils/setDependencyName";
+import {Context} from "../../index";
+import {doCreate, doDelete, doFetch, doUpdate} from "../../http/storeAPI";
+import InputControl from "../UI/Admin/InputControl";
+import OutlineButton from "../UI/OutlineButton/OutlineButton";
 import DependencyShow from "./DependencyShow";
 import IButton from "../UI/IconButton/IButton";
+import Paginate from "../UI/Paginate/Paginate";
+import classes from "./EditTable.module.css"
+import {PAGINATION} from "../../utils/consts";
 
 
 const EditTable = observer(({context, isDependencyTable, filters, ordering, parentContext}) => {
 	const [add, setAdd] = useState(false)
 	const [edit, setEdit] = useState(0)
 	const [data, setData] = useState([])
+	const [currentPage, setCurrentPage] = useState(0)
+	const [totalRows, setTotalRows] = useState(0)
+	const [rowsPerPage, setRowsPerPage] = useState(PAGINATION.rowsPerPageDefault)
+
 	const [isLoading, setIsLoading] = useState(false)
 	const [needFetch, setNeedFetch] = useState([])
 	const [fieldValues, setFieldValues] = useState({})
@@ -30,11 +37,19 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 	const contextScope = useContext(Context)
 	const conf = context.settings
 
-	useEffect(() => {
-		doFetch(context, ordering, filters)
-			.then(resp => setData(resp.results))
+	const pagination = {
+		page: currentPage ? currentPage+1 : undefined,
+		[PAGINATION.backendPageSize]: rowsPerPage
+	}
 
-	}, [needFetch, filters]);
+	useEffect(() => {
+		doFetch(context, ordering, filters, pagination)
+			.then(resp => {
+					setData(resp.results);
+					setTotalRows(resp.count)
+				}
+			)
+	}, [needFetch, filters, currentPage, rowsPerPage]);
 
 	const setCellValue = (item, set) => {
 		if (set.contextName && contextScope[set.contextName] && contextScope[set.contextName].data.length) {
@@ -110,15 +125,22 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 	return (
 		<>
 			{!isDependencyTable &&
-				<Row className={["", classes.dict__title].join(' ')}>
-					{conf.fields.map(set =>
-						<Col key={set.name} className={["", set.cssClassName].join(' ')}
-						>
-							{set.placeholder}
+				<>
+					<Row>
+						<Col>
+							<Paginate total={totalRows} setCurrentPage={setCurrentPage} setLimit={setRowsPerPage}/>
 						</Col>
-					)}
-					<Col className="col-1"></Col>
-				</Row>
+					</Row>
+					<Row className={["", classes.dict__title].join(' ')}>
+						{conf.fields.map(set =>
+							<Col key={set.name} className={["", set.cssClassName].join(' ')}
+							>
+								{set.placeholder}
+							</Col>
+						)}
+						<Col className="col-1"></Col>
+					</Row>
+				</>
 			}
 			{data.length === 0 &&
 				<div className="d-flex justify-content-center m-1 text-black-50">
@@ -149,7 +171,8 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 													selectOptions={set.contextName && contextScope[set.contextName].data}
 												/>
 												:
-												<div className="d-flex align-items-center m-1" style={{cursor: "cell", minHeight: "40px", paddingLeft: "7px"}}
+												<div className="d-flex align-items-center m-1"
+													 style={{cursor: "cell", minHeight: "40px", paddingLeft: "7px"}}
 													 onClick={() => {
 														 setFieldsArray(item)
 														 setAdd(false)
@@ -247,6 +270,13 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 					>
 						Добавить{/*conf.addButtonTitle*/}
 					</OutlineButton>
+				</Row>
+			}
+			{!isDependencyTable &&
+				<Row className={classes.pagination__wrapper}>
+					<Col>
+						<Paginate total={totalRows} setCurrentPage={setCurrentPage} setLimit={setRowsPerPage}/>
+					</Col>
 				</Row>
 			}
 		</>

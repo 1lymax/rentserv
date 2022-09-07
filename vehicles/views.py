@@ -11,6 +11,7 @@ from rest_framework.parsers import MultiPartParser
 from rest_framework.viewsets import ModelViewSet
 
 from vehicles.models import Vehicle, Type, VehicleFeature, FeatureList, MessurementUnit, VehicleImage
+from vehicles.pagination import SetPagination, PaginationWithAggregates
 from vehicles.permissions import IsStaffOrReadOnly
 from vehicles.serializers import VehicleSerializer, TypeSerializer, VehicleFeaturesCreateUpdateSerializer, \
     FeatureListSerializer, MessurementUnitSerializer, VehicleImageSerializer
@@ -50,8 +51,7 @@ class VehicleViewSet(ModelViewSet):
         vehicle_type_name=F('vehicle_type__name')
     ).prefetch_related('images').prefetch_related('features').prefetch_related('store').distinct()
     serializer_class = VehicleSerializer
-    pagination_class = PageNumberPagination
-    page_size = 2
+    pagination_class = PaginationWithAggregates
     permission_classes = [IsStaffOrReadOnly]
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_fields = ['id', 'vehicle_type', 'name', 'price_cap', 'price_region',
