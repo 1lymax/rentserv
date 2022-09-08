@@ -28,7 +28,6 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 	const [currentPage, setCurrentPage] = useState(0)
 	const [totalRows, setTotalRows] = useState(0)
 	const [rowsPerPage, setRowsPerPage] = useState(PAGINATION.rowsPerPageDefault)
-
 	const [isLoading, setIsLoading] = useState(false)
 	const [needFetch, setNeedFetch] = useState([])
 	const [fieldValues, setFieldValues] = useState({})
@@ -36,23 +35,22 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 	const [focusElement, setFocusElement] = useState([])
 	const contextScope = useContext(Context)
 	const conf = context.settings
-
 	const pagination = {
-		page: currentPage ? currentPage+1 : undefined,
+		page: currentPage ? currentPage + 1 : undefined,
 		[PAGINATION.backendPageSize]: rowsPerPage
 	}
 
 	useEffect(() => {
 		doFetch(context, ordering, filters, pagination)
 			.then(resp => {
-					setData(resp.results);
+					setData(resp.results)
 					setTotalRows(resp.count)
 				}
 			)
 	}, [needFetch, filters, currentPage, rowsPerPage]);
 
 	const setCellValue = (item, set) => {
-		if (set.contextName && contextScope[set.contextName] && contextScope[set.contextName].data.length) {
+		if (set.contextName && !set.filter && contextScope[set.contextName] && contextScope[set.contextName].data.length) {
 			if (isNeedDependencyValue(set.name)) {
 				let result = setDependencyName(contextScope[set.contextName].data, item[set.name])
 				return result && result.name
@@ -62,6 +60,7 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 		}
 
 	};
+
 	const isNeedDependencyValue = (CellName) => {
 		const isParent = typeof parentContext !== 'undefined' && CellName === parentContext.selfName
 		return !isDependencyTable || !isParent
@@ -126,8 +125,11 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 		<>
 			{!isDependencyTable &&
 				<>
-					<Row>
-						<Col>
+					<Row className="d-flex align-items-center">
+						<Col md={6}>
+							Фильтр
+						</Col>
+						<Col md={6}>
 							<Paginate total={totalRows} setCurrentPage={setCurrentPage} setLimit={setRowsPerPage}/>
 						</Col>
 					</Row>
@@ -256,27 +258,27 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 
 				</Row>
 				:
-				<Row className={["mb-1", isDependencyTable && 'ms-5'].join(' ')}>
-					<OutlineButton
-						size="small"
-						startIcon={<AddToPhotos/>}
-						style={{minWidth: "50px", width: "20%"}}
-						onClick={() => {
-							setIsLoading(true)
-							setFieldsArray(isDependencyTable ? filters : {})
-							setAdd(true)
-							hideAll()
-						}}
-					>
-						Добавить{/*conf.addButtonTitle*/}
-					</OutlineButton>
-				</Row>
-			}
-			{!isDependencyTable &&
-				<Row className={classes.pagination__wrapper}>
+				<Row className={["mb-1 d-flex align-items-center", isDependencyTable && 'ms-5'].join(' ')}>
 					<Col>
-						<Paginate total={totalRows} setCurrentPage={setCurrentPage} setLimit={setRowsPerPage}/>
+						<OutlineButton
+							size="small"
+							startIcon={<AddToPhotos/>}
+							style={{minWidth: "150px", width: "20%"}}
+							onClick={() => {
+								setIsLoading(true)
+								setFieldsArray(isDependencyTable ? filters : {})
+								setAdd(true)
+								hideAll()
+							}}
+						>
+							Добавить{/*conf.addButtonTitle*/}
+						</OutlineButton>
 					</Col>
+					{!isDependencyTable &&
+						<Col className={classes.pagination__wrapper}>
+							<Paginate total={totalRows} setCurrentPage={setCurrentPage} setLimit={setRowsPerPage}/>
+						</Col>
+					}
 				</Row>
 			}
 		</>

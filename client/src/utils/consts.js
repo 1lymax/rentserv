@@ -93,10 +93,12 @@ export const ADMIN = {
 		],
 		fields: [
 			{
-				name: 'name', type: 'string', filter: 'autocomplete', placeholder: 'Название', cssClassName: "col-4 col-lg-3 flex-grow-1"
+				name: 'name', type: 'string', filter: 'autocomplete', filterStyles: {minWidth: '150px'},
+				contextName: 'vehicle', placeholder: 'Название', cssClassName: "col-4 col-lg-3 flex-grow-1"
 			},
 			{
-				name: 'vehicle_type', type: 'select', placeholder: 'Тип', contextName: 'type', cssClassName: "col-4 col-lg-3"
+				name: 'vehicle_type', type: 'select', placeholder: 'Тип', filterStyles: {minWidth: '170px', maxWidth: '220px'},
+				contextName: 'type', cssClassName: "col-4 col-lg-3"
 			},
 			{
 				name: 'price_cap', type: 'string', filter: 'slider', placeholder: 'Цена (Столица)', width: '80px', cssClassName: "col-2"

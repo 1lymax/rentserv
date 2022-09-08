@@ -186,11 +186,11 @@ USE_DEBUG_TOOLBAR = True
 
 # disable as well if running unit tests...
 pgm = os.path.basename(sys.argv[0])
-if not USE_DEBUG_TOOLBAR or pgm.startswith("test") or pgm.startswith("nosetests"):
-    li = [app for app in INSTALLED_APPS if not app == "debug_toolbar"]
-    INSTALLED_APPS = tuple(li)
-    li = [app for app in MIDDLEWARE if not app == "debug_toolbar.middleware.DebugToolbarMiddleware"]
-    MIDDLEWARE = tuple(li)
+# if not USE_DEBUG_TOOLBAR or pgm.startswith("test") or pgm.startswith("nosetests"):
+#     li = [app for app in INSTALLED_APPS if not app == "debug_toolbar"]
+#     INSTALLED_APPS = tuple(li)
+#     li = [app for app in MIDDLEWARE if not app == "debug_toolbar.middleware.DebugToolbarMiddleware"]
+#     MIDDLEWARE = tuple(li)
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 

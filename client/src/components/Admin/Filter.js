@@ -3,8 +3,9 @@ import InputControl from "../UI/Admin/InputControl";
 import {ADMIN} from "../../utils/consts";
 import {Context} from "../../index";
 import {Col, Row} from "react-bootstrap";
+import {observer} from "mobx-react-lite";
 
-const Filter = ({conf, filterCallback, aggregate}) => {
+const Filter = observer(({conf, filterCallback, aggregate}) => {
 	const [fieldValues, setFieldValues] = useState({})
 
 	const contextScope = useContext(Context)
@@ -12,7 +13,34 @@ const Filter = ({conf, filterCallback, aggregate}) => {
 		filterCallback(fieldValues)
 	}, [fieldValues, filterCallback])
 
+	useEffect(() => {
+		conf.fields.map(set => (
+				setFieldValues(prevState => ({
+					...prevState,
+					[set.name]: ''
+				}))
+			)
+		)
+		conf.dependencies.map(set => (
+				ADMIN[set.name].fields.map(dep => (
+					(
+						setFieldValues(prevState => ({
+							...prevState,
+							[dep.backendFiltersetField ? dep.backendFiltersetField : dep.name]: ''
+						}))
+					)
+				))
+			)
+		)
+
+	}, []);
+
+	const getDependencyFieldValue = (dep) => {
+		return fieldValues[dep.backendFiltersetField] ? fieldValues[dep.backendFiltersetField] : fieldValues[dep.name]
+	};
+
 	const handleChange = e => {
+		console.log(e)
 		let value = ''
 		let name = e.name || e.target.name;
 		if ('value' in e) value = e.value
@@ -20,8 +48,8 @@ const Filter = ({conf, filterCallback, aggregate}) => {
 		if (typeof value === "object" && value.length === 2) {
 			setFieldValues(prevState => ({
 				...prevState,
-				['min_'+name]: value[0],
-				['max_'+name]: value[1],
+				['min_' + name]: value[0],
+				['max_' + name]: value[1],
 			}));
 			return
 		}
@@ -40,13 +68,14 @@ const Filter = ({conf, filterCallback, aggregate}) => {
 					<div
 						key={set.name}
 						className="me-2"
+						style={set.filterStyles ? set.filterStyles : {}}
 					>
 						<InputControl
 							add
 							filterComponent
 							set={set}
-							min={aggregate ? aggregate['min_'+set.name] : 0}
-							max={aggregate ? aggregate['max_'+set.name] : 0}
+							min={aggregate ? aggregate['min_' + set.name] : 0}
+							max={aggregate ? aggregate['max_' + set.name] : 0}
 							isClearable={true}
 							inputName={set.name}
 							onChange={e => handleChange(e)}
@@ -76,7 +105,7 @@ const Filter = ({conf, filterCallback, aggregate}) => {
 									onChange={e => handleChange(e)}
 									add={dep.name !== conf.selfName}
 									inputName={dep.backendFiltersetField ? dep.backendFiltersetField : dep.name}
-									value={fieldValues[dep.backendFiltersetField] ? fieldValues[dep.backendFiltersetField] : fieldValues[dep.name]}
+									value={getDependencyFieldValue(dep)}
 									selectOptions={dep.contextName && contextScope[dep.contextName].data}
 								/>
 							</div>
@@ -91,6 +120,6 @@ const Filter = ({conf, filterCallback, aggregate}) => {
 
 		</div>
 	);
-};
+});
 
 export default Filter;

@@ -12,6 +12,7 @@ const VehiclesAdmin = observer(() => {
 	const contextScope = useContext(Context)
 	const [filters, setFilters] = useState({})
 	const user = contextScope.user
+
 	useEffect(() => {
 		for (const obj of Object.values(contextScope)) {
 			obj.noFetchContextFromBackend === undefined && doFetch(obj, '', '')

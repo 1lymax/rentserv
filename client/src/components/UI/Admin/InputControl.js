@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {Form} from "react-bootstrap";
 import {observer} from "mobx-react-lite";
 import MultiSelect from "../MultiSelect/MultiSelect";
-import {Box, Slider, Typography} from "@mui/material";
+import {Autocomplete, Box, Slider, TextField, Typography} from "@mui/material";
 
 const InputControl = observer((props) => {
 	const inputType = props.set.filter ? props.set.filter : props.set.type
@@ -18,7 +18,18 @@ const InputControl = observer((props) => {
 	return (
 		<Form>
 			{props.filterComponent && inputType === 'autocomplete' &&
-				<>Autocomplete</>
+				<Autocomplete
+					freeSolo
+
+					size='small'
+					options={props.selectOptions}
+					//value={props.value}
+					name={props.inputName}
+					onChange={e => e && props.onChange(e)}
+					onInputChange={(e, value) => props.onChange({name: props.inputName, value: value})}
+					getOptionLabel={props.getOptionLabel ? props.getOptionLabel : (option) => `${option.name}`}
+					renderInput={(params) => <TextField {...params} name={props.inputName} label={props.set.placeholder}/>}
+				/>
 			}
 			{props.filterComponent && inputType === 'slider' &&
 				<Box sx={{width: 200, marginX: '20px'}}>
