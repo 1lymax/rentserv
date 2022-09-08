@@ -14,8 +14,8 @@ jobs:
       postgres:
         image: postgres:latest
         env:
-          POSTGRES_USER: rentserv
-          POSTGRES_PASSWORD: 123
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
           POSTGRES_DB: rentserv
         ports:
           - 5432:5432
