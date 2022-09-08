@@ -54,7 +54,7 @@ class VehicleViewSet(ModelViewSet):
     pagination_class = PaginationWithAggregates
     permission_classes = [IsStaffOrReadOnly]
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-    filterset_fields = ['id', 'vehicle_type', 'name', 'price_cap', 'price_region',
+    filterset_fields = ['id', 'vehicle_type', 'price_cap', 'price_region',
                         'vehicle_type__name', 'features__feature', 'features__unit', 'features__value', 'store__city']
     ordering_fields = ['name', 'vehicle_type_name', 'price_cap']
     search_fields = ['name', 'vehicle_type_name', ]
@@ -64,6 +64,8 @@ class VehicleViewSet(ModelViewSet):
         self.queryset = super().filter_queryset(request)
 
         predicate = self.request.query_params  # or request.data for POST
+        if predicate.get('name', None) is not None:
+            self.queryset = self.queryset.filter(name__contains=predicate['name'])
         if predicate.get('min_price_cap', None) is not None:
             self.queryset = self.queryset.filter(price_cap__gte=predicate['min_price_cap'])
         if predicate.get('max_price_cap', None) is not None:

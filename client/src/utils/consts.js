@@ -59,13 +59,16 @@ export const ADMIN = {
 		dependsOn: 'vehicle',
 		fields: [
 			{
-				name: 'feature', backendFiltersetField: 'features__feature', type: 'select', placeholder: 'Характеристика', contextName: 'feature', cssClassName: "col-5 col-lg-4"
+				name: 'feature', backendFiltersetField: 'features__feature',
+				type: 'select', placeholder: 'Характеристика', contextName: 'feature', cssClassName: "col-5 col-lg-4"
 			},
 			{
-				name: 'value', backendFiltersetField: 'features__value', type: 'string', placeholder: 'Величина', cssClassName: "col-2"
+				name: 'value', backendFiltersetField: 'features__value', filterStyles: {minWidth: '70px', maxWidth: '100px'},
+				type: 'string', placeholder: 'Величина', cssClassName: "col-2"
 			},
 			{
-				name: 'unit', backendFiltersetField: 'features__unit', type: 'select', placeholder: 'Ед. изм.', contextName: 'unit', cssClassName: "col-2"
+				name: 'unit', backendFiltersetField: 'features__unit', type: 'select', filterStyles: {minWidth: '100px', maxWidth: '120px'},
+				placeholder: 'Ед. изм.', contextName: 'unit', cssClassName: "col-2"
 			},
 			{
 				name: 'vehicle', type: 'select', placeholder: 'Транспорт', contextName: 'vehicle', cssClassName: "col-3 col-lg-2"
@@ -134,7 +137,7 @@ export const ADMIN = {
 		addButtonTitle: '+ ед. изм.',
 		fields: [
 			{
-				name: 'name', type: 'string'
+				name: 'name', type: 'string', filterStyles: {minWidth: '70px', maxWidth: '100px'},
 			},
 		]
 	},

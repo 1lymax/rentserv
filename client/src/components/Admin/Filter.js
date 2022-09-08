@@ -11,6 +11,7 @@ const Filter = observer(({conf, filterCallback, aggregate}) => {
 	const contextScope = useContext(Context)
 	useEffect(() => {
 		filterCallback(fieldValues)
+		console.log(fieldValues)
 	}, [fieldValues, filterCallback])
 
 	useEffect(() => {
@@ -97,6 +98,7 @@ const Filter = observer(({conf, filterCallback, aggregate}) => {
 							<div
 								key={dep.name}
 								className="ps-1"
+								style={dep.filterStyles ? dep.filterStyles : {}}
 							>
 								<InputControl
 									set={dep}

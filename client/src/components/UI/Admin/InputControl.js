@@ -20,7 +20,6 @@ const InputControl = observer((props) => {
 			{props.filterComponent && inputType === 'autocomplete' &&
 				<Autocomplete
 					freeSolo
-
 					size='small'
 					options={props.selectOptions}
 					//value={props.value}

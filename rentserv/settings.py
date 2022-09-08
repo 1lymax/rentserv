@@ -104,6 +104,15 @@ DATABASES = {
     }
 }
 
+# 'default': {
+#     'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#     'NAME': 'books_db',
+#     'USER': 'books_user',
+#     'PASSWORD': '123',
+#     'HOST': 'localhost',
+#   'PORT': '5432',
+# }
+
 AUTHENTICATION_BACKENDS = (
     # 'social_core.backends.github.GithubOAuth2',
     # 'user.authentication.EmailAuthBackend',
