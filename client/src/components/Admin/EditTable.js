@@ -12,7 +12,7 @@ import {AddToPhotos} from "@mui/icons-material";
 import setDependencyName from "../../utils/setDependencyName";
 import {Context} from "../../index";
 import {doCreate, doDelete, doFetch, doUpdate} from "../../http/storeAPI";
-import InputControl from "../UI/Admin/InputControl";
+import InputControl from "../UI/InputControl/InputControl";
 import OutlineButton from "../UI/OutlineButton/OutlineButton";
 import DependencyShow from "./DependencyShow";
 import IButton from "../UI/IconButton/IButton";
@@ -160,7 +160,9 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 							{conf.fields.map(set =>
 								<React.Fragment key={set.name}>
 									{isNeedDependencyValue(set.name)
-										? <Col className={["", set.cssClassName].join(' ')}>
+										? <Col className={["", set.cssClassName].join(' ')}
+											   style={{minHeight: "48px"}}
+										>
 											{item.id === edit
 												?
 												<InputControl
@@ -173,8 +175,8 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 													selectOptions={set.contextName && contextScope[set.contextName].data}
 												/>
 												:
-												<div className="d-flex align-items-center m-1"
-													 style={{cursor: "cell", minHeight: "40px", paddingLeft: "7px"}}
+												<div className="d-flex align-items-center"
+													 style={{cursor: "cell", minHeight: "40px", paddingLeft: "15px"}}
 													 onClick={() => {
 														 setFieldsArray(item)
 														 setAdd(false)
@@ -196,7 +198,9 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 								<Col className={"col-12 d-flex flex-row justify-content-end pe-1"} lg={1}>
 									{isLoading
 										? <LoadingButton loading/>
-										: <IButton onClick={() => {
+										: <IButton
+											type="submit"
+											onClick={() => {
 											setFieldsArray(item)
 											setAdd(false)
 											handleEditOrSave(item.id, item.name)

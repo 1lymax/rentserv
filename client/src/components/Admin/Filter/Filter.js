@@ -1,9 +1,11 @@
 import React, {useContext, useEffect, useState} from 'react';
-import InputControl from "../UI/Admin/InputControl";
-import {ADMIN} from "../../utils/consts";
-import {Context} from "../../index";
 import {Col, Row} from "react-bootstrap";
 import {observer} from "mobx-react-lite";
+
+import InputControl from "../../UI/InputControl/InputControl";
+import {ADMIN} from "../../../utils/consts";
+import {Context} from "../../../index";
+import classes from './Filter.module.css'
 
 const Filter = observer(({conf, filterCallback, aggregate}) => {
 	const [fieldValues, setFieldValues] = useState({})
@@ -87,9 +89,9 @@ const Filter = observer(({conf, filterCallback, aggregate}) => {
 				)}
 			</div>
 
-			{conf.dependencies.map(set =>
+			{conf.dependencies.map(set => !ADMIN[set.name].imageContent &&
 				<Row key={set.name}
-					 className="align-items-center">
+					 className={classes.filter_row}>
 					<Col md={2}>
 						<h6>{set.inlineTitle}</h6>
 					</Col>
@@ -97,7 +99,7 @@ const Filter = observer(({conf, filterCallback, aggregate}) => {
 						{ADMIN[set.name].fields.map(dep =>
 							<div
 								key={dep.name}
-								className="ps-1"
+								className="ps-2"
 								style={dep.filterStyles ? dep.filterStyles : {}}
 							>
 								<InputControl

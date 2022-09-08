@@ -4,7 +4,7 @@ import {Context} from "../../index";
 import {observer} from "mobx-react-lite";
 import {doFetch} from "../../http/storeAPI";
 import {ADMIN} from "../../utils/consts";
-import Filter from "../../components/Admin/Filter";
+import Filter from "../../components/Admin/Filter/Filter";
 import EditTable from "../../components/Admin/EditTable";
 import {Container} from "@mui/material";
 

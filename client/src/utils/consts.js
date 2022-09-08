@@ -67,7 +67,7 @@ export const ADMIN = {
 				type: 'string', placeholder: 'Величина', cssClassName: "col-2"
 			},
 			{
-				name: 'unit', backendFiltersetField: 'features__unit', type: 'select', filterStyles: {minWidth: '100px', maxWidth: '120px'},
+				name: 'unit', backendFiltersetField: 'features__unit', type: 'select', filterStyles: {minWidth: '120px', maxWidth: '140px'},
 				placeholder: 'Ед. изм.', contextName: 'unit', cssClassName: "col-2"
 			},
 			{
@@ -121,13 +121,13 @@ export const ADMIN = {
 		],
 		fields: [
 			{
-				name: 'vehicle', type: 'select', placeholder: 'Транспорт', contextName: 'vehicle', cssClassName: "col-4 col-lg-3"
+				name: 'vehicle', type: 'select', placeholder: 'Транспорт', contextName: 'vehicle', filterStyles: {maxWidth: '170px'}, cssClassName: "col-4 col-lg-3"
 			},
 			{
 				name: 'city', type: 'select', backendFiltersetField: 'store__city', placeholder: 'Город', contextName: 'city', cssClassName: "col-4 col-lg-3"
 			},
 			{
-				name: 'quantity', type: 'string', placeholder: 'Кол-во', cssClassName: "col-4 col-lg-3"
+				name: 'quantity', type: 'string', placeholder: 'Кол-во', filterStyles: {maxWidth: '90px'}, cssClassName: "col-4 col-lg-3"
 			},
 		]
 	},
@@ -150,7 +150,8 @@ export const ADMIN = {
 		],
 		fields: [
 			{
-				name: 'name', type: 'string', placeholder: 'Название города', cssClassName: "col-6 col-lg-5"
+				name: 'name', type: 'string', filter: 'autocomplete', filterStyles: {minWidth: '180px'},
+				contextName: 'city', placeholder: 'Название города', cssClassName: "col-6 col-lg-5"
 			},
 		]
 	}

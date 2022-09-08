@@ -1,8 +1,9 @@
 import React, {useState} from 'react';
-import {Form} from "react-bootstrap";
 import {observer} from "mobx-react-lite";
-import MultiSelect from "../MultiSelect/MultiSelect";
 import {Autocomplete, Box, Slider, TextField, Typography} from "@mui/material";
+
+import MultiSelect from "../MultiSelect/MultiSelect";
+import classes from "./InputControl.module.css"
 
 const InputControl = observer((props) => {
 	const inputType = props.set.filter ? props.set.filter : props.set.type
@@ -16,13 +17,12 @@ const InputControl = observer((props) => {
 	}
 
 	return (
-		<Form>
+		<React.Fragment>
 			{props.filterComponent && inputType === 'autocomplete' &&
 				<Autocomplete
 					freeSolo
 					size='small'
 					options={props.selectOptions}
-					//value={props.value}
 					name={props.inputName}
 					onChange={e => e && props.onChange(e)}
 					onInputChange={(e, value) => props.onChange({name: props.inputName, value: value})}
@@ -50,9 +50,12 @@ const InputControl = observer((props) => {
 				</Box>
 			}
 			{(!props.filterComponent || (props.filterComponent && !props.set.filter)) && props.set.type === 'string' &&
-				<Form.Control
+				<TextField
+					size='small'
+					className={classes.root}
 					value={props.value}
 					name={props.inputName}
+					label={props.set.placeholder}
 					onChange={e => props.onChange(e)}
 					placeholder={props.set.placeholder}
 					autoFocus={props.autoFocus}
@@ -76,7 +79,7 @@ const InputControl = observer((props) => {
 				/>
 			}
 
-		</Form>
+		</React.Fragment>
 	);
 });
 

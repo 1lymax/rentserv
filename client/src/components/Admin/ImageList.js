@@ -7,7 +7,6 @@ import {ADMIN} from "../../utils/consts";
 const ImageList = ({context, filters}) => {
 		const [data, setData] = useState([])
 		const [uploadedFile, setUploadedFile] = useState({file: '', imagePreviewUrl: ''})
-		// const [file, setFile] = useState(null)
 		const [needFetch, setNeedFetch] = useState(0)
 		const dependsOn = ADMIN[context.endpoint].dependsOn
 

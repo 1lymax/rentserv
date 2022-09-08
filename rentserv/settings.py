@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'psycopg2',
     'rest_framework',
     'django_filters',
     'debug_toolbar',
@@ -58,7 +59,6 @@ INSTALLED_APPS = [
     'orders'
 
 ]
-
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -97,21 +97,24 @@ WSGI_APPLICATION = 'rentserv.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
+
 DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
+
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'rentserv',
+        'USER': 'rentserv',
+        'PASSWORD': '123',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
-
-# 'default': {
-#     'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#     'NAME': 'books_db',
-#     'USER': 'books_user',
-#     'PASSWORD': '123',
-#     'HOST': 'localhost',
-#   'PORT': '5432',
-# }
 
 AUTHENTICATION_BACKENDS = (
     # 'social_core.backends.github.GithubOAuth2',
