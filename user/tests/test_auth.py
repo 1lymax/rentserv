@@ -21,16 +21,15 @@ class AuthApiTestCase(APITestCase):
         json_data = json.dumps(data)
         response = self.client.post(url, data=json_data, content_type='application/json')
         self.assertEqual(status.HTTP_200_OK, response.status_code, response.data)
-
         url = reverse('token_verify')
         data = {
             'token': response.data['access']
         }
         json_data = json.dumps(data)
         response = self.client.post(url, data=json_data, content_type='application/json')
-        print(data)
-        self.assertEqual(1, response.data)
-        return response.data['access']
+        self.assertEqual({}, response.data)
+        # print(response.data)
+        return data['token']
 
     def test_get_token_wrong(self):
         url = reverse('token_obtain_pair')
@@ -49,7 +48,7 @@ class AuthApiTestCase(APITestCase):
         url = reverse('auth_register')
         self.assertEqual(2, User.objects.all().count())
         data = {
-            # "username": "test_user1",
+            "username": "test_user1",
             "password": "qwsah12356782",
             # "password2": "qwsah12356782",
             "email": "some1@google.com",
@@ -60,7 +59,7 @@ class AuthApiTestCase(APITestCase):
         json_data = json.dumps(data)
         response = self.client.post(url, data=json_data, content_type='application/json')
         self.assertEqual(status.HTTP_201_CREATED, response.status_code, response.data)
-        self.assertEqual({ #"username": "test_user1",
+        self.assertEqual({ "username": "test_user1",
                           "email": "some1@google.com",
                           "first_name": "Max",
                           "last_name": "Popov"}
@@ -84,8 +83,8 @@ class AuthApiTestCase(APITestCase):
         response = self.client.post(url, data=json_data, content_type='application/json')
         # serializer_data = MyTokenObtainPairSerializer(messure, many=True).data
         self.assertEqual(status.HTTP_400_BAD_REQUEST, response.status_code, response.data)
-        self.assertEqual({'username': [ErrorDetail(string='A user with that username already exists.', code='unique')],
-                          'email': [ErrorDetail(string='This field must be unique.', code='unique')]}
+        self.assertEqual({'username': [ErrorDetail(string='Пользователь с таким именем уже существует.', code='unique')],
+                          'email': [ErrorDetail(string='Значения поля должны быть уникальны.', code='unique')]}
                          , response.data, response.data)
 
         self.assertEqual(2, User.objects.all().count())

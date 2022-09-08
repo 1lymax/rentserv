@@ -34,11 +34,12 @@ class VehicleFeaturesApiTestCase(APITestCase):
         url = reverse('vehiclefeature-list')
         with CaptureQueriesContext(connection) as queries:
             response = self.client.get(url)
-            self.assertEqual(2, len(queries))
+            self.assertEqual(3, len(queries))
         features = VehicleFeature.objects.all()
         serializer_data = VehicleFeaturesCreateUpdateSerializer(features, many=True).data
         self.assertEqual(status.HTTP_200_OK, response.status_code)
-        self.assertEqual(serializer_data, response.data)
+
+        self.assertEqual(serializer_data, response.data['results'])
 
     def test_create(self):
         self.assertEqual(1, VehicleFeature.objects.all().count())
@@ -69,7 +70,6 @@ class VehicleFeaturesApiTestCase(APITestCase):
         self.client.force_login(self.staff_user)
         response = self.client.post(url, data=json_data,
                                     content_type='application/json')
-        print(response.data)
         self.assertEqual(status.HTTP_400_BAD_REQUEST, response.status_code)
         self.assertEqual(1, VehicleFeature.objects.all().count())
         self.assertEqual([ErrorDetail(string='Vehicle already has such feature', code='invalid')], response.data)
@@ -121,7 +121,7 @@ class VehicleFeaturesApiTestCase(APITestCase):
         self.client.force_login(self.staff_user)
         response = self.client.put(url, data=json_data,
                                    content_type='application/json')
-        self.assertEqual(status.HTTP_200_OK, response.status_code, response.data)
+        self.assertEqual(status.HTTP_200_OK, response.status_code)
         self.vehicle_feature.refresh_from_db()
         self.assertEqual('10', self.vehicle_feature.value)
 

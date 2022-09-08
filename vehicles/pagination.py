@@ -26,5 +26,4 @@ class PaginationWithAggregates(PageNumberPagination):
     def get_paginated_response(self, data):
         paginated_response = super(PaginationWithAggregates, self).get_paginated_response(data)
         paginated_response.data['aggregate'] = self.aggregate
-        # paginated_response.data.aggregate['max_price_cap'] = self.max_price_cap['max_price_cap']
         return paginated_response

@@ -25,15 +25,14 @@ class CartApiTestCase(APITestCase):
         for key in data:
             url = reverse('cart_add', args={key['id']})
             json_data = json.dumps(key)
-            print("test_create json_data", json_data, key['id'])
             response = self.client.post(url, data=json_data,
                                         content_type='application/json')
             self.assertEqual(status.HTTP_200_OK, response.status_code)
 
         url = reverse('cart_detail')
         response = self.client.get(url)
-        compare_data = {'cart': {'1': {'name': 'Hyundai 100', 'quantity': 9, 'price': 600.0},
-                                 '2': {'name': 'Hyundai 200', 'quantity': 10, 'price': 700.0},
+        compare_data = {'cart': {'1': {'id': 1, 'name': 'Hyundai 100', 'quantity': 9, 'price': 600.0},
+                                 '2': {'id': 2, 'name': 'Hyundai 200', 'quantity': 10, 'price': 700.0},
                                  'total_items': 19,
                                  'total_price': 12400}}
         self.assertEqual(status.HTTP_200_OK, response.status_code)

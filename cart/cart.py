@@ -35,7 +35,6 @@ class Cart(object):
         is_in_cart = False
         for vehicle_in_cart in self.cart:
             if vehicle_in_cart == vehicle.id:
-                print("self.cart.index(vehicle_in_cart)", self.cart.index(vehicle_in_cart))
                 is_in_cart = True
                 self.cart[self.cart.index(vehicle_in_cart)] = {
                     str(vehicle.id):

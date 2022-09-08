@@ -1,17 +1,12 @@
-import json
-
-from django.db.migrations import serializer
 from django.db.models import F
-from django.http import HttpResponse
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import serializers
 from rest_framework.filters import SearchFilter, OrderingFilter
-from rest_framework.pagination import PageNumberPagination
 from rest_framework.parsers import MultiPartParser
 from rest_framework.viewsets import ModelViewSet
 
 from vehicles.models import Vehicle, Type, VehicleFeature, FeatureList, MessurementUnit, VehicleImage
-from vehicles.pagination import SetPagination, PaginationWithAggregates
+from vehicles.pagination import PaginationWithAggregates
 from vehicles.permissions import IsStaffOrReadOnly
 from vehicles.serializers import VehicleSerializer, TypeSerializer, VehicleFeaturesCreateUpdateSerializer, \
     FeatureListSerializer, MessurementUnitSerializer, VehicleImageSerializer
@@ -57,7 +52,7 @@ class VehicleViewSet(ModelViewSet):
     filterset_fields = ['id', 'vehicle_type', 'price_cap', 'price_region',
                         'vehicle_type__name', 'features__feature', 'features__unit', 'features__value', 'store__city']
     ordering_fields = ['name', 'vehicle_type_name', 'price_cap']
-    search_fields = ['name', 'vehicle_type_name', ]
+    search_fields = ['vehicle_type_name', ]
 
 
     def filter_queryset(self, request):
@@ -65,7 +60,7 @@ class VehicleViewSet(ModelViewSet):
 
         predicate = self.request.query_params  # or request.data for POST
         if predicate.get('name', None) is not None:
-            self.queryset = self.queryset.filter(name__contains=predicate['name'])
+            self.queryset = self.queryset.filter(name__icontains=predicate['name'])
         if predicate.get('min_price_cap', None) is not None:
             self.queryset = self.queryset.filter(price_cap__gte=predicate['min_price_cap'])
         if predicate.get('max_price_cap', None) is not None:

@@ -45,9 +45,9 @@ class OrderApiTestCase(APITestCase):
         orders = Order.objects.all()
         serializer_data = OrderViewSerializer(orders, many=True).data
         self.assertEqual(status.HTTP_200_OK, response.status_code)
-        self.assertEqual(serializer_data, response.data)
+        self.assertEqual(serializer_data, response.data['results'])
 
-    def test_get_owner(self):
+    def test_get_order(self):
         url = reverse('order_list')
         token = test_get_token(self.client, staff=False)
         self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + token)
@@ -63,7 +63,7 @@ class OrderApiTestCase(APITestCase):
         orders = Order.objects.all().filter(user=User.objects.get(username='test_user1'))
         serializer_data = OrderViewSerializer(orders, many=True).data
         self.assertEqual(status.HTTP_200_OK, response.status_code)
-        self.assertEqual(serializer_data, response.data)
+        self.assertEqual(serializer_data, response.data['results'])
 
     def test_get_order_by_id(self):
         token = test_get_token(self.client, staff=False)
@@ -81,7 +81,7 @@ class OrderApiTestCase(APITestCase):
         orders = Order.objects.all().filter(id=self.order_4.id)
         serializer_data = OrderViewSerializer(orders, many=True).data
         self.assertEqual(status.HTTP_200_OK, response.status_code)
-        self.assertEqual(serializer_data, response.data)
+        self.assertEqual(serializer_data, response.data['results'])
 
     def test_create_order(self):
         # token = test_get_token(self.client, staff=False)
@@ -112,7 +112,6 @@ class OrderApiTestCase(APITestCase):
         url = reverse('order_create')
         json_data = json.dumps(data)
         response = self.client.post(url, data=json_data, content_type='application/json')
-        print(response.data)
         self.assertEqual(status.HTTP_201_CREATED, response.status_code)
         self.assertEqual(2, len(Order.objects.all()))
         self.assertEqual(2, len(OrderItem.objects.all().filter(order=2)))
@@ -144,7 +143,6 @@ class OrderApiTestCase(APITestCase):
         url = reverse('order_create')
         json_data = json.dumps(data)
         response = self.client.post(url, data=json_data, content_type='application/json')
-        print(response.data)
         self.assertEqual(status.HTTP_400_BAD_REQUEST, response.status_code)
         self.assertEqual(2, len(Order.objects.all()))
         self.assertEqual(0, len(OrderItem.objects.all().filter(order=2)))
@@ -157,7 +155,7 @@ class OrderApiTestCase(APITestCase):
         url = reverse('order_remove', args=(self.order_1.id,))
         response = self.client.delete(url)
         self.assertEqual(status.HTTP_403_FORBIDDEN, response.status_code)
-        self.assertEqual({'detail': ErrorDetail(string='You do not have permission to perform this action.',
+        self.assertEqual({'detail': ErrorDetail(string='У вас недостаточно прав для выполнения данного действия.',
                                                 code='permission_denied')}
                          , response.data)
         self.assertEqual(1, len(Order.objects.all()))
@@ -178,7 +176,7 @@ class OrderApiTestCase(APITestCase):
         url = reverse('orderitem_remove', args=(self.order_1.id,))
         response = self.client.delete(url)
         self.assertEqual(status.HTTP_403_FORBIDDEN, response.status_code)
-        self.assertEqual({'detail': ErrorDetail(string='You do not have permission to perform this action.',
+        self.assertEqual({'detail': ErrorDetail(string='У вас недостаточно прав для выполнения данного действия.',
                                                 code='permission_denied')}
                          , response.data)
         self.assertEqual(1, len(Order.objects.all()))

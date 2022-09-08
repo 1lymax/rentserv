@@ -21,7 +21,6 @@ class CartViewSet(GenericAPIView):
         return Response(data={settings.CART_SESSION_ID: cart})
 
     def delete(self, request, *args, **kwargs):
-        print("request.data", request.data)
         cart = Cart(request.session)
         cart = cart.remove(kwargs['id'])
         return Response(data={settings.CART_SESSION_ID: cart})
