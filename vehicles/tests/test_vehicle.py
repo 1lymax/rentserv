@@ -54,20 +54,20 @@ class VehiclesApiTestCase(APITestCase):
         url = reverse('vehicle-list')
         with CaptureQueriesContext(connection) as queries:
             response = self.client.get(url)
-            self.assertEqual(5, len(queries))
+            self.assertEqual(7, len(queries))
 
         serializer_data = VehicleSerializer(self.qs, many=True).data
         self.assertEqual(status.HTTP_200_OK, response.status_code)
-        self.assertEqual(serializer_data, response.data)
+        self.assertEqual(serializer_data, response.data['results'])
 
     def test_filter(self):
         url = reverse('vehicle-list')
         response = self.client.get(url, data={'vehicle_type': 1})
         vehicles = self.qs.filter(vehicle_type=1)
         serializer_data = VehicleSerializer(vehicles, many=True).data
-        self.assertEqual(len(serializer_data), len(response.data))
+        self.assertEqual(len(serializer_data), len(response.data['results']))
         self.assertEqual(status.HTTP_200_OK, response.status_code)
-        self.assertEqual(serializer_data, response.data)
+        self.assertEqual(serializer_data, response.data['results'])
 
     def test_filter_price_cap_min_max(self):
         url = reverse('vehicle-list')
@@ -75,9 +75,9 @@ class VehiclesApiTestCase(APITestCase):
         vehicles = self.qs.filter(price_cap__gte=600).filter(price_cap__lte=650)
         serializer_data = VehicleSerializer(vehicles, many=True).data
         self.assertEqual(status.HTTP_200_OK, response.status_code)
-        self.assertEqual(len(serializer_data), len(response.data))
+        self.assertEqual(len(serializer_data), len(response.data['results']))
         self.assertEqual(1, vehicles.count())
-        self.assertEqual(serializer_data, response.data)
+        self.assertEqual(serializer_data, response.data['results'])
 
     def test_filter_price_region_min_max(self):
         url = reverse('vehicle-list')
@@ -85,7 +85,7 @@ class VehiclesApiTestCase(APITestCase):
         vehicles = self.qs.filter(price_region__gte=600).filter(price_region__lte=700)
         serializer_data = VehicleSerializer(vehicles, many=True).data
         self.assertEqual(status.HTTP_200_OK, response.status_code)
-        self.assertEqual(serializer_data, response.data)
+        self.assertEqual(serializer_data, response.data['results'])
         self.assertEqual(2, vehicles.count())
 
     def test_filter_feature_value(self):
@@ -94,7 +94,7 @@ class VehiclesApiTestCase(APITestCase):
         vehicles = self.qs.filter(features__value=5)
         serializer_data = VehicleSerializer(vehicles, many=True).data
         self.assertEqual(status.HTTP_200_OK, response.status_code)
-        self.assertEqual(serializer_data, response.data)
+        self.assertEqual(serializer_data, response.data['results'])
         self.assertEqual(1, vehicles.count(), response.data)
 
     def test_filter_feature_min_max(self):
@@ -103,7 +103,7 @@ class VehiclesApiTestCase(APITestCase):
         vehicles = self.qs.filter(features__value__gte=5).filter(features__value__lte=5)
         serializer_data = VehicleSerializer(vehicles, many=True).data
         self.assertEqual(status.HTTP_200_OK, response.status_code)
-        self.assertEqual(serializer_data, response.data)
+        self.assertEqual(serializer_data, response.data['results'])
         self.assertEqual(1, vehicles.count(), response.data)
 
     def test_order_asc(self):
@@ -112,7 +112,7 @@ class VehiclesApiTestCase(APITestCase):
         vehicles = self.qs.order_by('name')
         serializer_data = VehicleSerializer(vehicles, many=True).data
         self.assertEqual(status.HTTP_200_OK, response.status_code)
-        self.assertEqual(serializer_data, response.data)
+        self.assertEqual(serializer_data, response.data['results'])
 
     def test_order_desc(self):
         url = reverse('vehicle-list')
@@ -120,7 +120,7 @@ class VehiclesApiTestCase(APITestCase):
         vehicles = self.qs.order_by('-vehicle_type_name')
         serializer_data = VehicleSerializer(vehicles, many=True).data
         self.assertEqual(status.HTTP_200_OK, response.status_code)
-        self.assertEqual(serializer_data, response.data)
+        self.assertEqual(serializer_data, response.data['results'])
 
     def test_create(self):
         self.assertEqual(3, Vehicle.objects.all().count())

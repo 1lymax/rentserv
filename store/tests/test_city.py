@@ -10,6 +10,7 @@ from django.test.utils import CaptureQueriesContext
 
 from store.models import City
 from store.serializers import CitySerializer
+from store.tests import test_get_token
 
 
 class CityApiTestCase(APITestCase):
@@ -23,11 +24,11 @@ class CityApiTestCase(APITestCase):
         url = reverse('city-list')
         with CaptureQueriesContext(connection) as queries:
             response = self.client.get(url)
-            self.assertEqual(1, len(queries))
+            self.assertEqual(2, len(queries))
         messure = City.objects.all()
         serializer_data = CitySerializer(messure, many=True).data
         self.assertEqual(status.HTTP_200_OK, response.status_code)
-        self.assertEqual(serializer_data, response.data)
+        self.assertEqual(serializer_data, response.data['results'])
 
     def test_create(self):
         self.assertEqual(2, City.objects.all().count())
@@ -36,7 +37,8 @@ class CityApiTestCase(APITestCase):
             'name': "Kharkiv",
         }
         json_data = json.dumps(data)
-        self.client.force_login(self.staff_user)
+        token = test_get_token(self.client, staff=True)
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + token)
         response = self.client.post(url, data=json_data,
                                     content_type='application/json')
         self.assertEqual(status.HTTP_201_CREATED, response.status_code, response.data)
@@ -49,7 +51,8 @@ class CityApiTestCase(APITestCase):
             'name': 'Odessa',
         }
         json_data = json.dumps(data)
-        self.client.force_login(self.staff_user)
+        token = test_get_token(self.client, staff=True)
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + token)
         response = self.client.post(url, data=json_data,
                                     content_type='application/json')
         self.assertEqual(status.HTTP_400_BAD_REQUEST, response.status_code, response.data)
@@ -63,11 +66,12 @@ class CityApiTestCase(APITestCase):
             'name': 'Kiev'
         }
         json_data = json.dumps(data)
-        self.client.force_login(self.user)
+        token = test_get_token(self.client, staff=False)
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + token)
         response = self.client.post(url, data=json_data,
                                     content_type='application/json')
         self.assertEqual(status.HTTP_403_FORBIDDEN, response.status_code)
-        self.assertEqual({'detail': ErrorDetail(string='You do not have permission to perform this action.',
+        self.assertEqual({'detail': ErrorDetail(string='У вас недостаточно прав для выполнения данного действия.',
                                                 code='permission_denied')}, response.data, response.data)
         self.assertEqual(2, City.objects.all().count())
 
@@ -75,7 +79,8 @@ class CityApiTestCase(APITestCase):
         self.assertEqual(2, City.objects.all().count())
         url = reverse('city-detail', args=(self.unit_1.id,))
 
-        self.client.force_login(self.staff_user)
+        token = test_get_token(self.client, staff=True)
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + token)
         response = self.client.delete(url)
         self.assertEqual(status.HTTP_204_NO_CONTENT, response.status_code)
         self.assertEqual(1, City.objects.all().count())
@@ -84,10 +89,11 @@ class CityApiTestCase(APITestCase):
         self.assertEqual(2, City.objects.all().count())
         url = reverse('city-detail', args=(self.unit_1.id,))
 
-        self.client.force_login(self.user)
+        token = test_get_token(self.client, staff=False)
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + token)
         response = self.client.delete(url)
         self.assertEqual(status.HTTP_403_FORBIDDEN, response.status_code)
-        self.assertEqual({'detail': ErrorDetail(string='You do not have permission to perform this action.',
+        self.assertEqual({'detail': ErrorDetail(string='У вас недостаточно прав для выполнения данного действия.',
                                                 code='permission_denied')}
                          , response.data)
         self.assertEqual(2, City.objects.all().count())
@@ -98,7 +104,8 @@ class CityApiTestCase(APITestCase):
             'name': 'Yuzhny'
         }
         json_data = json.dumps(data)
-        self.client.force_login(self.staff_user)
+        token = test_get_token(self.client, staff=True)
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + token)
         response = self.client.put(url, data=json_data,
                                    content_type='application/json')
         self.assertEqual(status.HTTP_200_OK, response.status_code, response.data)
@@ -111,7 +118,8 @@ class CityApiTestCase(APITestCase):
             'name': 'Kharkiv'
         }
         json_data = json.dumps(data)
-        self.client.force_login(self.user)
+        token = test_get_token(self.client, staff=False)
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + token)
         response = self.client.put(url, data=json_data,
                                    content_type='application/json')
         self.assertEqual(status.HTTP_403_FORBIDDEN, response.status_code)

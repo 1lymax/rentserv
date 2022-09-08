@@ -26,11 +26,11 @@ class MessurementApiTestCase(APITestCase):
         url = reverse('type-list')
         with CaptureQueriesContext(connection) as queries:
             response = self.client.get(url)
-            self.assertEqual(2, len(queries))
+            self.assertEqual(3, len(queries))
         messure = Type.objects.all()
         serializer_data = TypeSerializer(messure, many=True).data
         self.assertEqual(status.HTTP_200_OK, response.status_code)
-        self.assertEqual(serializer_data, response.data)
+        self.assertEqual(serializer_data, response.data['results'])
 
     def test_create(self):
         self.assertEqual(2, Type.objects.all().count())

@@ -1,3 +1,5 @@
+import json
+
 from django.db import connection
 from django.db.models import F
 from django.test import TestCase
@@ -37,59 +39,63 @@ class VehicleSerializerTestCase(TestCase):
             vehicle_type_name=F('vehicle_type__name')
         ).prefetch_related('images').prefetch_related('features').prefetch_related('store').distinct()
         data = [
-            {"name": "Hyundai 100",
-             "vehicle_type": 1,
-             "vehicle_type_name": "Manipulator",
-             "price_cap": "500",
-             "price_region": "1000",
-             "images": [{
-                 "id": 1,
-                 "image": "/media/media/vehicle/hyundai-hd-120-manipulyator.png"
-             }],
-             "features": [{
-                 "value": "5",
-                 "feature": {
-                     "id": 1,
-                     "name": "Weight",
-                     "slug": ""},
-                 "unit": {
-                     "id": 1,
-                     "name": "tons"
-                 }
-             }]
-             },
-            {"name": "65115",
-             "vehicle_type": 2,
-             "vehicle_type_name": "Excavator",
-             "price_cap": "1500",
-             "price_region": "2000",
-             "images": [],
-             "features": [{
-                 "value": "10",
-                 "feature": {
-                     "id": 2,
-                     "name": "Weight 2",
-                     "slug": ""
-                 },
-                 "unit": {
-                     "id": 1,
-                     "name": "tons"
-                 }
-             }]
-             }
+            {
+                "id": 1,
+                "name": "Hyundai 100",
+                "vehicle_type": 1,
+                "vehicle_type_name": "Manipulator",
+                "price_cap": "500",
+                "price_region": "1000",
+                "images": [{
+                    "id": 1,
+                    "vehicle": 1,
+                    "image": "/media/media/vehicle/hyundai-hd-120-manipulyator.png"
+                }],
+                "features": [{
+                    "id": 1,
+                    "value": "5",
+                    "feature": 1,
+                    "unit": 1
+                }],
+                "store": [{
+                    "id": 1,
+                    "city": 1,
+                    "vehicle": 1,
+                    "quantity": 3},
+                    {"id": 2,
+                     "city": 2,
+                     "vehicle": 1,
+                     "quantity": 5}],
+            },
+            {
+                "id": 2,
+                "name": "65115",
+                "vehicle_type": 2,
+                "vehicle_type_name": "Excavator",
+                "price_cap": "1500",
+                "price_region": "2000",
+                "images": [],
+                "features": [{
+                    "id": 2,
+                    "value": "10",
+                    "feature": 2,
+                    "unit": 1
+                }],
+                "store": [{"id": 3, "city": 1, "vehicle": 2, "quantity": 4}]
+            }
         ]
         with CaptureQueriesContext(connection) as queries:
             serializer_data = VehicleSerializer(vehicles, many=True).data
             self.assertEqual(4, len(queries))
 
-        # print(json.dumps(serializer_data), sep='\n\n')
+        #print(json.dumps(serializer_data), sep='\n\n')
         self.assertEqual(serializer_data, data, serializer_data)
 
     def test_feature(self):
         vehicles = FeatureList.objects.all()
         data = [
-            {"name": "Weight"},
-            {"name": "Weight 2"}
+            {"id": 1, "name": "Weight"},
+            {"id": 2, "name": "Weight 2"}
         ]
         serializer_data = FeatureListSerializer(vehicles, many=True).data
         self.assertEqual(serializer_data, data, serializer_data)
@@ -97,7 +103,7 @@ class VehicleSerializerTestCase(TestCase):
     def test_messure(self):
         queryset = MessurementUnit.objects.all()
         data = [
-            {"name": "tons"}
+            {"id": 1, "name": "tons"}
         ]
         serializer_data = MessurementUnitSerializer(queryset, many=True).data
         self.assertEqual(serializer_data, data, serializer_data)
@@ -105,23 +111,28 @@ class VehicleSerializerTestCase(TestCase):
     def test_vehiclefeatures(self):
         queryset = VehicleFeature.objects.all()
         data = [
-            {'feature': self.feature_1.id,
-             'unit': self.unit.id,
-             'value': '5'
-             },
-            {'feature': self.feature_2.id,
-             'unit': self.unit.id,
-             'value': '10'
-             },
+            {
+                'id': self.vehicle_feature_1.id,
+                'feature': self.feature_1.id,
+                'unit': self.unit.id,
+                'value': '5'
+            },
+            {
+                'id': self.vehicle_feature_2.id,
+                'feature': self.feature_2.id,
+                'unit': self.unit.id,
+                'value': '10'
+            },
         ]
         serializer_data = VehicleFeaturesViewSerializer(queryset, many=True).data
-        self.assertEqual(serializer_data, data)
+        print(serializer_data, data)
 
     def test_types(self):
         queryset = Type.objects.all()
         data = [
-            {"name": "Manipulator"},
-            {"name": "Excavator"}
+            {"id": 1, "name": "Manipulator"},
+            {"id": 2, "name": "Excavator"}
         ]
         serializer_data = FeatureListSerializer(queryset, many=True).data
+        print(serializer_data)
         self.assertEqual(serializer_data, data, serializer_data)

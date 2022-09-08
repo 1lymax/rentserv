@@ -39,7 +39,7 @@ class StoreApiTestCase(APITestCase):
         messure = Store.objects.all()
         serializer_data = StoreViewSerializer(messure, many=True).data
         self.assertEqual(status.HTTP_200_OK, response.status_code)
-        self.assertEqual(serializer_data, response.data)
+        self.assertEqual(serializer_data, response.data['results'])
 
     def test_create(self):
         self.assertEqual(2, Store.objects.all().count())

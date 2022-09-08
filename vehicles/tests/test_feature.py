@@ -26,11 +26,11 @@ class VehicleFeaturesApiTestCase(APITestCase):
         url = reverse('featurelist-list')
         with CaptureQueriesContext(connection) as queries:
             response = self.client.get(url)
-            self.assertEqual(2, len(queries))
+            self.assertEqual(3, len(queries))
         features = FeatureList.objects.all()
         serializer_data = FeatureListSerializer(features, many=True).data
         self.assertEqual(status.HTTP_200_OK, response.status_code)
-        self.assertEqual(serializer_data, response.data)
+        self.assertEqual(serializer_data, response.data['results'])
 
     def test_create(self):
         self.assertEqual(2, FeatureList.objects.all().count())
