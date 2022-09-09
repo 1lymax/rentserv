@@ -36,15 +36,6 @@ class VehicleSerializer(ModelSerializer):
             'id', 'name', 'vehicle_type', 'vehicle_type_name', 'price_cap', 'price_region', 'images', 'features', 'store')
 
 
-# class VehicleFilter(filters.FilterSet):
-#     feature = filters.IntegerField(method='filter_feature')
-#
-#     class Meta:
-#         fields = ('feature')
-#
-#     def filter_feature(self, queryset, name, value):
-#         return queryset.filter(featureslist__fe)
-
 class FeatureListSerializer(ModelSerializer):
     class Meta:
         model = FeatureList

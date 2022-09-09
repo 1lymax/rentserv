@@ -6,14 +6,14 @@ from rest_framework.parsers import MultiPartParser
 from rest_framework.viewsets import ModelViewSet
 
 from vehicles.models import Vehicle, Type, VehicleFeature, FeatureList, MessurementUnit, VehicleImage
-from vehicles.pagination import PaginationWithAggregates
+from vehicles.pagination import PaginationVehicleWithAggregates
 from vehicles.permissions import IsStaffOrReadOnly
 from vehicles.serializers import VehicleSerializer, TypeSerializer, VehicleFeaturesCreateUpdateSerializer, \
     FeatureListSerializer, MessurementUnitSerializer, VehicleImageSerializer
 
 
 class VehicleImageViewSet(ModelViewSet):
-    queryset = VehicleImage.objects.all()
+    queryset = VehicleImage.objects.all().order_by('id')
     serializer_class = VehicleImageSerializer
     permission_classes = [IsStaffOrReadOnly]
     filterset_fields = ['id', 'vehicle',]
@@ -27,7 +27,7 @@ class VehicleImageViewSet(ModelViewSet):
             raise serializers.ValidationError("Invalid request")
 
 class TypeViewSet(ModelViewSet):
-    queryset = Type.objects.all()
+    queryset = Type.objects.all().order_by('id')
     serializer_class = TypeSerializer
     permission_classes = [IsStaffOrReadOnly]
 
@@ -42,11 +42,11 @@ class TypeViewSet(ModelViewSet):
 
 
 class VehicleViewSet(ModelViewSet):
-    queryset = Vehicle.objects.all().annotate(
+    queryset = Vehicle.objects.all().order_by('id').annotate(
         vehicle_type_name=F('vehicle_type__name')
     ).prefetch_related('images').prefetch_related('features').prefetch_related('store').distinct()
     serializer_class = VehicleSerializer
-    pagination_class = PaginationWithAggregates
+    pagination_class = PaginationVehicleWithAggregates
     permission_classes = [IsStaffOrReadOnly]
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_fields = ['id', 'vehicle_type', 'price_cap', 'price_region',
@@ -58,7 +58,7 @@ class VehicleViewSet(ModelViewSet):
     def filter_queryset(self, request):
         self.queryset = super().filter_queryset(request)
 
-        predicate = self.request.query_params  # or request.data for POST
+        predicate = self.request.query_params
         if predicate.get('name', None) is not None:
             self.queryset = self.queryset.filter(name__icontains=predicate['name'])
         if predicate.get('min_price_cap', None) is not None:
@@ -78,7 +78,7 @@ class VehicleViewSet(ModelViewSet):
 
 
 class VehicleFeatureViewSet(ModelViewSet):
-    queryset = VehicleFeature.objects.all()
+    queryset = VehicleFeature.objects.all().order_by('id')
     serializer_class = VehicleFeaturesCreateUpdateSerializer
     permission_classes = [IsStaffOrReadOnly]
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
@@ -95,7 +95,7 @@ class VehicleFeatureViewSet(ModelViewSet):
 
 
 class FeatureListViewSet(ModelViewSet):
-    queryset = FeatureList.objects.all()
+    queryset = FeatureList.objects.all().order_by('id')
     serializer_class = FeatureListSerializer
     permission_classes = [IsStaffOrReadOnly]
 
@@ -110,7 +110,7 @@ class FeatureListViewSet(ModelViewSet):
 
 
 class MessurementUnitViewSet(ModelViewSet):
-    queryset = MessurementUnit.objects.all()
+    queryset = MessurementUnit.objects.all().order_by('id')
     serializer_class = MessurementUnitSerializer
     permission_classes = [IsStaffOrReadOnly]
 
