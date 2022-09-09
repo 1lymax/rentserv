@@ -1,10 +1,10 @@
 import React from 'react';
 import {IconButton} from "@mui/material";
-// import Button from '@mui/';
+//import {IconButton} from '@mui/joy';
 
 const IButton = (props) => {
 	return (
-		<IconButton color='default' size='large' {...props} >
+		<IconButton size='large' {...props} >
 			{props.children}
 		</IconButton>
 	);

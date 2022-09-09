@@ -6,7 +6,7 @@ import classes from './MultiSelect.module.css'
 const MultiSelect = observer(({
 								  isMulti, isClearable, onChange, options,
 								  value, placeholder, name,
-								  getOptionValue, getOptionLabel
+								  getOptionValue, getOptionLabel, onKeyDown
 							  }) => {
 
 	return (
@@ -15,6 +15,7 @@ const MultiSelect = observer(({
 				name={name}
 				options={options}
 				isMulti={isMulti}
+				onKeyDown={e => onKeyDown(e)}
 				isClearable={isClearable}
 				placeholder={placeholder}
 				defaultValue={options[options.findIndex(item => item.id === value)]}

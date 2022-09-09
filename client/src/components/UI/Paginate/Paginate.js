@@ -28,7 +28,7 @@ const Paginate = observer(({total, setCurrentPage, setLimit}) => {
 			classes={classes}
 			rowsPerPage={rowsPerPage}
 			onPageChange={handleChangePage}
-			labelRowsPerPage='Записей на страницу'
+			labelRowsPerPage='Строк на стр.:'
 			onRowsPerPageChange={handleChangeRowsPerPage}
 			rowsPerPageOptions={[5, 25, 50, 100, {value: -1, label: 'Все'}]}
 			labelDisplayedRows={({ from, to, count }) => { return `${from}–${to} из ${count !== -1 ? count : `более чем ${to}`}`; }}

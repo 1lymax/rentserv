@@ -1,11 +1,13 @@
 import {BrowserRouter} from "react-router-dom";
 import React, {useContext, useEffect, useState} from "react";
+import {observer} from "mobx-react-lite";
+import {Spinner} from "react-bootstrap";
+
 import AppRouter from "./components/AppRouter";
 import NavBar from "./components/NavBar";
-import {observer} from "mobx-react-lite";
 import {Context} from "./index";
 import {check} from "./http/userAPI";
-import {Spinner} from "react-bootstrap";
+
 
 const App = observer(() => {
 	const {user} = useContext(Context)
@@ -27,10 +29,12 @@ const App = observer(() => {
 	}
 
 	return (
+		//<CssVarsProvider>
 		<BrowserRouter>
 			<NavBar/>
 			<AppRouter/>
 		</BrowserRouter>
+		//</CssVarsProvider>
 	);
 })
 

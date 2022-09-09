@@ -31,7 +31,7 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 	const [isLoading, setIsLoading] = useState(false)
 	const [needFetch, setNeedFetch] = useState([])
 	const [fieldValues, setFieldValues] = useState({})
-	const [inputVisible, setInputVisible] = useState(0)
+	const [actionButtonsVisible, setActionButtonsVisible] = useState(0)
 	const [focusElement, setFocusElement] = useState([])
 	const contextScope = useContext(Context)
 	const conf = context.settings
@@ -77,6 +77,7 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 
 	const handleEditOrSave = (id) => {
 		setEdit(id)
+		console.log('id', id, 'edit', edit)
 		if (id === edit && id) {
 			setIsLoading(true)
 			doUpdate(context, id, fieldValues).then(() => {
@@ -86,7 +87,7 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 			}).catch(e => {
 				console.log(e.response.data)
 			});
-		} else if (inputVisible === 0) {
+		} else if (actionButtonsVisible === 0) {
 			doCreate(context, fieldValues).then(() => {
 				doFetch(context).then(resp => context.setData(resp.results))
 				setNeedFetch(Date.now())
@@ -94,6 +95,7 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 				hideAll()
 			})
 		}
+
 	}
 
 	const handleDelOrCancel = (id) => {
@@ -117,8 +119,15 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 
 	const hideAll = () => {
 		setEdit(0)
-		setInputVisible(0)
+		setActionButtonsVisible(0)
 		setIsLoading(false)
+	};
+
+	const handleSubmit = (item, e) => {
+		console.log(e)
+		setFieldsArray(item)
+		setAdd(false)
+		handleEditOrSave(item.id, item.name)
 	};
 
 	return (
@@ -154,8 +163,8 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 					<Row className={!isDependencyTable && classes.dict__item}>
 						<Row
 							className={["d-flex align-items-center", isDependencyTable && 'ms-4'].join(' ')}
-							onMouseEnter={() => setInputVisible(item.id)}
-							onMouseLeave={() => setInputVisible(0)}
+							onMouseEnter={() => setActionButtonsVisible(item.id)}
+							onMouseLeave={() => setActionButtonsVisible(0)}
 						>
 							{conf.fields.map(set =>
 								<React.Fragment key={set.name}>
@@ -166,12 +175,13 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 											{item.id === edit
 												?
 												<InputControl
-													inputName={set.name}
-													onChange={e => handleInputChange(e)}
-													hidden={isNeedDependencyValue(set.name)}
-													value={fieldValues[set.name]}
-													autoFocus={item.id === focusElement[0] && set.name === focusElement[1]}
 													set={set}
+													inputName={set.name}
+													value={fieldValues[set.name]}
+													onChange={e => handleInputChange(e)}
+													handleSubmit={(e) => handleSubmit(item, e)}
+													hidden={isNeedDependencyValue(set.name)}
+													autoFocus={item.id === focusElement[0] && set.name === focusElement[1]}
 													selectOptions={set.contextName && contextScope[set.contextName].data}
 												/>
 												:
@@ -181,7 +191,7 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 														 setFieldsArray(item)
 														 setAdd(false)
 														 setFocusElement([item.id, set.name])
-														 handleEditOrSave(item.id, set)
+														 setEdit(item.id)
 													 }}>
 													{setCellValue(item, set)}
 												</div>
@@ -193,19 +203,12 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 								</React.Fragment>
 							)}
 
-							{inputVisible === item.id
+							{actionButtonsVisible === item.id
 								?
 								<Col className={"col-12 d-flex flex-row justify-content-end pe-1"} lg={1}>
 									{isLoading
 										? <LoadingButton loading/>
-										: <IButton
-											type="submit"
-											onClick={() => {
-											setFieldsArray(item)
-											setAdd(false)
-											handleEditOrSave(item.id, item.name)
-										}}
-										>
+										: <IButton onClick={() => handleSubmit(item)}>
 											{edit === item.id ? <SaveIcon/> : <EditIcon/>}
 										</IButton>
 									}
@@ -265,9 +268,9 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 				<Row className={["mb-1 d-flex align-items-center", isDependencyTable && 'ms-5'].join(' ')}>
 					<Col>
 						<OutlineButton
-							size="small"
+							//size="small"
 							startIcon={<AddToPhotos/>}
-							style={{minWidth: "150px", width: "20%"}}
+							style={{minWidth: "120px", width: "20%"}}
 							onClick={() => {
 								setIsLoading(true)
 								setFieldsArray(isDependencyTable ? filters : {})
@@ -278,7 +281,7 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 							Добавить{/*conf.addButtonTitle*/}
 						</OutlineButton>
 					</Col>
-					{!isDependencyTable &&
+					{!isDependencyTable ||
 						<Col className={classes.pagination__wrapper}>
 							<Paginate total={totalRows} setCurrentPage={setCurrentPage} setLimit={setRowsPerPage}/>
 						</Col>
