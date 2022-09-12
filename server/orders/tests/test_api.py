@@ -6,11 +6,11 @@ from rest_framework import status
 from rest_framework.exceptions import ErrorDetail
 from rest_framework.test import APITestCase
 
-from server.orders.models import Order, OrderItem
-from server.orders.serializers import OrderViewSerializer
-from server.store.models import City, Store
-from server.vehicles.models import Type, Vehicle
-from server.vehicles.tests import test_get_token
+from orders.models import Order, OrderItem
+from orders.serializers import OrderViewSerializer
+from store.models import City, Store
+from vehicles.models import Type, Vehicle
+from vehicles.tests import test_get_token
 
 
 class OrderApiTestCase(APITestCase):

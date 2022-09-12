@@ -8,9 +8,9 @@ from rest_framework.test import APITestCase
 from django.db import connection
 from django.test.utils import CaptureQueriesContext
 
-from server.vehicles.models import Type
-from server.vehicles.serializers import TypeSerializer
-from server.vehicles.tests import test_get_token, bad_token
+from vehicles.models import Type
+from vehicles.serializers import TypeSerializer
+from vehicles.tests import test_get_token, bad_token
 
 
 class MessurementApiTestCase(APITestCase):

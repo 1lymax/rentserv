@@ -6,10 +6,10 @@ from rest_framework import status
 from rest_framework.exceptions import ErrorDetail
 from rest_framework.test import APITestCase
 
-from server.store.models import Store, City
-from server.store.serializers import StoreViewSerializer
-from server.store.tests import test_get_token, bad_token
-from server.vehicles.models import Type, Vehicle
+from store.models import Store, City
+from store.serializers import StoreViewSerializer
+from store.tests import test_get_token, bad_token
+from vehicles.models import Type, Vehicle
 
 
 class StoreApiTestCase(APITestCase):

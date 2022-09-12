@@ -7,9 +7,9 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 from django.db import connection
 from django.test.utils import CaptureQueriesContext
-from server.vehicles.models import Vehicle, Type, MessurementUnit, FeatureList, VehicleFeature
-from server.vehicles.serializers import TypeSerializer
-from server.vehicles.tests import test_get_token
+from vehicles.models import Vehicle, Type, MessurementUnit, FeatureList, VehicleFeature
+from vehicles.serializers import TypeSerializer
+from vehicles.tests import test_get_token
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "rentserv.settings")
 
