@@ -15,6 +15,7 @@ class CartViewSet(GenericAPIView):
 
     def post(self, request, *args, **kwargs):
         cart = Cart(request.session)
+        print(request.data)
         if not request.data.get('id') or not request.data.get('quantity'):
             raise s.ValidationError("Some parameters are missed")
         cart = cart.add(request.data['id'], request.data['quantity'])

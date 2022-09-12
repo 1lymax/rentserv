@@ -4,8 +4,7 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from cart.serializers import CartSerializer
-from vehicles.models import Type, Vehicle
+from server.vehicles.models import Type, Vehicle
 
 
 class CartApiTestCase(APITestCase):

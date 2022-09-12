@@ -10,6 +10,7 @@ import Types from "./store/Types";
 import Units from "./store/Units";
 import VehicleFeatures from "./store/VehicleFeatures";
 import VehicleImages from "./store/VehicleImages";
+import Cart from "./store/Cart";
 
 
 export const Context = createContext(null)
@@ -24,6 +25,7 @@ root.render(
 		city: new Cities(),
 		type: new Types(),
 		unit: new Units(),
+		cart: new Cart(),
 		vehicleImage: new VehicleImages(),
 		vehicleFeature: new VehicleFeatures()
 	}}>

@@ -1,13 +1,11 @@
-import json
-
 from django.db import connection
 from django.db.models import F
 from django.test import TestCase
 from django.test.utils import CaptureQueriesContext
 
-from store.models import City, Store
-from vehicles.models import Type, Vehicle, MessurementUnit, FeatureList, VehicleFeature, VehicleImage
-from vehicles.serializers import VehicleSerializer, FeatureListSerializer, MessurementUnitSerializer, \
+from server.store.models import City, Store
+from server.vehicles.models import Type, Vehicle, MessurementUnit, FeatureList, VehicleFeature, VehicleImage
+from server.vehicles.serializers import VehicleSerializer, FeatureListSerializer, MessurementUnitSerializer, \
     VehicleFeaturesViewSerializer
 
 

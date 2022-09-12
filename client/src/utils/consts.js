@@ -14,6 +14,7 @@ export const API_ROUTES = {
 	vehicleFeature: 'vehicle_feature',
 	city: 'city',
 	store: 'store',
+	cart: 'cart'
 }
 
 export const PAGINATION = {
@@ -81,7 +82,7 @@ export const ADMIN = {
 		addButtonTitle: '+ характеристика',
 		fields: [
 			{
-				name: 'name', type: 'string'
+				name: 'name', type: 'string', placeholder: 'Характеристика'
 			},
 		]
 	},
@@ -137,7 +138,7 @@ export const ADMIN = {
 		addButtonTitle: '+ ед. изм.',
 		fields: [
 			{
-				name: 'name', type: 'string', filterStyles: {minWidth: '70px', maxWidth: '100px'},
+				name: 'name', type: 'string', placeholder: 'Ед. изм.', filterStyles: {minWidth: '70px', maxWidth: '100px'},
 			},
 		]
 	},

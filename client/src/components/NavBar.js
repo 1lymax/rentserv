@@ -6,6 +6,9 @@ import Nav from "react-bootstrap/Nav";
 import {NavLink, useNavigate} from "react-router-dom";
 import {ADMIN_ROUTE, LOGIN_ROUTE, SHOP_ROUTE} from "../utils/consts";
 import {observer} from "mobx-react-lite";
+import Cart from "./Cart/Cart";
+import {grey} from "@mui/material/colors";
+import UserMenu from "./UserMenu/UserMenu";
 
 const NavBar = observer(() => {
 	const {user} = useContext(Context)
@@ -44,6 +47,9 @@ const NavBar = observer(() => {
 							onClick={logout} className="ms-2"
 						>
 							Выйти</Button>
+
+						<Cart/>
+						<UserMenu/>
 					</Nav>
 					:
 					<Nav className="ms-auto" style={{color: "white"}}>

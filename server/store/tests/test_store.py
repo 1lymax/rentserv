@@ -5,13 +5,11 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.exceptions import ErrorDetail
 from rest_framework.test import APITestCase
-from django.db import connection
-from django.test.utils import CaptureQueriesContext
 
-from store.models import Store, City
-from store.serializers import StoreViewSerializer
-from store.tests import test_get_token, bad_token
-from vehicles.models import Type, Vehicle, MessurementUnit, FeatureList
+from server.store.models import Store, City
+from server.store.serializers import StoreViewSerializer
+from server.store.tests import test_get_token, bad_token
+from server.vehicles.models import Type, Vehicle
 
 
 class StoreApiTestCase(APITestCase):

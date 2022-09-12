@@ -8,9 +8,9 @@ from rest_framework.test import APITestCase
 from django.db import connection
 from django.test.utils import CaptureQueriesContext
 
-from store.models import City
-from store.serializers import CitySerializer
-from store.tests import test_get_token
+from server.store.models import City
+from server.store.serializers import CitySerializer
+from server.store.tests import test_get_token
 
 
 class CityApiTestCase(APITestCase):

@@ -8,9 +8,9 @@ from rest_framework import status
 from rest_framework.exceptions import ErrorDetail
 from rest_framework.test import APITestCase
 
-from vehicles.models import FeatureList
-from vehicles.serializers import FeatureListSerializer
-from vehicles.tests import test_get_token
+from server.vehicles.models import FeatureList
+from server.vehicles.serializers import FeatureListSerializer
+from server.vehicles.tests import test_get_token
 
 
 class VehicleFeaturesApiTestCase(APITestCase):

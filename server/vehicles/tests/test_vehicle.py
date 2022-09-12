@@ -7,13 +7,12 @@ from django.db.models import F
 from django.test.utils import CaptureQueriesContext
 from django.urls import reverse
 from rest_framework import status
-from rest_framework.exceptions import ErrorDetail
 from rest_framework.test import APITestCase
 
-from store.models import City, Store
-from vehicles.models import Vehicle, Type, MessurementUnit, FeatureList, VehicleFeature
-from vehicles.serializers import VehicleSerializer
-from vehicles.tests import test_get_token
+from server.store.models import City, Store
+from server.vehicles.models import Vehicle, Type, MessurementUnit, FeatureList, VehicleFeature
+from server.vehicles.serializers import VehicleSerializer
+from server.vehicles.tests import test_get_token
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "rentserv.settings")
 
