@@ -37,14 +37,17 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
-    - name: cd server
-      run: cd server
     - name: Run makemigrations
-      run: python manage.py makemigrations
+      run: |
+        cd server
+        python manage.py makemigrations
     - name: Run migrations
-      run: python manage.py migrate
+      run: |
+        cd server
+        python manage.py migrate
     # - name: Run server
     #  run: python manage.py runserver
     - name: Run Tests
       run: |
+        cd server
         python manage.py test
