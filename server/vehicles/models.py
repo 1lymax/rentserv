@@ -2,7 +2,7 @@ import os
 
 from django.db import models
 
-
+print('Hello world!')
 class Type(models.Model):
     name = models.CharField(max_length=200)
     slug = models.SlugField(max_length=200, default='')

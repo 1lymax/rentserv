@@ -104,7 +104,7 @@ DATABASES = {
         'NAME': 'rentserv',
         'USER': 'rentserv',
         'PASSWORD': '123',
-        'HOST': 'localhost',
+        'HOST': 'db',
         'PORT': '5432',
     }
 }
@@ -121,7 +121,7 @@ if os.environ.get('GITHUB_WORKFLOW'):
         }
     }
 
-if 'test' in sys.argv:
+if 'test' in sys.argv or True:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
@@ -232,3 +232,4 @@ CORS_ORIGIN_WHITELIST = (
 # ACCOUNT_AUTHENTICATION_METHOD = "email"
 # ACCOUNT_EMAIL_REQUIRED = True
 # ACCOUNT_USERNAME_REQUIRED = False
+

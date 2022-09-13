@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    command: python3 manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./server/:/app
+    ports:
+      - 8000:8000
+    depends_on:
+      - db
+    env_file:
+      - ./.env.dev
+#  db:
+#    image: postgres:13
+#    volumes:
+#      - postgres_data:/var/lib/postgresql/data/
+#    environment:
+#      - POSTGRES_DB=rentserv
+#      - POSTGRES_USER=postgres
+#      - POSTGRES_PASSWORD=postgres
+#      - "POSTGRES_HOST_AUTH_METHOD=trust"
+#
+#volumes:
+#  postgres_data:
