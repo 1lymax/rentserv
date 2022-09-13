@@ -42,8 +42,8 @@ jobs:
           cache-from: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/rentserv:buildcache
           cache-to: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/rentserv:buildcache,mode=max
           
-      -
-        name: compose
-        with:
-          compose-file: "./docker-compose.yml"
+     # -
+     #   name: compose
+     #   with:
+     #     compose-file: "./docker-compose.yml"
           
