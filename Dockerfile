@@ -5,10 +5,10 @@ RUN mkdir -p /opt/app/pip_cache
 RUN mkdir -p /opt/app/rentserv
 COPY requirements.txt /opt/app/
 COPY ./server Procfile /opt/app/rentserv/
-COPY Procfile /opt/app/rentserv/rentserv/
+# COPY  /opt/app/rentserv/rentserv/
 
 WORKDIR /opt/app/rentserv
 EXPOSE 8020
 
 RUN pip install -r /opt/app/requirements.txt --cache-dir /opt/app/pip_cache
-RUN python manage.py collectstatic
+# RUN python manage.py collectstatic
