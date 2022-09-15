@@ -7,7 +7,7 @@ COPY requirements.txt /opt/app/
 COPY ./server Procfile /opt/app/rentserv/
 # COPY  /opt/app/rentserv/rentserv/
 
-WORKDIR /opt/app/rentserv
+WORKDIR /opt/app/rentserv/
 EXPOSE 8020
 
 RUN pip install -r /opt/app/requirements.txt --cache-dir /opt/app/pip_cache
