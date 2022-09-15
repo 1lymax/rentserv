@@ -5,6 +5,7 @@ RUN mkdir -p /opt/app/pip_cache
 RUN mkdir -p /opt/app/rentserv
 COPY requirements.txt /opt/app/
 COPY ./server Procfile /opt/app/rentserv/
+COPY Procfile /opt/app/rentserv/rentserv/
 
 WORKDIR /opt/app/rentserv
 EXPOSE 8020

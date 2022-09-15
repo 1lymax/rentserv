@@ -1,1 +1,1 @@
-web: gunicorn rentserv.wsgi
+web: gunicorn rentserv.wsgi --logfile -
