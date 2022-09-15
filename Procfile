@@ -1,2 +1,1 @@
-worker: python manage.py collectstatic
-web: gunicorn rentserv.wsgi --logfile -
+web: gunicorn rentserv.wsgi --bind 0.0.0.0:8020 --workers 3 --logfile -
