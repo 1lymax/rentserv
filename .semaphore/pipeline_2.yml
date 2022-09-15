@@ -1,0 +1,29 @@
+version: v1.0
+name: Pipeline 2
+agent:
+  machine:
+    type: e1-standard-2
+    os_image: ubuntu2004
+blocks:
+  - name: Docker build
+    task:
+      jobs:
+        - name: 'Job #1'
+          commands:
+            - 'echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin'
+            - 'docker pull $DOCKER_USERNAME/rentserv:latest || true'
+            - 'docker build --cache-from=$DOCKER_USERNAME/rentserv:latest -t $DOCKER_USERNAME/rentserv:latest .'
+            - 'docker push $DOCKER_USERNAME/rentserv:latest'
+      secrets:
+        - name: dockerhub
+      prologue:
+        commands:
+          - sem-version python 3.9
+          - checkout
+          - cache restore
+          - mkdir -p .pip_cache
+          - pip install --cache-dir .pip_cache -r requirements.txt
+          - cd server
+          - 'python manage.py makemigrations '
+          - python manage.py migrate
+          - cd ..
