@@ -12,11 +12,11 @@ blocks:
           commands:
             - checkout
             - 'echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin'
-            - 'docker pull "$DOCKER_USERNAME"/pyflasksemaphore:$SEMAPHORE_WORKFLOW_ID'
+            - 'docker pull "$DOCKER_USERNAME"/rentserv:$SEMAPHORE_WORKFLOW_ID'
             - 'heroku container:login'
-            - 'docker tag "$DOCKER_USERNAME"/pyflasksemaphore:$SEMAPHORE_WORKFLOW_ID registry.heroku.com/$HEROKU_APP/web'
+            - 'docker tag "$DOCKER_USERNAME"/rentserv:$SEMAPHORE_WORKFLOW_ID registry.heroku.com/$HEROKU_APP/web'
             - docker push registry.heroku.com/$HEROKU_APP/web
-            - 'heroku config:set DB="$MONGODB_URI"'
+            - '# heroku config:set DB="$MONGODB_URI"'
             - 'heroku stack:set container --app $HEROKU_APP'
             - 'heroku container:release web --app $HEROKU_APP'
       secrets:
