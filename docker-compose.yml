@@ -7,11 +7,11 @@ services:
 #      - 27017:27017
 #    command: mongod --logpath=/dev/null # --quiet
   web:
-#    image: rentserv
-#    container_name: rentserv
-#    build:
-#      context: .
-#      dockerfile: Dockerfile
+    image: rentserv
+    container_name: rentserv
+    build:
+      context: .
+      dockerfile: Dockerfile
     command: gunicorn rentserv.wsgi --bind 0.0.0.0:8020 --workers 3
     ports:
       - "8020:8020"
