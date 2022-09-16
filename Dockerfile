@@ -1,5 +1,5 @@
-FROM registry.semaphoreci.com/python:3.8
-# python:3.9-slim
+# FROM registry.semaphoreci.com/python:3.8
+FROM python:3.9-slim
 
 RUN mkdir -p /opt/app
 RUN mkdir -p /opt/app/pip_cache
