@@ -16,5 +16,5 @@ RUN pip install -r /opt/app/requirements.txt --cache-dir /opt/app/pip_cache
 # RUN python manage.py makemigrations
 # RUN python manage.py migrate
 #CMD ["/rentserv/start-server.sh"]
-#CMD start-server.sh
-CMD ls
+RUN chmod 755 start-server.sh
+CMD start-server.sh
