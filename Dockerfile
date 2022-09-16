@@ -10,7 +10,7 @@ COPY ./server start.sh /opt/app/rentserv/
 # COPY  /opt/app/rentserv/rentserv/
 
 WORKDIR /opt/app/rentserv/
-EXPOSE 8020
+EXPOSE $PORT
 
 RUN pip install -r /opt/app/requirements.txt --cache-dir /opt/app/pip_cache
 # RUN python manage.py makemigrations
