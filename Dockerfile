@@ -14,3 +14,4 @@ EXPOSE 8020
 RUN pip install -r /opt/app/requirements.txt --cache-dir /opt/app/pip_cache
 RUN python manage.py makemigrations
 RUN python manage.py migrate
+CMD ['gunicorn', 'rentserv.wsgi', '--bind 0.0.0.0:8020', '--workers 3']
