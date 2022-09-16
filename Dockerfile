@@ -16,5 +16,6 @@ RUN pip install -r /opt/app/requirements.txt --cache-dir /opt/app/pip_cache
 # RUN python manage.py makemigrations
 # RUN python manage.py migrate
 # RUN chmod 755 start.sh
-USER root
+# RUN chown -R www-data:www-data /opt/app
+# USER root
 CMD /opt/app/rentserv/start.sh
