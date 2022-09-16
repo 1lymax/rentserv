@@ -34,6 +34,7 @@ const DependencyShow = ({contextScope, item, conf}) => {
 	};
 
 	const handleShowAll = () => {
+		// eslint-disable-next-line
 		conf.dependencies && conf.dependencies.map(i => {
 			handleShowDependency(i, item, true, !showAll)
 		})

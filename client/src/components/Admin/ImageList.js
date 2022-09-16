@@ -13,6 +13,7 @@ const ImageList = ({context, filters}) => {
 		useEffect(() => {
 			doFetch(context, '', filters)
 				.then(resp => setData(resp.results))
+			// eslint-disable-next-line
 		}, [needFetch]);
 
 		const handleImageUpload = (file) => {

@@ -1,5 +1,5 @@
 import {makeAutoObservable} from "mobx";
-import {ADMIN, API_ROUTES} from "../utils/consts";
+import {API_ROUTES} from "../utils/consts";
 
 export default class Cart {
 	constructor() {

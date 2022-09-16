@@ -19,6 +19,7 @@ const StoresAdmin = observer(() => {
 			obj.noFetchContextFromBackend === undefined && doFetch(obj, '', '')
 				.then(data => obj.setData(data.results))
 		}
+		// eslint-disable-next-line
 	}, []);
 	return (
 		<Container className="d-flex flex-column">

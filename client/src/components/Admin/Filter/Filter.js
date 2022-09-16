@@ -35,7 +35,7 @@ const Filter = observer(({conf, filterCallback, aggregate}) => {
 				))
 			)
 		)
-
+		// eslint-disable-next-line
 	}, []);
 
 	const getDependencyFieldValue = (dep) => {

@@ -1,18 +1,17 @@
-import React, {useContext} from 'react';
+import React from 'react';
 import {Col, Image} from "react-bootstrap";
 import {useNavigate} from "react-router-dom";
 import {ITEMDETAIL_ROUTE} from "../utils/consts";
 import {Card} from "@mui/material";
 import IButton from "./UI/IconButton/IButton";
 import {AddShoppingCartOutlined} from "@mui/icons-material";
-import {addToCart, doCreate} from "../http/storeAPI";
-import {Context} from "../index";
+import {addToCart} from "../http/storeAPI";
 
 const VehicleItem = ({vehicle}) => {
 	const {images} = vehicle
 	const imagesObj = images.reduce((acc,curr)=> (acc[curr]=curr),{});
 	const navigate = useNavigate()
-	const {cart} = useContext(Context)
+	//const {cart} = useContext(Context)
 
 	const handleClick = (e) => {
 		e.stopPropagation()

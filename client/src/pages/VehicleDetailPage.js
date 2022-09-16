@@ -19,10 +19,12 @@ const VehicleDetailPage = () => {
 
 	useEffect(() => {
 		doFetch(feature).then(data => feature.setData(data.results))
+		// eslint-disable-next-line
 	}, [id]);
 
 	useEffect(() => {
 		doFetch(unit).then(data => unit.setData(data.results))
+		// eslint-disable-next-line
 	}, [id]);
 
 	return (

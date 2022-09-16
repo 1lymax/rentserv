@@ -23,11 +23,13 @@ const Shop = observer(() => {
 		let ordering = {ordering: vehicleSorting}
 		doFetch(vehicle, ordering, filterParams)
 			.then(data => vehicle.setData(data.results))
+		// eslint-disable-next-line
 	}, [vehicleSorting, filterParams]);
 
 	useEffect(() => {
 		doFetch(type)
 			.then(data => type.setData(data.results))
+		// eslint-disable-next-line
 	}, []);
 
 	return (

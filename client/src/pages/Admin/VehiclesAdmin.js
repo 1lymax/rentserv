@@ -21,6 +21,7 @@ const VehiclesAdmin = observer(() => {
 					obj.aggregate && obj.setAggregate(data.aggregate)
 				})
 		}
+		// eslint-disable-next-line
 	}, []);
 
 	return (

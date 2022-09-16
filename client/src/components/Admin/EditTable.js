@@ -47,6 +47,7 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 					setTotalRows(resp.count)
 				}
 			)
+		// eslint-disable-next-line
 	}, [needFetch, filters, currentPage, rowsPerPage]);
 
 	const setCellValue = (item, set) => {
@@ -67,6 +68,7 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 	};
 
 	const setFieldsArray = (item) => {
+		// eslint-disable-next-line
 		conf.fields.map(field => {
 			setFieldValues(prevState => ({
 				...prevState,
