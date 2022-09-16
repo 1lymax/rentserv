@@ -12,4 +12,5 @@ WORKDIR /opt/app/rentserv/
 EXPOSE 8020
 
 RUN pip install -r /opt/app/requirements.txt --cache-dir /opt/app/pip_cache
-RUN python manage.py collectstatic
+RUN python manage.py makemigrations
+RUN python manage.py migrate
