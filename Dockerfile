@@ -6,6 +6,7 @@ RUN mkdir -p /opt/app/pip_cache
 RUN mkdir -p /opt/app/rentserv
 COPY requirements.txt Procfile /opt/app/
 COPY ./server Procfile /opt/app/rentserv/
+COPY Procfile .
 # COPY  /opt/app/rentserv/rentserv/
 
 WORKDIR /opt/app/rentserv/
