@@ -1,24 +1,24 @@
-# version: '3.9'
-#services:
-##  mongodb:
-##    image: registry.semaphoreci.com/mongo:4.4
-##    container_name: "mongodb"
-##    ports:
-##      - 27017:27017
-##    command: mongod --logpath=/dev/null # --quiet
-#  web:
-#    image: rentserv
-#    container_name: rentserv
-#    build:
-#      context: .
-#      dockerfile: Dockerfile
-#    command: gunicorn rentserv.wsgi --bind 0.0.0.0:8020 --workers 3
+ version: '3.9'
+services:
+#  mongodb:
+#    image: registry.semaphoreci.com/mongo:4.4
+#    container_name: "mongodb"
 #    ports:
-#      - "8020:8020"
-##    volumes:
-##      - .:/opt/
-##    environment:
-##      - DB=mongodb://mongodb:27017/tasks
-##      - PORT=5000
-##    depends_on:
-##      - mongodb
+#      - 27017:27017
+#    command: mongod --logpath=/dev/null # --quiet
+  web:
+    image: rentserv
+    container_name: rentserv
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: gunicorn rentserv.wsgi --bind 0.0.0.0:8020 --workers 3
+    ports:
+      - "8020:8020"
+    volumes:
+      - .:/opt/app/rentserv/
+#    environment:
+#      - DB=mongodb://mongodb:27017/tasks
+#      - PORT=5000
+#    depends_on:
+#      - mongodb
