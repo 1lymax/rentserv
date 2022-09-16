@@ -15,7 +15,6 @@ EXPOSE 8020
 RUN pip install -r /opt/app/requirements.txt --cache-dir /opt/app/pip_cache
 # RUN python manage.py makemigrations
 # RUN python manage.py migrate
-# RUN chmod 755 start.sh
-# RUN chown -R www-data:www-data /opt/app
-# USER root
+RUN chown -R www-data:www-data /opt/app
+RUN chmod 755 /opt/app/rentserv/start.sh
 CMD /opt/app/rentserv/start.sh
