@@ -6,7 +6,7 @@ RUN mkdir -p /opt/app/rentserv
 COPY requirements.txt /opt/app/
 COPY ./server start-backend.sh /opt/app/rentserv/
 
-# ARG PORT
+ARG PORT
 EXPOSE $PORT
 
 WORKDIR /opt/app/rentserv/
@@ -17,4 +17,4 @@ RUN chown -R www-data:www-data /opt/app
 
 RUN chmod 755 /opt/app/rentserv/start-backend.sh
 CMD /opt/app/rentserv/start-backend.sh
-# CMD ["gunicorn", "rentserv.wsgi", "--bind", "0.0.0.0:$PORT", "--workers", "3", "--daemon"]
+#CMD ["gunicorn", "rentserv.wsgi", "--bind", "0.0.0.0:$PORT", "--workers", "3", "--daemon"]
