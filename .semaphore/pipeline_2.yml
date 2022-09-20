@@ -28,5 +28,5 @@ blocks:
           - python manage.py migrate
           - cd ..
       env_vars:
-        - name: $SCOPE
+        - name: SCOPE
           value: backend
