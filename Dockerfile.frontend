@@ -18,4 +18,5 @@ RUN npm run build
 RUN npm install -g serve
 
 RUN chmod 755 /opt/app/rentserv/start-frontend.sh
-CMD ["/opt/app/rentserv/start-frontend.sh", "$PORT"]
+CMD /opt/app/rentserv/start-frontend.sh
+# CMD ["/opt/app/rentserv/start-frontend.sh", "$PORT"]
