@@ -18,6 +18,11 @@ blocks:
             - 'docker push $DOCKER_USERNAME/rentserv-$SCOPE:latest'
       secrets:
         - name: dockerhub
+      prologue:
+        commands:
+          sem-version node 16
+          checkout
+          cache restore
       env_vars:
         - name: SCOPE
           value: frontend
