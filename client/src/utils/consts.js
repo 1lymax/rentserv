@@ -3,6 +3,7 @@ export const LOGIN_ROUTE = '/login'
 export const REGISTRATION_ROUTE = '/registration'
 export const SHOP_ROUTE = '/'
 export const ITEMDETAIL_ROUTE = '/detail'
+export const REACT_APP_API_CLOUD_URL='https://renserv-api.herokuapp.com/'
 
 export const API_ROUTES = {
 	api: 'api/',
