@@ -21,12 +21,12 @@ blocks:
           - sem-version node 16
           - checkout
           - cache restore
-          - cd client
-          - npm ci --legacy-peer-deps
-          - cache store
-          - npm run build --if-present
-          - npm install -g serve
-          - cd ..
+#          - cd client
+#          - npm ci --legacy-peer-deps
+#          - cache store
+#          - npm run build --if-present
+#          - npm install -g serve
+#          - cd ..
       env_vars:
         - name: SCOPE
           value: frontend

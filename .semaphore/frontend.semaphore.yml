@@ -15,9 +15,9 @@ blocks:
             - cache restore
             - cd client
             - npm ci --legacy-peer-deps
-            - cache store
             - npm run build --if-present
             - npm install -g serve
+            - cache store
 promotions:
   - name: Dockerize
     pipeline_file: frontend.pipeline_2.yml

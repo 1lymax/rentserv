@@ -16,4 +16,4 @@ RUN python manage.py migrate
 RUN chown -R www-data:www-data /opt/app
 
 RUN chmod 755 /opt/app/rentserv/start-backend.sh
-CMD /opt/app/rentserv/start-backend.sh $PORT
+CMD ['/opt/app/rentserv/start-backend.sh', '$PORT']

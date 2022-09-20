@@ -1,7 +1,6 @@
 FROM node:16-buster-slim
 
 RUN mkdir -p /opt/app
-RUN mkdir -p /opt/app/pip_cache
 RUN mkdir -p /opt/app/rentserv
 COPY start-frontend.sh /opt/app/rentserv/
 COPY ./client /opt/app/rentserv/client/
@@ -19,4 +18,4 @@ RUN npm run build
 RUN npm install -g serve
 
 RUN chmod 755 /opt/app/rentserv/start-frontend.sh
-CMD /opt/app/rentserv/start-frontend.sh $PORT
+CMD ['/opt/app/rentserv/start-frontend.sh', '$PORT']
