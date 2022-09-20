@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # start.sh
 
-a=$1
-cd ..
-gunicorn rentserv.wsgi --bind 0.0.0.0:${a:1} --workers 3 --daemon
+if [ -n "$PORT" ] ; then
+(cd ..; gunicorn rentserv.wsgi --bind 0.0.0.0:$PORT --workers 3 --daemon) ; else
+(cd ..; gunicorn rentserv.wsgi --bind 0.0.0.0:8020 --workers 3 --daemon)
+fi
