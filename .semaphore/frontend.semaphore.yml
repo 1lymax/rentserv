@@ -22,8 +22,8 @@ promotions:
   - name: Dockerize
     pipeline_file: frontend.pipeline_2.yml
     auto_promote:
-      when: (branch = 'master') AND result = 'passed'
+      when: (branch = 'master' AND tag =~ 'frontend') AND result = 'passed'
   - name: Heroku deploy
     pipeline_file: frontend.pipeline_3.yml
     auto_promote:
-      when: (branch = 'master') AND result = 'passed'
+      when: (branch = 'master' OR tag =~ 'frontend') AND result = 'passed'
