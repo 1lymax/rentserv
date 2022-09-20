@@ -25,3 +25,5 @@ blocks:
       env_vars:
         - name: HEROKU_APP
           value: rentserv-api
+        - name: SCOPE
+          value: backend

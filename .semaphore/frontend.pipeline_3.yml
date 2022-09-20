@@ -12,9 +12,9 @@ blocks:
           commands:
             - checkout
             - 'echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin'
-            - 'docker pull "$DOCKER_USERNAME"/rentserv:latest'
+            - 'docker pull "$DOCKER_USERNAME"/rentserv-$SCOPE:latest'
             - 'heroku container:login'
-            - 'docker tag "$DOCKER_USERNAME"/rentserv:latest registry.heroku.com/$HEROKU_APP/web'
+            - 'docker tag "$DOCKER_USERNAME"/rentserv-$SCOPE:latest registry.heroku.com/$HEROKU_APP/web'
             - docker push registry.heroku.com/$HEROKU_APP/web
             - '# heroku config:set DB="$MONGODB_URI"'
             - 'heroku stack:set container --app $HEROKU_APP'
@@ -25,3 +25,5 @@ blocks:
       env_vars:
         - name: HEROKU_APP
           value: rentserv
+        - name: SCOPE
+          value: frontend
