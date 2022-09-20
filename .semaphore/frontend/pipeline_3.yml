@@ -1,0 +1,27 @@
+version: v1.0
+name: Pipeline 3
+agent:
+  machine:
+    type: e1-standard-2
+    os_image: ubuntu2004
+blocks:
+  - name: Deploy to heroku
+    task:
+      jobs:
+        - name: Deploy
+          commands:
+            - checkout
+            - 'echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin'
+            - 'docker pull "$DOCKER_USERNAME"/rentserv:latest'
+            - 'heroku container:login'
+            - 'docker tag "$DOCKER_USERNAME"/rentserv:latest registry.heroku.com/$HEROKU_APP/web'
+            - docker push registry.heroku.com/$HEROKU_APP/web
+            - '# heroku config:set DB="$MONGODB_URI"'
+            - 'heroku stack:set container --app $HEROKU_APP'
+            - 'heroku container:release web --app $HEROKU_APP'
+      secrets:
+        - name: dockerhub
+        - name: heroku
+      env_vars:
+        - name: HEROKU_APP
+          value: rentserv

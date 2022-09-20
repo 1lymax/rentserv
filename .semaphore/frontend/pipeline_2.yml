@@ -1,0 +1,21 @@
+version: v1.0
+name: Pipeline 2
+agent:
+  machine:
+    type: e1-standard-2
+    os_image: ubuntu1804
+blocks:
+  - name: Build and push
+    task:
+      jobs:
+        - name: Deploy
+          commands:
+            - 'echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin'
+            - 'docker pull $DOCKER_USERNAME/rentserv-$SCOPE:latest || true'
+            - 'docker build --cache-from=$DOCKER_USERNAME/rentserv-$SCOPE:latest -t $DOCKER_USERNAME/rentserv-$SCOPE:latest -f Dockerfile.$SCOPE .'
+            - 'docker push $DOCKER_USERNAME/rentserv-$SCOPE:latest'
+      secrets:
+        - name: dockerhub
+      env_vars:
+        - name: SCOPE
+          value: frontend
