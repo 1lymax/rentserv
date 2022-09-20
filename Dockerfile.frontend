@@ -5,7 +5,6 @@ RUN mkdir -p /opt/app/rentserv
 COPY start-frontend.sh /opt/app/rentserv/
 COPY ./client /opt/app/rentserv/client/
 
-
 ARG PORT
 EXPOSE $PORT
 
