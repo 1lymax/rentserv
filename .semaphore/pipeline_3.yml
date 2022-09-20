@@ -24,4 +24,4 @@ blocks:
         - name: heroku
       env_vars:
         - name: HEROKU_APP
-          value: rentserv
+          value: rentserv-api

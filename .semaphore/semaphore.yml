@@ -30,7 +30,6 @@ blocks:
             - cd server
             - python manage.py makemigrations
             - python manage.py migrate
-            # - python manage.py test
         - name: Deploy checklist
           commands:
             - cd server
@@ -41,4 +40,4 @@ promotions:
   - name: Heroku Deploy
     pipeline_file: pipeline_3.yml
     auto_promote:
-      when: branch = 'master' AND result = 'passed'
+      when: (branch = 'master' AND tag =~ 'back') AND result = 'passed'
