@@ -1,0 +1,19 @@
+FROM nikolaik/python-nodejs:python3.10-nodejs16
+
+RUN mkdir -p /opt/app
+RUN mkdir -p /opt/app/pip_cache
+RUN mkdir -p /opt/app/rentserv
+COPY requirements.txt /opt/app/
+COPY ./server start-backend.sh /opt/app/rentserv/
+
+ARG PORT
+EXPOSE $PORT
+
+WORKDIR /opt/app/rentserv/
+RUN pip install -r /opt/app/requirements.txt --cache-dir /opt/app/pip_cache
+RUN python manage.py makemigrations
+RUN python manage.py migrate
+RUN chown -R www-data:www-data /opt/app
+
+RUN chmod 755 /opt/app/rentserv/start-backend.sh
+CMD /opt/app/rentserv/start-backend.sh $PORT

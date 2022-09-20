@@ -25,13 +25,6 @@ SECRET_KEY = 'django-insecure--cwv$1p3!phkd^!)2-b*fx+h*e*q=t4a0)g6!_c5)kzr9q*3vg
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['http://localhost:3000',
-                 'http://localhost:8000'
-                 'localhost',
-                 '127.0.0.1'
-                 '127.0.0.1:8000'
-                 ]
-
 ALLOWED_HOSTS = ['*']
 
 # Application definition
@@ -61,6 +54,8 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
+
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -71,7 +66,6 @@ MIDDLEWARE = [
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'debug_toolbar_force.middleware.ForceDebugToolbarMiddleware',
 
-    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'rentserv.urls'
@@ -223,12 +217,11 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 APPEND_SLASH = True
 
-CORS_ORIGIN_ALLOW_ALL = False
+CORS_ALLOW_ALL_ORIGINS = True
 
-CORS_ORIGIN_WHITELIST = (
-    'http://localhost:3000',
-    'http://localhost:8000'
-)
+# CORS_ALLOWED_ORIGIN_REGEXES = (
+#     r'^(http)s?(:\/\/localhost:)[0-9]*$',
+# )
 
 # ACCOUNT_AUTHENTICATION_METHOD = "email"
 # ACCOUNT_EMAIL_REQUIRED = True
