@@ -217,11 +217,12 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 APPEND_SLASH = True
 
-CORS_ALLOW_ALL_ORIGINS = True
+# CORS_ALLOW_ALL_ORIGINS = True
 
-# CORS_ALLOWED_ORIGIN_REGEXES = (
-#     r'^(http)s?(:\/\/localhost:)[0-9]*$',
-# )
+CORS_ALLOWED_ORIGIN_REGEXES = (
+    r'^(http)s?(:\/\/localhost:)[0-9]*$',
+    r'^(http)s?(:\/\/rentserv\.herokuapp\.com)$'
+)
 
 # ACCOUNT_AUTHENTICATION_METHOD = "email"
 # ACCOUNT_EMAIL_REQUIRED = True
