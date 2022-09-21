@@ -1,0 +1,50 @@
+version: v1.0
+name: Pipeline 8
+agent:
+  machine:
+    type: e1-standard-2
+    os_image: ubuntu2004
+blocks:
+  - name: Deploy to Kubernates
+    task:
+      jobs:
+        - name: Deploy
+          commands:
+            - kubectl get nodes
+            - kubectl get pods
+            - cat deployment.yml | envsubst | tee deployment.yml
+            - kubectl apply -f deployment.yml
+      secrets:
+        - name: gcr-secret
+      env_vars:
+        - name: CLUSTER_NAME
+          value: rentserv
+      prologue:
+        commands:
+          - gcloud auth activate-service-account --key-file=.secrets.gcp.json
+          - gcloud auth configure-docker -q
+          - gcloud config set project $GCP_PROJECT_ID
+          - gcloud config set compute/zone $GCP_PROJECT_DEFAULT_ZONE
+          - gcloud container clusters get-credentials $CLUSTER_NAME --zone $GCP_PROJECT_DEFAULT_ZONE --project $GCP_PROJECT_ID
+          - checkout
+  - name: tag container
+    task:
+      secrets:
+        - name: gcr-secret
+      env_vars:
+        - name: SCOPE
+          value: backend
+      prologue:
+        commands:
+          - gcloud auth activate-service-account --key-file=.secrets.gcp.json
+          - gcloud auth configure-docker -q
+          - gcloud config set project $GCP_PROJECT_ID
+          - gcloud config set compute/zone $GCP_PROJECT_DEFAULT_ZONE
+          - gcloud container clusters get-credentials $CLUSTER_NAME --zone $GCP_PROJECT_DEFAULT_ZONE --project $GCP_PROJECT_ID
+          - checkout
+      jobs:
+        - name: tag latest
+          commands:
+            - 'docker pull "gcr.io/$GCP_PROJECT_ID/rentserv-$SCOPE:$SEMAPHORE_WORKFLOW_ID"'
+            - 'docker tag "gcr.io/$GCP_PROJECT_ID/rentserv-$SCOPE:$SEMAPHORE_WORKFLOW_ID" "gcr.io/$GCP_PROJECT_ID/rentserv-$SCOPE:latest"'
+            - 'docker push "gcr.io/$GCP_PROJECT_ID/rentserv-$SCOPE:latest"'

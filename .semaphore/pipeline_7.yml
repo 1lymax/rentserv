@@ -30,3 +30,8 @@ blocks:
           - checkout
           - sem-version python 3.9
           - checkout
+promotions:
+  - name: Deploy to Kubernates
+    pipeline_file: pipeline_8.yml
+    auto_promote:
+      when: branch = 'g_k8s' AND result = 'passed'
