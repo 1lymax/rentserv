@@ -34,6 +34,9 @@ blocks:
           commands:
             - cd server
             - python manage.py check --deploy
+      env_vars:
+        - name: use_db
+          value: sqlite
 promotions:
   - name: Dockerize
     pipeline_file: pipeline_2.yml
