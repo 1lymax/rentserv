@@ -42,7 +42,7 @@ blocks:
           - gcloud auth configure-docker -q
           - gcloud config set project $GCP_PROJECT_ID
           - gcloud config set compute/zone $GCP_PROJECT_DEFAULT_ZONE
-          - gcloud container clusters get-credentials $CLUSTER_NAME --zone $GCP_PROJECT_DEFAULT_ZONE --project $GCP_PROJECT_ID
+          - gcloud container clusters get-credentials cluster-1 --zone $GCP_PROJECT_DEFAULT_ZONE --project $GCP_PROJECT_ID
           - checkout
       jobs:
         - name: tag latest
