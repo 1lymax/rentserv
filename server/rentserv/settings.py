@@ -128,7 +128,7 @@ if os.environ.get('use_db') == 'postgres':
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': os.environ.get('DB_NAME') or 'rentserv',
+            'NAME': os.environ.get('DB_NAME') or 'postgres',
             'USER': os.environ.get('DB_USER') or 'postgres',
             'PASSWORD': os.environ.get('DB_PASSWORD') or 'postgres',
             'HOST': os.environ.get('DB_HOST') or '127.0.0.1',
