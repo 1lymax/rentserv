@@ -115,13 +115,25 @@ if os.environ.get('GITHUB_WORKFLOW'):
         }
     }
 
-if 'test' in sys.argv or True:
+if 'test' in sys.argv or os.environ.get('use_db') == 'sqlite':
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
             'NAME': BASE_DIR / 'db.sqlite3',
         }
 
+    }
+
+if os.environ.get('use_db') == 'postgres':
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': os.environ.get('DB_NAME') or 'rentserv',
+            'USER': os.environ.get('DB_USER') or 'postgres',
+            'PASSWORD': os.environ.get('DB_PASSWORD') or 'postgres',
+            'HOST': os.environ.get('DB_HOST') or '127.0.0.1',
+            'PORT': os.environ.get('DB_PORT') or '5432',
+        }
     }
 
 AUTHENTICATION_BACKENDS = (
@@ -217,11 +229,9 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 APPEND_SLASH = True
 
-# CORS_ALLOW_ALL_ORIGINS = True
-
 CORS_ALLOWED_ORIGIN_REGEXES = (
     r'^(http)s?(:\/\/localhost:)[0-9]*$',
-    r'^(http)s?(:\/\/rentserv\.herokuapp\.com)$'
+    r'^(http)s?(:\/\/rentserv\.herokuapp\.com)\/?$'
 )
 
 # ACCOUNT_AUTHENTICATION_METHOD = "email"
