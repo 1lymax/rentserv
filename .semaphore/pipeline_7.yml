@@ -11,7 +11,8 @@ blocks:
         - name: 'Job #1'
           commands:
             - docker pull "gcr.io/$GCP_PROJECT_ID/$GCP_PROJECT_ID-$SCOPE" || true
-            - 'docker build --cache-from "gcr.io/$GCP_PROJECT_ID/$GCP_PROJECT_ID-$SCOPE:latest" -t "gcr.io/$GCP_PROJECT_ID/$GCP_PROJECT_ID-$SCOPE:$SEMAPHORE_WORKFLOW_ID" -f Dockerfile.$SCOPE .'
+            - 'docker build --cache-from "gcr.io/$GCP_PROJECT_ID/$GCP_PROJECT_ID-$SCOPE:latest" \'
+            - '-t "gcr.io/$GCP_PROJECT_ID/$GCP_PROJECT_ID-$SCOPE:$SEMAPHORE_WORKFLOW_ID" -f Dockerfile.$SCOPE .'
             - 'docker push "gcr.io/$GCP_PROJECT_ID/$GCP_PROJECT_ID-$SCOPE:$SEMAPHORE_WORKFLOW_ID"'
       secrets:
         - name: db_google_k8s
