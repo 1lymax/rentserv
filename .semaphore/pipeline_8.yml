@@ -18,7 +18,7 @@ blocks:
         - name: gcr-secret
       env_vars:
         - name: CLUSTER_NAME
-          value: rentserv
+          value: cluster-1
       prologue:
         commands:
           - gcloud auth activate-service-account --key-file=.secrets.gcp.json
