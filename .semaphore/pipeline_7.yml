@@ -15,6 +15,7 @@ blocks:
             - 'docker push "gcr.io/$GCP_PROJECT_ID/$GCP_PROJECT_ID-$SCOPE:$SEMAPHORE_WORKFLOW_ID"'
       secrets:
         - name: db_google_k8s
+        - name: dockerhub
         - name: gcr-secret
       env_vars:
         - name: SCOPE
@@ -26,3 +27,12 @@ blocks:
           - gcloud config set project $GCP_PROJECT_ID
           - gcloud config set compute/zone $GCP_PROJECT_DEFAULT_ZONE
           - checkout
+          - sem-version python 3.9
+          - checkout
+          - cache restore
+          - mkdir -p .pip_cache
+          - pip install --cache-dir .pip_cache -r requirements.txt
+          - cd server
+          - 'python manage.py makemigrations '
+          - python manage.py migrate
+          - cd ..
