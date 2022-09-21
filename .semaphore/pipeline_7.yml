@@ -28,8 +28,6 @@ blocks:
           - gcloud config set project $GCP_PROJECT_ID
           - gcloud config set compute/zone $GCP_PROJECT_DEFAULT_ZONE
           - checkout
-          - sem-version python 3.9
-          - checkout
 promotions:
   - name: Deploy to Kubernates
     pipeline_file: pipeline_8.yml
