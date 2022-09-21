@@ -1,0 +1,28 @@
+version: v1.0
+name: Pipeline 7
+agent:
+  machine:
+    type: e1-standard-2
+    os_image: ubuntu2004
+blocks:
+  - name: Dockerize and Deploy
+    task:
+      jobs:
+        - name: 'Job #1'
+          commands:
+            - docker pull "gcr.io/$GCP_PROJECT_ID/$GCP_PROJECT_ID-$SCOPE" || true
+            - 'docker build --cache-from "gcr.io/$GCP_PROJECT_ID/$GCP_PROJECT_ID-$SCOPE:latest" -t "gcr.io/$GCP_PROJECT_ID/$GCP_PROJECT_ID-$SCOPE:$SEMAPHORE_WORKFLOW_ID" .'
+            - 'docker push "gcr.io/$GCP_PROJECT_ID/$GCP_PROJECT_ID-$SCOPE:$SEMAPHORE_WORKFLOW_ID"'
+      secrets:
+        - name: db_google_k8s
+        - name: gcr-secret
+      env_vars:
+        - name: SCOPE
+          value: backend
+      prologue:
+        commands:
+          - gcloud auth activate-service-account --key-file=.secrets.gcp.json
+          - gcloud auth configure-docker -q
+          - gcloud config set project $GCP_PROJECT_ID
+          - gcloud config set compute/zone $GCP_PROJECT_DEFAULT_ZONE
+          - checkout

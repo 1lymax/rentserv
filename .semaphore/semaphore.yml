@@ -46,3 +46,5 @@ promotions:
     pipeline_file: pipeline_3.yml
     auto_promote:
       when: (branch = 'master' AND tag =~ 'backend') AND result = 'passed'
+  - name: Google_K8S
+    pipeline_file: pipeline_7.yml
