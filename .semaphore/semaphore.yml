@@ -37,6 +37,11 @@ blocks:
       env_vars:
         - name: use_db
           value: sqlite
+after_pipeline:
+  task:
+    jobs:
+      - name: 'Job #1'
+        commands: []
 promotions:
   - name: Dockerize
     pipeline_file: pipeline_2.yml
@@ -48,3 +53,5 @@ promotions:
       when: (branch = 'master' AND tag =~ 'backend') AND result = 'passed'
   - name: Google_K8S
     pipeline_file: pipeline_7.yml
+    auto_promote:
+      when: branch = 'g_k8s' AND result = 'passed'
