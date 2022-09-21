@@ -10,6 +10,7 @@ blocks:
       jobs:
         - name: Deploy
           commands:
+            - kubectl delete deploy $GCP_PROJECT_ID
             - kubectl get nodes
             - kubectl get pods
             - cat deployment.yml | envsubst | tee deployment.yml
