@@ -115,7 +115,7 @@ if os.environ.get('GITHUB_WORKFLOW'):
         }
     }
 
-if 'test' in sys.argv or os.environ.get('use_db') == 'sqlite':
+if 'test' in sys.argv  or 'localhost:8000' in sys.argv or os.environ.get('use_db') == 'sqlite':
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
@@ -232,7 +232,7 @@ APPEND_SLASH = True
 CORS_ALLOWED_ORIGIN_REGEXES = (
     r'^(http)s?(:\/\/localhost:)[0-9]*$',
     r'^(http)s?(:\/\/rentserv\.herokuapp\.com)\/?$'
-    r'^(http)s?(:\/\/35\.237\.213\.220)[0-9]*\/?$'
+    r'^(http)s?(:\/\/35\.237\.213\.220:)[0-9]*\/?$'
 )
 
 # ACCOUNT_AUTHENTICATION_METHOD = "email"
