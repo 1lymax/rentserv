@@ -15,9 +15,6 @@ spec:
       containers:
         - name: rentserv
           image: gcr.io/$GCP_PROJECT_ID/rentserv-$SCOPE:$SEMAPHORE_WORKFLOW_ID
-          env:
-            - name: NODE_ENV
-              value: "production"
 
 ---
 
@@ -31,4 +28,4 @@ spec:
   type: LoadBalancer
   ports:
     - port: 80
-      targetPort: 8000
+      targetPort: 8020

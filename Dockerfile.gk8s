@@ -1,0 +1,37 @@
+# FROM python:3.9-slim
+FROM nikolaik/python-nodejs:python3.10-nodejs16-slim
+
+RUN mkdir -p /opt/app
+RUN mkdir -p /opt/app/pip_cache
+RUN mkdir -p /opt/app/rentserv
+COPY requirements.txt /opt/app/
+COPY ./server start-gk8s.sh /opt/app/rentserv/
+COPY ./client /opt/app/rentserv/client/
+
+ARG PORT
+ARG use_db
+ARG DB_NAME
+ARG DB_USER
+ARG DB_PASSWORD
+ARG DB_HOST
+ARG DB_PORT
+
+EXPOSE $PORT
+ENV use_db=${use_db}
+ENV DB_NAME=${DB_NAME}
+ENV DB_USER=${DB_USER}
+ENV DB_PASSWORD=${DB_PASSWORD}
+ENV DB_HOST=${DB_HOST}
+ENV DB_PORT=${DB_PORT}
+
+WORKDIR /opt/app/rentserv/client/
+RUN npm ci --legacy-peer-deps
+RUN npm run build
+RUN npm install -g serve
+
+WORKDIR /opt/app/rentserv/
+RUN pip install -r /opt/app/requirements.txt --cache-dir /opt/app/pip_cache
+RUN chown -R www-data:www-data /opt/app
+
+RUN chmod 755 /opt/app/rentserv/start-gk8s.sh
+CMD /opt/app/rentserv/start-gk8s.sh

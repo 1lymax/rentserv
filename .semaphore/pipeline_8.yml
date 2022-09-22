@@ -21,7 +21,7 @@ blocks:
         - name: CLUSTER_NAME
           value: cluster-1
         - name: SCOPE
-          value: backend
+          value: gk8s
       prologue:
         commands:
           - gcloud auth activate-service-account --key-file=.secrets.gcp.json
@@ -36,7 +36,7 @@ blocks:
         - name: gcr-secret
       env_vars:
         - name: SCOPE
-          value: backend
+          value: gk8s
       prologue:
         commands:
           - gcloud auth activate-service-account --key-file=.secrets.gcp.json
