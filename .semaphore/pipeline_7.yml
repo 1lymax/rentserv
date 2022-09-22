@@ -8,7 +8,7 @@ blocks:
   - name: Dockerize and Deploy
     task:
       jobs:
-        - name: 'Job #1'
+        - name: 'Dockerize to Google registry'
           commands:
             - 'echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin'
             - 'docker pull $DOCKER_USERNAME/rentserv-$SCOPE:latest || true'
@@ -20,7 +20,7 @@ blocks:
         - name: gcr-secret
       env_vars:
         - name: REACT_APP_API_URL
-          value: http://localhost:8000
+          value: http://35.237.213.220/:8000
         - name: SCOPE
           value: gk8s
       prologue:

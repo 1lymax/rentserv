@@ -232,6 +232,7 @@ APPEND_SLASH = True
 CORS_ALLOWED_ORIGIN_REGEXES = (
     r'^(http)s?(:\/\/localhost:)[0-9]*$',
     r'^(http)s?(:\/\/rentserv\.herokuapp\.com)\/?$'
+    r'^(http)s?(:\/\/35\.237\.213\.220)[0-9]*\/?$'
 )
 
 # ACCOUNT_AUTHENTICATION_METHOD = "email"
