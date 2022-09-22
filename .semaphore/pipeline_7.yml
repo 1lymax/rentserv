@@ -20,7 +20,7 @@ blocks:
         - name: gcr-secret
       env_vars:
         - name: REACT_APP_API_URL
-          value: http://35.237.213.220/:8000
+          value: http://35.237.213.220:8000
         - name: SCOPE
           value: gk8s
       prologue:
