@@ -28,6 +28,8 @@ spec:
   type: LoadBalancer
   ports:
     - port: 80
+      name: http
       targetPort: 8020
     - port: 8000
+      name: bend
       targetPort: 8000
