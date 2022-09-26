@@ -1,10 +1,6 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {observer} from "mobx-react-lite";
-import {Col, Container, Row} from "react-bootstrap";
-
-import DeleteIcon from '@mui/icons-material/Delete';
 import CancelIcon from '@mui/icons-material/Cancel';
-import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
 import LoadingButton from '@mui/lab/LoadingButton'
 import {AddToPhotos} from "@mui/icons-material";
@@ -19,6 +15,7 @@ import IButton from "../UI/IconButton/IButton";
 import Paginate from "../UI/Paginate/Paginate";
 import classes from "./EditTable.module.css"
 import {PAGINATION} from "../../utils/consts";
+import {Button, Header, Segment, Table} from "semantic-ui-react";
 
 
 const EditTable = observer(({context, isDependencyTable, filters, ordering, parentContext}) => {
@@ -135,161 +132,175 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 	return (
 		<>
 			{!isDependencyTable &&
-				<>
-					<Row className="d-flex align-items-center">
-						<Col md={6}>
-							Фильтр
-						</Col>
-						<Col md={6}>
-							<Paginate total={totalRows} setCurrentPage={setCurrentPage} setLimit={setRowsPerPage}/>
-						</Col>
-					</Row>
-					<Row className={["", classes.dict__title].join(' ')}>
-						{conf.fields.map(set =>
-							<Col key={set.name} className={["", set.cssClassName].join(' ')}
-							>
-								{set.placeholder}
-							</Col>
-						)}
-						<Col className="col-1"></Col>
-					</Row>
-				</>
+				<Segment basic>
+					<div>
+						Фильтр
+					</div>
+					<div>
+						<Paginate total={totalRows} setCurrentPage={setCurrentPage} setLimit={setRowsPerPage}/>
+					</div>
+				</Segment>
 			}
-			{data.length === 0 &&
-				<div className="d-flex justify-content-center m-1 text-black-50">
-					<h5>Данные отстуствуют</h5>
-				</div>
-			}
-			{data.length > 0 && data.map(item =>
-				<Container key={item.id} className={["",].join(' ')}>
-					<Row className={!isDependencyTable && classes.dict__item}>
-						<Row
-							className={["d-flex align-items-center", isDependencyTable && 'ms-4'].join(' ')}
-							onMouseEnter={() => setActionButtonsVisible(item.id)}
-							onMouseLeave={() => setActionButtonsVisible(0)}
+			{/*<Table className={["", classes.dict__title].join(' ')}>*/}
+			<Table fixed>
+				<Table.Header>
+					{conf.fields.map(set =>
+						<Table.HeaderCell key={set.name} className={["", set.cssClassName].join(' ')}
 						>
-							{conf.fields.map(set =>
-								<React.Fragment key={set.name}>
-									{isNeedDependencyValue(set.name)
-										? <Col className={["", set.cssClassName].join(' ')}
-											   style={{minHeight: "48px"}}
-										>
-											{item.id === edit
-												?
-												<InputControl
-													set={set}
-													inputName={set.name}
-													value={fieldValues[set.name]}
-													onChange={e => handleInputChange(e)}
-													handleSubmit={(e) => handleSubmit(item, e)}
-													hidden={isNeedDependencyValue(set.name)}
-													autoFocus={item.id === focusElement[0] && set.name === focusElement[1]}
-													selectOptions={set.contextName && contextScope[set.contextName].data}
-												/>
-												:
-												<div className="d-flex align-items-center"
-													 style={{cursor: "cell", minHeight: "40px", paddingLeft: "15px"}}
-													 onClick={() => {
-														 setFieldsArray(item)
-														 setAdd(false)
-														 setFocusElement([item.id, set.name])
-														 setEdit(item.id)
-													 }}>
-													{setCellValue(item, set)}
-												</div>
+							{set.placeholder}
+						</Table.HeaderCell>
+					)}
+					<Table.HeaderCell></Table.HeaderCell>
+				</Table.Header>
 
+				<Table.Body>
+					{data.length === 0 &&
+						<Table.Row>
+							<Table.Cell colSpan={conf.fields.length+1} textAlign="center">
+								<Header as="h3"
+										color="grey" textAlign="center" content="< no data >"/>
+							</Table.Cell>
+						</Table.Row>
+					}
+					{data.length > 0 && data.map(item =>
+						<React.Fragment key={item.id}>
+							{/*<Table.Row className={!isDependencyTable && classes.dict__item}>*/}
+							<Table.Row
+								className={["", isDependencyTable && 'ms-4'].join(' ')}
+								onMouseEnter={() => setActionButtonsVisible(item.id)}
+								onMouseLeave={() => setActionButtonsVisible(0)}
+							>
+								{conf.fields.map(set =>
+									<Table.Cell key={set.name} className={["", set.cssClassName].join(' ')}
+												style={{minHeight: "48px"}}
+									>
+										{isNeedDependencyValue(set.name) &&
+											<>
+												{item.id === edit
+													?
+													<InputControl
+														set={set}
+														inputName={set.name}
+														value={fieldValues[set.name]}
+														onChange={e => handleInputChange(e)}
+														handleSubmit={(e) => handleSubmit(item, e)}
+														hidden={isNeedDependencyValue(set.name)}
+														autoFocus={item.id === focusElement[0] && set.name === focusElement[1]}
+														selectOptions={set.contextName && contextScope[set.contextName].data}
+													/>
+													:
+													<div className="d-flex align-items-center"
+														 style={{
+															 cursor: "cell",
+															 minHeight: "40px",
+															 paddingLeft: "15px"
+														 }}
+														 onClick={() => {
+															 setFieldsArray(item)
+															 setAdd(false)
+															 setFocusElement([item.id, set.name])
+															 setEdit(item.id)
+														 }}>
+														{setCellValue(item, set)}
+													</div>
+
+												}
+											</>
+										}
+
+									</Table.Cell>
+								)}
+								<Table.Cell>
+									{actionButtonsVisible === item.id &&
+										<>
+											{isLoading
+												? <LoadingButton loading/>
+												: <Button circular icon={edit === item.id ? "save" : "edit"}
+														  onClick={() => handleSubmit(item)}/>
 											}
-										</Col>
-										: ''
+											<Button
+												circular icon={edit === item.id ? "cancel" : "trash"}
+												onClick={() => {
+													setAdd(false)
+													handleDelOrCancel(item.id)
+												}}
+											/>
+
+										</>
 									}
-								</React.Fragment>
+								</Table.Cell>
+							</Table.Row>
+
+
+							{/*</Table.Row>*/}
+							<Table.Row>
+								<Table.Cell colSpan={conf.fields.length + 1}>
+									<DependencyShow conf={conf} item={item} contextScope={contextScope}/>
+								</Table.Cell>
+							</Table.Row>
+						</React.Fragment>
+					)}
+					{add
+						?
+						<Table.Row className={["", isDependencyTable ? 'ms-4' : 'mb-4'].join(' ')}>
+							{conf.fields.map(set =>
+								<Table.Cell
+									key={set.name}
+									className={["", set.cssClassName].join(' ')}
+								>
+									<InputControl
+										add
+										set={set}
+										inputName={set.name}
+										value={fieldValues[set.name]}
+										onChange={e => handleInputChange(e)}
+										selectOptions={set.contextName && contextScope[set.contextName].data}
+									/>
+								</Table.Cell>
 							)}
 
-							{actionButtonsVisible === item.id
-								?
-								<Col className={"col-12 d-flex flex-row justify-content-end pe-1"} lg={1}>
-									{isLoading
-										? <LoadingButton loading/>
-										: <IButton onClick={() => handleSubmit(item)}>
-											{edit === item.id ? <SaveIcon/> : <EditIcon/>}
-										</IButton>
-									}
-									< IButton onClick={() => {
-										setAdd(false)
-										handleDelOrCancel(item.id)
+							<Table.Cell>
+								{isLoading
+									? <LoadingButton loading/>
+									: <IButton onClick={() => {
+										setEdit(-1)
+										handleEditOrSave(undefined, fieldValues)
 									}}
 									>
-										{edit === item.id ? <CancelIcon/> : <DeleteIcon/>}
+										<SaveIcon/>
 									</IButton>
-								</Col>
-								:
-								<Col className={"col-lg-1"}></Col>
+								}
+								<IButton onClick={() => setAdd(false)}><CancelIcon/></IButton>
+							</Table.Cell>
+
+						</Table.Row>
+						:
+						<Table.Row className={["", isDependencyTable && 'ms-5'].join(' ')}>
+							<Table.Cell colSpan={2}>
+								<OutlineButton
+									//size="small"
+									startIcon={<AddToPhotos/>}
+									style={{minWidth: "120px", width: "20%"}}
+									onClick={() => {
+										setIsLoading(true)
+										setFieldsArray(isDependencyTable ? filters : {})
+										setAdd(true)
+										hideAll()
+									}}
+								>
+									Добавить{/*conf.addButtonTitle*/}
+								</OutlineButton>
+							</Table.Cell>
+							{!isDependencyTable ||
+								<Table.Cell className={classes.pagination__wrapper} colSpan={3}>
+									<Paginate total={totalRows} setCurrentPage={setCurrentPage}
+											  setLimit={setRowsPerPage}/>
+								</Table.Cell>
 							}
-						</Row>
-						{}
-						<DependencyShow conf={conf} item={item} contextScope={contextScope}/>
-					</Row>
-				</Container>
-			)}
-			{add
-				?
-				<Row
-					className={["pt-2 pb-2 d-flex align-items-center", isDependencyTable ? 'ms-4' : 'mb-4'].join(' ')}>
-					{conf.fields.map(set =>
-						<Col
-							key={set.name}
-							className={["", set.cssClassName].join(' ')}
-						>
-							<InputControl
-								add
-								set={set}
-								inputName={set.name}
-								value={fieldValues[set.name]}
-								onChange={e => handleInputChange(e)}
-								selectOptions={set.contextName && contextScope[set.contextName].data}
-							/>
-						</Col>
-					)}
-
-					<Col className={"col-12 d-flex flex-row justify-content-end pe-1"} lg={1}>
-						{isLoading
-							? <LoadingButton loading/>
-							: <IButton onClick={() => {
-								setEdit(-1)
-								handleEditOrSave(undefined, fieldValues)
-							}}
-							>
-								<SaveIcon/>
-							</IButton>
-						}
-						<IButton onClick={() => setAdd(false)}><CancelIcon/></IButton>
-					</Col>
-
-				</Row>
-				:
-				<Row className={["mb-1 d-flex align-items-center", isDependencyTable && 'ms-5'].join(' ')}>
-					<Col>
-						<OutlineButton
-							//size="small"
-							startIcon={<AddToPhotos/>}
-							style={{minWidth: "120px", width: "20%"}}
-							onClick={() => {
-								setIsLoading(true)
-								setFieldsArray(isDependencyTable ? filters : {})
-								setAdd(true)
-								hideAll()
-							}}
-						>
-							Добавить{/*conf.addButtonTitle*/}
-						</OutlineButton>
-					</Col>
-					{!isDependencyTable ||
-						<Col className={classes.pagination__wrapper}>
-							<Paginate total={totalRows} setCurrentPage={setCurrentPage} setLimit={setRowsPerPage}/>
-						</Col>
+						</Table.Row>
 					}
-				</Row>
-			}
+				</Table.Body>
+			</Table>
 		</>
 	);
 });
