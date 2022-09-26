@@ -34,10 +34,6 @@ const ImageItem = ({image, id, newPlacement, handleImageUpload, handleAction, is
 									  <div>{fileTypes.join(', ')}</div>
 								  </div>}
 				/>
-				// <IconButton component={"label"}>
-				// 	{/*<input hidden accept="image/*" type="file" onChange={e => handleImageUpload(e)}/>*/}
-				// 	{/*<AddIcon sx={{fontSize: 140, color: grey[300]}}/>*/}
-				// </IconButton>
 				:
 				<Box>
 					<CardMedia component="img"

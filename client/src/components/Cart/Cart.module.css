@@ -1,0 +1,54 @@
+.cartCell {
+    display: flex!important;
+    align-items: center!important;
+    justify-content: space-between!important;
+    padding-left: 20px;
+}
+.cartRow {
+    display: flex!important;
+    cursor: default;
+    justify-content: space-between!important;
+    /*padding-inline: 20px!important;*/
+    margin-top: 0!important;
+}
+.cellPrice {
+    display: flex!important;
+    justify-content: flex-end!important;
+    width: 150px!important;
+}
+.cellQuantity {
+    width: 150px!important;
+}
+.cartModal {
+    bottom: auto!important;
+    left: auto!important;
+    right: auto!important;
+    top: auto!important;
+    height: auto!important;
+}
+.actions {
+    flex-direction: column!important;
+    justify-content: right!important;
+    padding-left: 25px!important;
+}
+.total_wrapper {
+    margin-bottom: 15px!important;
+    padding-inline: 20px!important;
+    /*width: 50px!important;*/
+    display: flex;
+    flex-direction: row!important;
+    justify-content: space-between;
+}
+.quantity_input {
+    width: 50px;
+    margin-inline: 10px;
+    text-align: center!important;
+}
+
+.buttonAddRemove {
+    background: white!important;
+}
+
+.ui.dimmer {
+    background-color: rgba(0,0,0,0.55);
+}

@@ -1,4 +1,5 @@
 from django.db.models import F
+from django.http import HttpRequest
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import serializers
 from rest_framework.filters import SearchFilter, OrderingFilter
@@ -53,7 +54,6 @@ class VehicleViewSet(ModelViewSet):
                         'vehicle_type__name', 'features__feature', 'features__unit', 'features__value', 'store__city']
     ordering_fields = ['name', 'vehicle_type_name', 'price_cap']
     search_fields = ['vehicle_type_name', ]
-
 
     def filter_queryset(self, request):
         self.queryset = super().filter_queryset(request)

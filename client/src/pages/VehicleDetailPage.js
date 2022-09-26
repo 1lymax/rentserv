@@ -15,17 +15,18 @@ const VehicleDetailPage = () => {
 
 	useEffect(() => {
 		fetchOneVehicle(id).then(data => setVehicle(data))
-	}, [id]);
+		// eslint-disable-next-line
+	}, []);
 
 	useEffect(() => {
 		doFetch(feature).then(data => feature.setData(data.results))
 		// eslint-disable-next-line
-	}, [id]);
+	}, []);
 
 	useEffect(() => {
 		doFetch(unit).then(data => unit.setData(data.results))
 		// eslint-disable-next-line
-	}, [id]);
+	}, []);
 
 	return (
 		<Container className="mt-3">
@@ -65,6 +66,8 @@ const VehicleDetailPage = () => {
 			{vehicleFeature.length
 				?
 				<Row className="d-flex flex-column m-3">
+
+
 					{vehicleFeature.map((item, index) =>
 						<Row
 							key={item.id}

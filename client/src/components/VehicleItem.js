@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {Col, Image} from "react-bootstrap";
 import {useNavigate} from "react-router-dom";
 import {ITEMDETAIL_ROUTE} from "../utils/consts";
@@ -6,16 +6,19 @@ import {Card} from "@mui/material";
 import IButton from "./UI/IconButton/IButton";
 import {AddShoppingCartOutlined} from "@mui/icons-material";
 import {addToCart} from "../http/storeAPI";
+import {Context} from "../index";
 
 const VehicleItem = ({vehicle}) => {
 	const {images} = vehicle
+	const {cart} = useContext(Context)
 	const imagesObj = images.reduce((acc,curr)=> (acc[curr]=curr),{});
 	const navigate = useNavigate()
-	//const {cart} = useContext(Context)
 
 	const handleClick = (e) => {
+		cart.setNeedFetch(Date.now())
+		console.log('add to cart')
+		addToCart(vehicle.id, {id: vehicle.id, quantity: 1})
 		e.stopPropagation()
-	  	addToCart(vehicle.id, {id: vehicle.id, quantity: 1})
 	}
 
 	return (

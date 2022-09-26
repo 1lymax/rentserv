@@ -18,7 +18,7 @@ const App = observer(() => {
 			console.log('userdata', data)
 			user.setUser(data)
 			user.setIsAuth(true)
-			user.setIsStaff(data.isStaff)
+			user.setIsStaff(data ? data.isStaff : false)
 		})
 			.finally(() => setLoading(false))
 			.catch(e => console.log('check() catch', e))
@@ -29,12 +29,10 @@ const App = observer(() => {
 	}
 
 	return (
-		//<CssVarsProvider>
 		<BrowserRouter>
 			<NavBar/>
 			<AppRouter/>
 		</BrowserRouter>
-		//</CssVarsProvider>
 	);
 })
 

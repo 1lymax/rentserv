@@ -1,97 +1,47 @@
-import React from 'react';
-import {Avatar, Box, Divider, IconButton, ListItemIcon, Menu, MenuItem, Tooltip} from "@mui/material";
-import {MenuOutlined, Logout, PersonAdd, Settings} from "@mui/icons-material";
-import {grey} from "@mui/material/colors";
+import React, {useContext} from 'react';
+import {Context} from "../../index";
+import {useNavigate} from "react-router-dom";
+import {Dropdown, Icon} from "semantic-ui-react";
+import {ADMIN_ROUTE, LOGIN_ROUTE} from "../../utils/consts";
+import {observer} from "mobx-react-lite";
 
 
-const UserMenu = () => {
-	const [anchorEl, setAnchorEl] = React.useState(null);
-	const open = Boolean(anchorEl);
-	const handleClick = (event) => {
-		setAnchorEl(event.currentTarget);
+const UserMenu = observer(() => {
+	const {user} = useContext(Context)
+	const navigate = useNavigate()
+
+	const logout = () => {
+		user.setUser({})
+		localStorage.setItem('access', '')
+		localStorage.setItem('refresh', '')
+		user.setIsAuth(false)
+		user.setIsStaff(false)
+
 	};
-	const handleClose = () => {
-		setAnchorEl(null);
-	};
-	const paperProps = {
-		elevation: 0,
-		sx: {
-			overflow: 'visible',
-			filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
-			mt: 1.5,
-			'& .MuiAvatar-root': {
-				width: 32,
-				height: 32,
-				ml: -0.5,
-				mr: 1,
-			},
-			'&:before': {
-				content: '""',
-				display: 'block',
-				position: 'absolute',
-				top: 0,
-				right: 14,
-				width: 10,
-				height: 10,
-				bgcolor: 'background.paper',
-				transform: 'translateY(-50%) rotate(45deg)',
-				zIndex: 0,
-			},
-		},
-	}
 
 	return (
 		<React.Fragment>
-			<Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
-				<Tooltip title="Account settings">
-					<IconButton
-						onClick={handleClick}
-						size="small"
-						sx={{ ml: 2, color: grey[100]}}
-
-					>
-						<MenuOutlined/>
-					</IconButton>
-				</Tooltip>
-			</Box>
-			<Menu
-				anchorEl={anchorEl}
-				id="account-menu"
-				open={open}
-				onClose={handleClose}
-				onClick={handleClose}
-				PaperProps={paperProps}
-				transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-				anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-			>
-				<MenuItem>
-					<Avatar /> Profile
-				</MenuItem>
-				<MenuItem>
-					<Avatar /> My account
-				</MenuItem>
-				<Divider />
-				<MenuItem>
-					<ListItemIcon>
-						<PersonAdd fontSize="small" />
-					</ListItemIcon>
-					Add another account
-				</MenuItem>
-				<MenuItem>
-					<ListItemIcon>
-						<Settings fontSize="small" />
-					</ListItemIcon>
-					Settings
-				</MenuItem>
-				<MenuItem>
-					<ListItemIcon>
-						<Logout fontSize="small" />
-					</ListItemIcon>
-					Logout
-				</MenuItem>
-			</Menu>
+			<Dropdown icon={{name: "bars", size: "large", color: "grey"}} direction="left" simple>
+				<Dropdown.Menu>
+					{user.isStaff &&
+					<Dropdown.Item onClick={() => navigate(ADMIN_ROUTE)}>
+						<Icon name={"shield alternate"}/> Admin Panel
+					</Dropdown.Item>
+				}
+					{user.isAuth
+						?
+						<Dropdown.Item onClick={logout}>
+							<Icon name={"sign out"}/> Logout
+						</Dropdown.Item>
+						:
+						<Dropdown.Item onClick={() => navigate(LOGIN_ROUTE)}>
+							<Icon name={"sign in"}/> Login
+						</Dropdown.Item>
+					}
+				</Dropdown.Menu>
+			</Dropdown>
 		</React.Fragment>
 	);
-}
+})
 
 export default UserMenu;

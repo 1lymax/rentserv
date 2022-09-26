@@ -25,6 +25,12 @@ const paperProps = {
 	},
 }
 
+const cartQuantityCell = {
+	border: 0, minWidth: 90, maxWidth: 100, display: "flex",
+		alignItems: "center"
+}
+
 export {
-	paperProps
+	paperProps,
+	cartQuantityCell
 }

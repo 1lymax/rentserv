@@ -3,9 +3,10 @@ import {API_ROUTES} from "../utils/consts";
 
 export default class Cart {
 	constructor() {
-		this._data = []
+		this._data = {total: {price: 0, quantity: 0}}
+		this._needFetch = 0
 		this.endpoint = API_ROUTES.cart
-		//this.settings = ADMIN.city
+		this.noFetchContextFromBackend = true
 
 		makeAutoObservable(this)
 	}
@@ -16,5 +17,13 @@ export default class Cart {
 
 	get data() {
 		return this._data
+	}
+
+	setNeedFetch(data) {
+		this._needFetch = data
+	}
+
+	get needFetch() {
+		return this._needFetch
 	}
 }

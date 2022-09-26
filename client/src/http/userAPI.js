@@ -25,11 +25,9 @@ export const check = async () => {
 		if (localStorage.access) {
 			const {data} = await $authHost.post('user/token/verify/', {token: localStorage.access});
 			if (data === {}) {
+				console.log(jwtDecode(localStorage.access))
 				return jwtDecode(localStorage.access);
-			} else {
-				return
 			}
-
 		}
 		return {}
 	} catch (e) {

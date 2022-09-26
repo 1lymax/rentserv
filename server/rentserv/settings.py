@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 import os
 import sys
 from pathlib import Path
+from corsheaders.defaults import default_headers
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -231,6 +232,8 @@ CORS_ALLOWED_ORIGIN_REGEXES = (
     r'^(http)s?(:\/\/rentserv\.herokuapp\.com)\/?$',
     r'^(http)s?(:\/\/35\.237\.213\.220:)[0-9]*\/?$'
 )
+
+CORS_ALLOW_CREDENTIALS = True
 
 # ACCOUNT_AUTHENTICATION_METHOD = "email"
 # ACCOUNT_EMAIL_REQUIRED = True

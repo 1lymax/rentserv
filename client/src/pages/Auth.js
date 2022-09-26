@@ -47,19 +47,19 @@ const Auth = observer(() => {
 			style={{height: window.innerHeight - 54}}
 		>
 			<Card style={{width: 600}} className="p-5">
-				<h2 className="m-auto">{isLogin ? "Авторизация" : "Регистрация"}</h2>
+				<h2 className="m-auto">{isLogin ? "Authorization" : "Registration"}</h2>
 				<Form className="d-flex flex-column">
 					<Form.Control
 						value={username}
 						onChange={e => setUsername(e.target.value)}
 						className="mt-3"
-						placeholder="Логин"
+						placeholder="Login"
 					/>
 					<Form.Control
 						value={password}
 						onChange={e => setPassword(e.target.value)}
 						className="mt-3"
-						placeholder="Пароль"
+						placeholder="Password"
 						type="password"
 					/>
 					{!isLogin
@@ -76,14 +76,14 @@ const Auth = observer(() => {
 								value={first_name}
 								onChange={e => setFirstName(e.target.value)}
 								className="mt-3"
-								placeholder="Имя"
+								placeholder="Firstname"
 								type={first_name}
 							/>
 							<Form.Control
 								value={last_name}
 								onChange={e => setLastName(e.target.value)}
 								className="mt-3"
-								placeholder="Фамилия"
+								placeholder="Lastname"
 								type={last_name}
 							/>
 						</>
@@ -101,17 +101,17 @@ const Auth = observer(() => {
 						{isLogin
 							?
 							<div>
-								Нет аккаунта? <NavLink to={REGISTRATION_ROUTE}>Зарегистрируйся!</NavLink>
+								No account? <NavLink to={REGISTRATION_ROUTE}>Sign in!</NavLink>
 							</div>
 							:
 							<div>
-								Есть аккаунт? <NavLink to={LOGIN_ROUTE}>Войдите</NavLink>
+								Already registered? <NavLink to={LOGIN_ROUTE}>Login</NavLink>
 							</div>
 						}
 						<Button
 							onClick={submit}
 							variant={"outline-success"}
-						>{isLogin ? "Войти" : "Регистрация"}</Button>
+						>{isLogin ? "Login" : "Sign in"}</Button>
 					</div>
 
 

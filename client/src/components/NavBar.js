@@ -1,69 +1,39 @@
-import React, {useContext} from 'react';
-import {Context} from "../index";
-import {Button, Container} from "react-bootstrap";
-import Navbar from "react-bootstrap/Navbar";
-import Nav from "react-bootstrap/Nav";
-import {NavLink, useNavigate} from "react-router-dom";
-import {ADMIN_ROUTE, LOGIN_ROUTE, SHOP_ROUTE} from "../utils/consts";
+import React, {useState} from 'react';
 import {observer} from "mobx-react-lite";
 import Cart from "./Cart/Cart";
 import UserMenu from "./UserMenu/UserMenu";
+import {Input, Menu} from "semantic-ui-react";
 
 const NavBar = observer(() => {
-	const {user} = useContext(Context)
-	const navigate = useNavigate()
+	const [activeLink, setActiveLink] = useState('home')
 
-	const logout = () => {
-		user.setUser({})
-		localStorage.setItem('access', '')
-		localStorage.setItem('refresh', '')
-		user.setIsAuth(false)
-		user.setIsStaff(false)
-
-	};
+	const handleItemClick = (e, {name}) => setActiveLink(name)
 
 	return (
-		<Navbar bg="dark" variant="dark">
-			<Container>
-				<NavLink style={{color: "white"}} to={SHOP_ROUTE}>
-					РентСерв - Сервис аренды строительной техники
-				</NavLink>
-				{user.isAuth ?
-					<Nav className="ms-auto" style={{color: "white"}}>
-						{user.isStaff
-							?
-							<Button
-								variant={"outline-light"}
-								onClick={() => navigate(ADMIN_ROUTE)}
-							>
-								Админ панель
-							</Button>
-							:
-							<></>
-						}
-						<Button
-							variant={"outline-light"}
-							onClick={logout} className="ms-2"
-						>
-							Выйти</Button>
-
-						<Cart/>
-						<UserMenu/>
-					</Nav>
-					:
-					<Nav className="ms-auto" style={{color: "white"}}>
-						<Button
-							variant={"outline-light"}
-							onClick={() => navigate(LOGIN_ROUTE)}
-						>
-							Авторизация
-						</Button>
-					</Nav>
-				}
-			</Container>
-
-
-		</Navbar>
+		<Menu secondary>
+			<Menu.Item
+				name='home'
+				active={activeLink === 'home'}
+				onClick={handleItemClick}
+			/>
+			{/*<Menu.Item*/}
+			{/*	name='messages'*/}
+			{/*	active={activeItem === 'messages'}*/}
+			{/*	onClick={this.handleItemClick}*/}
+			{/*/>*/}
+			{/*<Menu.Item*/}
+			{/*	name='friends'*/}
+			{/*	active={activeItem === 'friends'}*/}
+			{/*	onClick={this.handleItemClick}*/}
+			{/*/>*/}
+			<Menu.Menu position='right'>
+				<Menu.Item>
+					<Input icon='search' placeholder='Search...'/>
+				</Menu.Item>
+				<Menu.Item><Cart/></Menu.Item>
+				<Menu.Item><UserMenu/></Menu.Item>
+			</Menu.Menu>
+		</Menu>
 
 	);
 
