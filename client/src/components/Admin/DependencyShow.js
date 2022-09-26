@@ -1,12 +1,13 @@
 import React, {useState} from 'react';
 import {Box, Collapse, Paper, Table, TableBody, TableCell, TableContainer, TableRow} from "@mui/material";
+import UnfoldMoreIcon from '@mui/icons-material/UnfoldMore';
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+
 import {ADMIN} from "../../utils/consts";
-import ImageList from "./ImageList";
+import ImageList from "./ImageList/ImageList";
 import EditTable from "./EditTable";
 import DependencyRowTable from "./DependencyRowTable";
-import UnfoldMoreIcon from '@mui/icons-material/UnfoldMore';
 import IButton from "../UI/IconButton/IButton";
 
 const DependencyShow = ({contextScope, item, conf}) => {

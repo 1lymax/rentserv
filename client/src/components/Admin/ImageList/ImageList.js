@@ -1,8 +1,9 @@
 import React, {useEffect, useState} from 'react';
-import ImageItem from "./ImageItem/ImageItem";
-import {doCreate, doDelete, doFetch} from "../../http/storeAPI";
-import {Grid} from "@mui/material";
-import {ADMIN} from "../../utils/consts";
+import {Card} from "semantic-ui-react";
+
+import {doCreate, doDelete, doFetch} from "../../../http/storeAPI";
+import ImageItem from "../ImageItem/ImageItem";
+import {ADMIN} from "../../../utils/consts";
 
 const ImageList = ({context, filters}) => {
 		const [data, setData] = useState([])
@@ -44,22 +45,17 @@ const ImageList = ({context, filters}) => {
 		};
 
 		return (
-			<React.Fragment>
-				<Grid container spacing={0} display={"flex"} direction={"row"} justifyContent={"start"}
-					  justifyItems={"center"}>
+				<Card.Group>
 					{data.map(image =>
-						<Grid item lg={3} md={4} sm={5} className="mt-3" key={image.id}>
-							<ImageItem image={image.image} id={image.id} handleAction={handleAction} isBackendImage={true}/>
-						</Grid>
+						<ImageItem key={image.image} image={image.image} id={image.id} handleAction={handleAction} isBackendImage={true}/>
 					)}
-					<Grid item lg={3} md={4} sm={5} className="mt-3">
+					<>
 						{uploadedFile.imagePreviewUrl
 							? <ImageItem image={uploadedFile.imagePreviewUrl} handleAction={handleAction}/>
 							: <ImageItem newPlacement handleImageUpload={handleImageUpload} handleAction={handleAction}/>
 						}
-					</Grid>
-				</Grid>
-			</React.Fragment>
+					</>
+				</Card.Group>
 		);
 	}
 ;

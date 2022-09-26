@@ -8,8 +8,8 @@
     display: flex!important;
     cursor: default;
     justify-content: space-between!important;
-    /*padding-inline: 20px!important;*/
-    margin-top: 0!important;
+    padding-left: 20px!important;
+    /*margin-top: 0px!important;*/
 }
 .cellPrice {
     display: flex!important;

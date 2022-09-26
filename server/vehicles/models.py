@@ -1,6 +1,10 @@
 import os
 
+from PIL import Image
 from django.db import models
+
+from rentserv.settings import MEDIA_URL
+
 
 class Type(models.Model):
     name = models.CharField(max_length=200)
@@ -42,9 +46,26 @@ def content_file_name(instance, filename):
     filename = filename.lower().replace(" ", "_")
     return os.path.join('vehicle/', filename)
 
+def get_extra_image_name (filename, postfix):
+    filename = str(filename)
+    ext = filename.split('.')[-1]
+    name = filename[0:len(filename) - len(ext) - 1]
+    return os.path.join(MEDIA_URL, name + postfix + '.' + ext)
+
+
 class VehicleImage(models.Model):
     vehicle = models.ForeignKey(Vehicle, on_delete=models.CASCADE, related_name='images')
     image = models.ImageField(upload_to=content_file_name, blank=True, )
+    main_image = models.BooleanField(default=False)
+
+    def save(self, *args, **kwargs):
+        if self.image:
+            super().save(*args, **kwargs)
+            img = Image.open(self.image.path)
+            output_size = (100, 100)
+            img.thumbnail(output_size)
+            img.save(get_extra_image_name(self.image.path, '_thumb'))
+
 
 
 class VehicleFeature(models.Model):

@@ -1,7 +1,7 @@
 import axios from "axios";
 import {REACT_APP_API_CLOUD_URL} from "../utils/consts";
 
-const API_URL = process.env.REACT_APP_API_URL ? process.env.REACT_APP_API_URL : REACT_APP_API_CLOUD_URL
+export const API_URL = process.env.REACT_APP_API_URL ? process.env.REACT_APP_API_URL : REACT_APP_API_CLOUD_URL
 
 const $host = axios.create({
 	baseURL: API_URL

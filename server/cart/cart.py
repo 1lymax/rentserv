@@ -5,7 +5,7 @@ from django.http import request
 from rest_framework import serializers
 
 from rentserv import settings
-from vehicles.models import Vehicle, VehicleImage
+from vehicles.models import Vehicle, VehicleImage, get_extra_image_name
 
 
 class Cart():
@@ -31,29 +31,36 @@ class Cart():
             total_price = total_items = 0
         cart_with_total = self.cart
         cart_with_total.update({"total": {"quantity": total_items, "price": str(total_price)}})
-
+        print(cart_with_total)
         return cart_with_total
 
     def add(self, vehicle_id, quantity=1):
 
         try:
             vehicle = Vehicle.objects.get(pk=int(vehicle_id))
-            # images = VehicleImage.objects.get(vehicle=int(vehicle_id))
+            images = VehicleImage.objects.filter(vehicle=int(vehicle_id))
+            image = images[vehicle_id].image if images[vehicle_id].image else ""
+
         except models.ObjectDoesNotExist:
             raise serializers.ValidationError("Vehicle not found")
         is_in_cart = False
+        print(dir(self.session))
         for vehicle_in_cart in self.cart:
             if vehicle_in_cart == vehicle.id:
                 is_in_cart = True
                 self.cart[self.cart.index(vehicle_in_cart)] = {
                     str(vehicle.id):
-                        {"id": vehicle.id, "name": vehicle.name, "image": "", "quantity": quantity, "price": float(vehicle.price_region)}}
+                        {"id": vehicle.id, "name": vehicle.name,
+                         "image": get_extra_image_name(image, '_thumb'),
+                         "quantity": quantity, "price": float(vehicle.price_region)}}
 
         if not is_in_cart:
             self.cart.update(
                 {
                     str(vehicle.id):
-                    {"id": vehicle.id, "name": vehicle.name, "quantity": quantity, "price": float(vehicle.price_region)}})
+                    {"id": vehicle.id, "name": vehicle.name,
+                     "image": get_extra_image_name(image, '_thumb'),
+                     "quantity": quantity, "price": float(vehicle.price_region)}})
 
         self.save()
         return self.cart

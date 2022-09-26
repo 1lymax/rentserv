@@ -1,9 +1,11 @@
 import React, {useContext, useEffect, useState} from 'react';
+import {observer} from "mobx-react-lite";
+import {Button, Divider, Dropdown, Grid, Icon, Image, Input, Label, Modal} from "semantic-ui-react";
+
 import {addToCart, fetchCart, removeFromCart} from "../../http/storeAPI";
 import {Context} from "../../index";
-import {Button, Divider, Dropdown, Grid, Icon, Input, Label, Modal} from "semantic-ui-react";
 import classes from "./Cart.module.css";
-import {observer} from "mobx-react-lite";
+import {API_URL} from "../../http";
 
 const Cart = observer(() => {
 	const [openCart, setOpenCart] = useState(false);
@@ -63,6 +65,7 @@ const Cart = observer(() => {
 									<>
 										<Grid.Row className={classes.cartRow}>
 											<Grid.Column className={classes.cartCell}>
+												<Image src={[API_URL, item[1].image].join(" ").replace("/ /", "/")}></Image>
 												<div><h4>{item[1].name}</h4></div>
 												<div>
 													<Dropdown icon='ellipsis vertical' direction="left">
