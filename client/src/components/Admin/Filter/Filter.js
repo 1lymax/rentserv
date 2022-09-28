@@ -13,7 +13,6 @@ const Filter = observer(({conf, filterCallback, aggregate}) => {
 	const contextScope = useContext(Context)
 	useEffect(() => {
 		filterCallback(fieldValues)
-		console.log(fieldValues)
 	}, [fieldValues, filterCallback])
 
 	useEffect(() => {
@@ -43,7 +42,6 @@ const Filter = observer(({conf, filterCallback, aggregate}) => {
 	};
 
 	const handleChange = e => {
-		console.log(e)
 		let value = ''
 		let name = e.name || e.target.name;
 		if ('value' in e) value = e.value
@@ -97,14 +95,12 @@ const Filter = observer(({conf, filterCallback, aggregate}) => {
 					</Col>
 					<Col md={10} className="d-flex flex-row justify-content-start align-items-center">
 						{ADMIN[set.name].fields.map(dep =>
-							<div								key={dep.name}
-								className="ps-2"
-								style={dep.filterStyles ? dep.filterStyles : {}}
-							>
+							<div key={dep.name} className="ps-2">
 								<InputControl
 									set={dep}
 									filterComponent
 									isClearable={true}
+									style={dep.filterStyles ? dep.filterStyles : {}}
 									onChange={e => handleChange(e)}
 									add={dep.name !== conf.selfName}
 									inputName={dep.backendFiltersetField ? dep.backendFiltersetField : dep.name}

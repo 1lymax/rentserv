@@ -7,6 +7,8 @@ import AppRouter from "./components/AppRouter";
 import NavBar from "./components/NavBar";
 import {Context} from "./index";
 import {check} from "./http/userAPI";
+// eslint-disable-next-line
+import classes from "./css/App.css"
 
 
 const App = observer(() => {

@@ -107,8 +107,9 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 	}
 
 	const handleInputChange = e => {
+		console.log('handleInputChange', e)
 		let name = e.name || e.target.name
-		let value = e.value || e.target.value
+		let value = e?.value || e.target?.value
 		setFieldValues(prevState => ({
 			...prevState,
 			[name]: value
@@ -130,7 +131,7 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 
 	return (
 		<>
-			{!isDependencyTable &&
+			{!isDependencyTable && false &&
 				<Segment basic>
 					<div>
 						Фильтр
@@ -140,7 +141,7 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 					</div>
 				</Segment>
 			}
-			<Table fixed>
+			<Table style={{tableLayout: "fixed"}}>
 				<Table.Header>
 					<Table.Row>
 						{conf.fields.map(set =>
@@ -184,11 +185,13 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 														selectOptions={set.contextName && contextScope[set.contextName].data}
 													/>
 													:
-													<div className="d-flex align-items-center"
+													<div //className="d-flex align-items-center"
 														 style={{
 															 cursor: "cell",
 															 minHeight: "40px",
-															 paddingLeft: "15px"
+															 paddingLeft: "15px",
+															 display: "flex",
+															 alignItems: "center"
 														 }}
 														 onClick={() => {
 															 setFieldsArray(item)
@@ -233,7 +236,8 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 					)}
 					{add
 						?
-						<Table.Row className={["", isDependencyTable ? 'ms-4' : 'mb-4'].join(' ')}>
+						<Table.Row //className={["", isDependencyTable ? 'ms-4' : 'mb-4'].join(' ')}
+						>
 							{conf.fields.map(set =>
 								<Table.Cell key={set.name}>
 									<InputControl

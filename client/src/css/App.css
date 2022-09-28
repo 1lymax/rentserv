@@ -2,3 +2,11 @@
     margin-top: 5px;
     margin-bottom: 5px;
 }
+
+.ui.secondary.menu {
+    margin: 10px;
+}
+
+.ui.search.dropdown {
+    z-index: 2;
+}
