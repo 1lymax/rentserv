@@ -6,7 +6,7 @@ import {doFetch} from "../../http/storeAPI";
 import {ADMIN} from "../../utils/consts";
 import Filter from "../../components/Admin/Filter/Filter";
 import EditTable from "../../components/Admin/EditTable";
-import {Container} from "@mui/material";
+import {Container} from "semantic-ui-react";
 
 const VehiclesAdmin = observer(() => {
 	const contextScope = useContext(Context)
@@ -25,7 +25,7 @@ const VehiclesAdmin = observer(() => {
 	}, []);
 
 	return (
-		<Container className="d-flex flex-column">
+		<Container>
 			{user.isStaff
 				?
 				<>

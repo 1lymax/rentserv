@@ -10,7 +10,7 @@ import {Context} from "../../index";
 import {doCreate, doDelete, doFetch, doUpdate} from "../../http/storeAPI";
 import InputControl from "../UI/InputControl/InputControl";
 import OutlineButton from "../UI/OutlineButton/OutlineButton";
-import DependencyShow from "./DependencyShow";
+import DependencyShow from "./DependencyShow/DependencyShow";
 import IButton from "../UI/IconButton/IButton";
 import Paginate from "../UI/Paginate/Paginate";
 import classes from "./EditTable.module.css"
@@ -76,7 +76,6 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 
 	const handleEditOrSave = (id) => {
 		setEdit(id)
-		console.log('id', id, 'edit', edit)
 		if (id === edit && id) {
 			setIsLoading(true)
 			doUpdate(context, id, fieldValues).then(() => {
@@ -122,8 +121,8 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 		setIsLoading(false)
 	};
 
-	const handleSubmit = (item, e) => {
-		console.log(e)
+	// eslint-disable-next-line
+	const handleSubmit = (item) => {
 		setFieldsArray(item)
 		setAdd(false)
 		handleEditOrSave(item.id, item.name)
@@ -141,22 +140,21 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 					</div>
 				</Segment>
 			}
-			{/*<Table className={["", classes.dict__title].join(' ')}>*/}
 			<Table fixed>
 				<Table.Header>
-					{conf.fields.map(set =>
-						<Table.HeaderCell key={set.name} className={["", set.cssClassName].join(' ')}
-						>
-							{set.placeholder}
-						</Table.HeaderCell>
-					)}
-					<Table.HeaderCell></Table.HeaderCell>
+					<Table.Row>
+						{conf.fields.map(set =>
+							<Table.HeaderCell key={set.name}>
+								{set.placeholder}
+							</Table.HeaderCell>
+						)}
+						<Table.HeaderCell></Table.HeaderCell>
+					</Table.Row>
 				</Table.Header>
-
 				<Table.Body>
 					{data.length === 0 &&
 						<Table.Row>
-							<Table.Cell colSpan={conf.fields.length+1} textAlign="center">
+							<Table.Cell colSpan={conf.fields.length + 1} textAlign="center">
 								<Header as="h3"
 										color="grey" textAlign="center" content="< no data >"/>
 							</Table.Cell>
@@ -166,14 +164,11 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 						<React.Fragment key={item.id}>
 							{/*<Table.Row className={!isDependencyTable && classes.dict__item}>*/}
 							<Table.Row
-								className={["", isDependencyTable && 'ms-4'].join(' ')}
 								onMouseEnter={() => setActionButtonsVisible(item.id)}
 								onMouseLeave={() => setActionButtonsVisible(0)}
 							>
 								{conf.fields.map(set =>
-									<Table.Cell key={set.name} className={["", set.cssClassName].join(' ')}
-												style={{minHeight: "48px"}}
-									>
+									<Table.Cell key={set.name} style={{minHeight: "48px"}}>
 										{isNeedDependencyValue(set.name) &&
 											<>
 												{item.id === edit
@@ -183,7 +178,7 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 														inputName={set.name}
 														value={fieldValues[set.name]}
 														onChange={e => handleInputChange(e)}
-														handleSubmit={(e) => handleSubmit(item, e)}
+														handleSubmit={() => handleSubmit(item)}
 														hidden={isNeedDependencyValue(set.name)}
 														autoFocus={item.id === focusElement[0] && set.name === focusElement[1]}
 														selectOptions={set.contextName && contextScope[set.contextName].data}
@@ -203,11 +198,9 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 														 }}>
 														{setCellValue(item, set)}
 													</div>
-
 												}
 											</>
 										}
-
 									</Table.Cell>
 								)}
 								<Table.Cell>
@@ -225,29 +218,24 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 													handleDelOrCancel(item.id)
 												}}
 											/>
-
 										</>
 									}
 								</Table.Cell>
 							</Table.Row>
-
-
-							{/*</Table.Row>*/}
-							<Table.Row>
-								<Table.Cell colSpan={conf.fields.length + 1}>
-									<DependencyShow conf={conf} item={item} contextScope={contextScope}/>
-								</Table.Cell>
-							</Table.Row>
+							{conf.dependencies && conf.dependencies.length > 0 &&
+								<Table.Row>
+									<Table.Cell colSpan={conf.fields.length + 1}>
+										<DependencyShow conf={conf} item={item} contextScope={contextScope}/>
+									</Table.Cell>
+								</Table.Row>
+							}
 						</React.Fragment>
 					)}
 					{add
 						?
 						<Table.Row className={["", isDependencyTable ? 'ms-4' : 'mb-4'].join(' ')}>
 							{conf.fields.map(set =>
-								<Table.Cell
-									key={set.name}
-									className={["", set.cssClassName].join(' ')}
-								>
+								<Table.Cell key={set.name}>
 									<InputControl
 										add
 										set={set}
@@ -272,10 +260,9 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 								}
 								<IButton onClick={() => setAdd(false)}><CancelIcon/></IButton>
 							</Table.Cell>
-
 						</Table.Row>
 						:
-						<Table.Row className={["", isDependencyTable && 'ms-5'].join(' ')}>
+						<Table.Row>
 							<Table.Cell colSpan={2}>
 								<OutlineButton
 									//size="small"

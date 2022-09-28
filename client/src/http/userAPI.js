@@ -24,16 +24,14 @@ export const check = async () => {
 	try {
 		if (localStorage.access) {
 			const {data} = await $authHost.post('user/token/verify/', {token: localStorage.access});
-			if (data === {}) {
-				console.log(jwtDecode(localStorage.access))
-				return jwtDecode(localStorage.access);
-			}
+			console.log('check data', data)
+			return jwtDecode(localStorage.access);
 		}
 		return {}
 	} catch (e) {
 		const {data} = await $authHost.post('user/token/refresh/', {refresh: localStorage.refresh})
 		localStorage.setItem('access', data.access)
-		//console.log('refresh data', data)
+		console.log('refreshed data at local storage')
 		return jwtDecode(data.access)
 
 	}

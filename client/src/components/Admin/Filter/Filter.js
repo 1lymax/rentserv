@@ -97,8 +97,7 @@ const Filter = observer(({conf, filterCallback, aggregate}) => {
 					</Col>
 					<Col md={10} className="d-flex flex-row justify-content-start align-items-center">
 						{ADMIN[set.name].fields.map(dep =>
-							<div
-								key={dep.name}
+							<div								key={dep.name}
 								className="ps-2"
 								style={dep.filterStyles ? dep.filterStyles : {}}
 							>
