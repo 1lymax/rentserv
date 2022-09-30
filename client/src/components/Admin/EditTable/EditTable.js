@@ -1,21 +1,16 @@
-import React, {useContext, useEffect, useState} from 'react';
 import {observer} from "mobx-react-lite";
-import CancelIcon from '@mui/icons-material/Cancel';
-import SaveIcon from '@mui/icons-material/Save';
-import LoadingButton from '@mui/lab/LoadingButton'
-import {AddToPhotos} from "@mui/icons-material";
+import React, {useContext, useEffect, useState} from 'react';
+import {Button, Grid, Header, Table} from "semantic-ui-react";
 
-import setDependencyName from "../../utils/setDependencyName";
-import {Context} from "../../index";
-import {doCreate, doDelete, doFetch, doUpdate} from "../../http/storeAPI";
-import InputControl from "../UI/InputControl/InputControl";
-import OutlineButton from "../UI/OutlineButton/OutlineButton";
-import DependencyShow from "./DependencyShow/DependencyShow";
-import IButton from "../UI/IconButton/IButton";
-import Paginate from "../UI/Paginate/Paginate";
+import {Context} from "../../../index";
+import {PAGINATION} from "../../../utils/consts";
+import Paginate from "../../UI/Paginate/Paginate";
+import InputControl from "../../UI/InputControl/InputControl";
+import DependencyShow from "../DependencyShow/DependencyShow";
+import setDependencyName from "../../../utils/setDependencyName";
+import {doCreate, doDelete, doFetch, doUpdate} from "../../../http/storeAPI";
+
 import classes from "./EditTable.module.css"
-import {PAGINATION} from "../../utils/consts";
-import {Button, Header, Segment, Table} from "semantic-ui-react";
 
 
 const EditTable = observer(({context, isDependencyTable, filters, ordering, parentContext}) => {
@@ -34,7 +29,7 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 	const conf = context.settings
 	const pagination = {
 		page: currentPage ? currentPage + 1 : undefined,
-		[PAGINATION.backendPageSize]: rowsPerPage
+		[PAGINATION.backendName]: rowsPerPage
 	}
 
 	useEffect(() => {
@@ -56,12 +51,10 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 		} else {
 			return item[set.name]
 		}
-
 	};
 
-	const isNeedDependencyValue = (CellName) => {
-		const isParent = typeof parentContext !== 'undefined' && CellName === parentContext.selfName
-		return !isDependencyTable || !isParent
+	const isNeedDependencyValue = (cellName) => {
+		return !(isDependencyTable && cellName === parentContext?.selfName)
 	};
 
 	const setFieldsArray = (item) => {
@@ -107,7 +100,6 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 	}
 
 	const handleInputChange = e => {
-		console.log('handleInputChange', e)
 		let name = e.name || e.target.name
 		let value = e?.value || e.target?.value
 		setFieldValues(prevState => ({
@@ -131,25 +123,23 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 
 	return (
 		<>
-			{!isDependencyTable && false &&
-				<Segment basic>
-					<div>
-						Фильтр
-					</div>
-					<div>
+			{!isDependencyTable &&
+				<Grid columns={1} verticalAlign={"bottom"}>
+					<Grid.Column>
 						<Paginate total={totalRows} setCurrentPage={setCurrentPage} setLimit={setRowsPerPage}/>
-					</div>
-				</Segment>
+					</Grid.Column>
+				</Grid>
 			}
-			<Table style={{tableLayout: "fixed"}}>
+			<Table style={{overflow: "auto", marginTop: "1rem"}}>
 				<Table.Header>
 					<Table.Row>
 						{conf.fields.map(set =>
-							<Table.HeaderCell key={set.name}>
+							isNeedDependencyValue(set.name) &&
+							<Table.HeaderCell width={set.width} key={set.name}>
 								{set.placeholder}
 							</Table.HeaderCell>
 						)}
-						<Table.HeaderCell></Table.HeaderCell>
+						<Table.HeaderCell>Actions</Table.HeaderCell>
 					</Table.Row>
 				</Table.Header>
 				<Table.Body>
@@ -163,63 +153,51 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 					}
 					{data.length > 0 && data.map(item =>
 						<React.Fragment key={item.id}>
-							{/*<Table.Row className={!isDependencyTable && classes.dict__item}>*/}
 							<Table.Row
 								onMouseEnter={() => setActionButtonsVisible(item.id)}
 								onMouseLeave={() => setActionButtonsVisible(0)}
 							>
-								{conf.fields.map(set =>
-									<Table.Cell key={set.name} style={{minHeight: "48px"}}>
-										{isNeedDependencyValue(set.name) &&
-											<>
-												{item.id === edit
-													?
-													<InputControl
-														set={set}
-														inputName={set.name}
-														value={fieldValues[set.name]}
-														onChange={e => handleInputChange(e)}
-														handleSubmit={() => handleSubmit(item)}
-														hidden={isNeedDependencyValue(set.name)}
-														autoFocus={item.id === focusElement[0] && set.name === focusElement[1]}
-														selectOptions={set.contextName && contextScope[set.contextName].data}
-													/>
-													:
-													<div //className="d-flex align-items-center"
-														 style={{
-															 cursor: "cell",
-															 minHeight: "40px",
-															 paddingLeft: "15px",
-															 display: "flex",
-															 alignItems: "center"
-														 }}
-														 onClick={() => {
-															 setFieldsArray(item)
-															 setAdd(false)
-															 setFocusElement([item.id, set.name])
-															 setEdit(item.id)
-														 }}>
-														{setCellValue(item, set)}
-													</div>
-												}
-											</>
+								{conf.fields.map(set => isNeedDependencyValue(set.name) &&
+									<Table.Cell key={set.name}>
+										{item.id === edit
+											?
+											<div className={classes.cellEdit}>
+												<InputControl
+													fluid
+													set={set}
+													inputName={set.name}
+													value={fieldValues[set.name]}
+													onChange={e => handleInputChange(e)}
+													handleSubmit={() => handleSubmit(item)}
+													hidden={isNeedDependencyValue(set.name)}
+													autoFocus={item.id === focusElement[0] && set.name === focusElement[1]}
+													selectOptions={set.contextName && contextScope[set.contextName].data}
+												/>
+											</div>
+											:
+											<div className={classes.cellData} onClick={() => {
+												setFieldsArray(item)
+												setAdd(false)
+												setFocusElement([item.id, set.name])
+												setEdit(item.id)
+											}}>
+												{setCellValue(item, set)}
+											</div>
 										}
 									</Table.Cell>
 								)}
 								<Table.Cell>
 									{actionButtonsVisible === item.id &&
 										<>
-											{isLoading
-												? <LoadingButton loading/>
-												: <Button circular icon={edit === item.id ? "save" : "edit"}
-														  onClick={() => handleSubmit(item)}/>
-											}
-											<Button
-												circular icon={edit === item.id ? "cancel" : "trash"}
-												onClick={() => {
-													setAdd(false)
-													handleDelOrCancel(item.id)
-												}}
+											<Button size="large" circular loading={isLoading}
+													icon={edit === item.id ? "save" : "edit"}
+													onClick={() => handleSubmit(item)}/>
+											<Button size="large" circular
+													icon={edit === item.id ? "cancel" : "trash"}
+													onClick={() => {
+														setAdd(false)
+														handleDelOrCancel(item.id)
+													}}
 											/>
 										</>
 									}
@@ -227,7 +205,7 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 							</Table.Row>
 							{conf.dependencies && conf.dependencies.length > 0 &&
 								<Table.Row>
-									<Table.Cell colSpan={conf.fields.length + 1}>
+									<Table.Cell colSpan={conf.fields.length + 1} className={classes.depButtonsCell}>
 										<DependencyShow conf={conf} item={item} contextScope={contextScope}/>
 									</Table.Cell>
 								</Table.Row>
@@ -236,12 +214,12 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 					)}
 					{add
 						?
-						<Table.Row //className={["", isDependencyTable ? 'ms-4' : 'mb-4'].join(' ')}
-						>
+						<Table.Row>
 							{conf.fields.map(set =>
 								<Table.Cell key={set.name}>
 									<InputControl
 										add
+										fluid
 										set={set}
 										inputName={set.name}
 										value={fieldValues[set.name]}
@@ -252,38 +230,30 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 							)}
 
 							<Table.Cell>
-								{isLoading
-									? <LoadingButton loading/>
-									: <IButton onClick={() => {
-										setEdit(-1)
-										handleEditOrSave(undefined, fieldValues)
-									}}
-									>
-										<SaveIcon/>
-									</IButton>
-								}
-								<IButton onClick={() => setAdd(false)}><CancelIcon/></IButton>
+								<Button circular size="large" loading={isLoading} icon="save"
+										onClick={() => {
+											setEdit(-1)
+											handleEditOrSave(undefined, fieldValues)
+										}}
+								/>
+								<Button circular size="large" icon="cancel"
+										onClick={() => setAdd(false)}/>
 							</Table.Cell>
 						</Table.Row>
 						:
 						<Table.Row>
-							<Table.Cell colSpan={2}>
-								<OutlineButton
-									//size="small"
-									startIcon={<AddToPhotos/>}
-									style={{minWidth: "120px", width: "20%"}}
-									onClick={() => {
-										setIsLoading(true)
-										setFieldsArray(isDependencyTable ? filters : {})
-										setAdd(true)
-										hideAll()
-									}}
-								>
-									Добавить{/*conf.addButtonTitle*/}
-								</OutlineButton>
+							<Table.Cell colSpan={isDependencyTable ? Math.floor(conf.fields.length / 2): conf.fields.length+1}>
+								<Button primary content='Add record' icon='add' labelPosition='left'
+										onClick={() => {
+											hideAll()
+											setAdd(true)
+											setFieldsArray(isDependencyTable ? filters : {})
+										}}
+								/>
 							</Table.Cell>
 							{!isDependencyTable ||
-								<Table.Cell className={classes.pagination__wrapper} colSpan={3}>
+								<Table.Cell colSpan={conf.fields.length - Math.floor(conf.fields.length / 2)}
+											className={classes.pagination__wrapper}>
 									<Paginate total={totalRows} setCurrentPage={setCurrentPage}
 											  setLimit={setRowsPerPage}/>
 								</Table.Cell>

@@ -2,10 +2,11 @@ import React, {useContext, useEffect, useState} from 'react';
 import {observer} from "mobx-react-lite";
 import {Button, Divider, Dropdown, Grid, Icon, Image, Input, Label, Modal} from "semantic-ui-react";
 
-import {addToCart, fetchCart, removeFromCart} from "../../http/storeAPI";
-import {Context} from "../../index";
-import classes from "./Cart.module.css";
 import {API_URL} from "../../http";
+import {Context} from "../../index";
+import {addToCart, fetchCart, removeFromCart} from "../../http/storeAPI";
+
+import classes from "./Cart.module.css";
 
 const Cart = observer(() => {
 	const [openCart, setOpenCart] = useState(false);
@@ -83,13 +84,13 @@ const Cart = observer(() => {
 											<Grid.Column className={classes.cartCell + ' ' + classes.cellQuantity}>
 												<Button icon="minus" circular size="small"
 														className={classes.buttonAddRemove}
-														onClick={e => handleInputChange(e, item[1].id, inputData[item[1].id].quantity - 1)}/>
-												<Input value={inputData[item[1].id].quantity}
+														onClick={e => handleInputChange(e, item[1].id, inputData[item[1].id]?.quantity - 1)}/>
+												<Input value={inputData[item[1].id]?.quantity}
 													   className={classes.quantity_input}
 													   onChange={e => handleInputChange(e, item[1].id, parseInt(e.target.value))}/>
 												<Button icon="add" circular size="small"
 														className={classes.buttonAddRemove}
-														onClick={e => handleInputChange(e, item[1].id, inputData[item[1].id].quantity + 1)}/>
+														onClick={e => handleInputChange(e, item[1].id, inputData[item[1].id]?.quantity + 1)}/>
 											</Grid.Column>
 											<Grid.Column className={classes.cartCell + ' ' + classes.cellPrice}>
 												<h2>{item[1].price}</h2>

@@ -1,14 +1,11 @@
 import React, {useState} from 'react';
-import UnfoldMoreIcon from '@mui/icons-material/UnfoldMore';
-import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import {Icon, Transition} from "semantic-ui-react";
 
 import {ADMIN} from "../../../utils/consts";
 import ImageList from "../ImageList/ImageList";
-import EditTable from "../EditTable";
-import IButton from "../../UI/IconButton/IButton";
+import EditTable from "../EditTable/EditTable";
+
 import classes from "./DependencyShow.module.css"
-import {Transition} from "semantic-ui-react";
 
 const DependencyShow = ({contextScope, item, conf}) => {
 	const [showDependency, setShowDependency] = useState({'': false})
@@ -58,20 +55,19 @@ const DependencyShow = ({contextScope, item, conf}) => {
 	return (
 		<React.Fragment>
 			<div className={classes.collapse_wrapper}>
-				<div>
-					<IButton size="small" onClick={() => handleShowAll()}>
-						<UnfoldMoreIcon/>
-					</IButton>
+				<div style={{cursor: "pointer", paddingInline: "0.6rem"}}>
+					<Icon name="sort" size="small" onClick={() => handleShowAll()}/>
 				</div>
 				{conf.dependencies && conf.dependencies.map(dependency =>
 					<div key={dependency.name}
 						 onClick={() => handleShowDependency(dependency, item)}
 						 style={{cursor: "pointer", paddingInline: "0.6rem"}}>
-						<IButton size="small">
-							{showDependency[dependency.name + item.id]
-								? <KeyboardArrowUpIcon/>
-								: <KeyboardArrowDownIcon/>}
-						</IButton>
+						<Icon size="small" name={showDependency[dependency.name + item.id] ? "chevron up" : "chevron down"}/>
+						{/*<IButton size="small">*/}
+						{/*	{showDependency[dependency.name + item.id]*/}
+						{/*		? <KeyboardArrowUpIcon/>*/}
+						{/*		: <KeyboardArrowDownIcon/>}*/}
+						{/*</IButton>*/}
 						{dependency.inlineTitle}
 					</div>
 				)}
@@ -87,9 +83,9 @@ const DependencyShow = ({contextScope, item, conf}) => {
 				</Transition>
 			)}
 			{showAll &&
-				<IButton size="small" onClick={() => handleShowAll()}>
-					<UnfoldMoreIcon/>
-				</IButton>
+				<div style={{cursor: "pointer", paddingInline: "0.6rem"}}>
+					<Icon name="sort" size="small" onClick={() => handleShowAll()}/>
+				</div>
 			}
 		</React.Fragment>
 	);

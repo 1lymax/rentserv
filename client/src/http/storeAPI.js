@@ -16,15 +16,22 @@ export const doCreate = async (context, createData) => {
 	return data
 }
 
+const removeEmpties = (data) => {
+	for (let key in data) {
+		data[key] === '' &&	delete data[key]
+	}
+	return data
+};
+
 export const doFetch = async (context, ordering, filters, pagination) => {
 	try{
 		const {data} = await $host.get(
 			API_ROUTES.api + context.endpoint + '/',
 			{params:
 					{
-						...ordering,
-						...filters,
-						...pagination
+						...removeEmpties(ordering),
+						...removeEmpties(filters),
+						...removeEmpties(pagination)
 					}
 			})
 		return data

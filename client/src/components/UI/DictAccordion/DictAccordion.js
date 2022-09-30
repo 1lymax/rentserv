@@ -1,26 +1,30 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {observer} from "mobx-react-lite";
-import EditTable from "../../Admin/EditTable";
-import {Accordion} from "react-bootstrap";
+import {Accordion, Icon} from "semantic-ui-react";
+
+import EditTable from "../../Admin/EditTable/EditTable";
 
 
 const DictAccordion = observer(({context, conf, filters}) => {
+	const [active, setActive] = useState(false)
+
 	return (
-		<Accordion className="mt-3">
-			<Accordion.Item eventKey="0">
-				<Accordion.Header>
-					{context.settings.title} ({context.data.length})
-				</Accordion.Header>
-				<Accordion.Body className="d-flex flex-column">
-					<EditTable
-						context={context}
-						filters={filters}
-						conf={conf}
-						showTitle={true}
-					/>
-					{/*<Create show={modalVisible} onHide={() => setModalVisible(false)}/>*/}
-				</Accordion.Body>
-			</Accordion.Item>
+		<Accordion styled fluid>
+			<Accordion.Title
+				active={active}
+				onClick={() => setActive(!active)}
+			>
+				<Icon name='dropdown'/>
+				{context.settings.title} ({context.data.length})
+			</Accordion.Title>
+			<Accordion.Content active={active}>
+				<EditTable
+					context={context}
+					filters={filters}
+					conf={conf}
+					showTitle={true}
+				/>
+			</Accordion.Content>
 		</Accordion>
 	);
 });

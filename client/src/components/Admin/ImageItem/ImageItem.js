@@ -1,7 +1,8 @@
 import React, {useState} from 'react';
 import {FileUploader} from "react-drag-drop-files";
-import classes from "./ImageItem.module.css";
 import {Button, Card, Icon, Image} from "semantic-ui-react";
+
+import classes from "./ImageItem.module.css";
 
 
 const ImageItem = ({image, id, newPlacement, handleImageUpload, handleAction, isBackendImage}) => {

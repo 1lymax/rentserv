@@ -5,12 +5,13 @@ import {observer} from "mobx-react-lite";
 import {doFetch} from "../../http/storeAPI";
 import {ADMIN} from "../../utils/consts";
 import Filter from "../../components/Admin/Filter/Filter";
-import EditTable from "../../components/Admin/EditTable";
-import {Container} from "semantic-ui-react";
+import EditTable from "../../components/Admin/EditTable/EditTable";
+import {Container, Dropdown, Grid, Header} from "semantic-ui-react";
 
 const VehiclesAdmin = observer(() => {
 	const contextScope = useContext(Context)
 	const [filters, setFilters] = useState({})
+	const [showFilter, setShowFilter] = useState(false)
 	const user = contextScope.user
 
 	useEffect(() => {
@@ -29,17 +30,34 @@ const VehiclesAdmin = observer(() => {
 			{user.isStaff
 				?
 				<>
-					<h4 className="mt-3">Транспорт</h4>
-					<Filter
-						conf={ADMIN.vehicle}
-						filterCallback={setFilters}
-						aggregate={contextScope.vehicle.aggregate}
-
-					/>
+					<Grid columns={2}>
+						<Grid.Column textAlign={"left"}>
+							<Header as="h3">Транспорт</Header>
+						</Grid.Column>
+						<Grid.Column textAlign={"right"}>
+							<div style={{marginRight: "10px"}}>
+								<Dropdown simple icon='ellipsis vertical' direction="left">
+									<Dropdown.Menu>
+										<Dropdown.Item
+											onClick={() => setShowFilter(!showFilter)}
+											icon="filter"
+										text={!showFilter ? "Show filters": "Hide filters"}
+										/>
+									</Dropdown.Menu>
+								</Dropdown>
+							</div>
+						</Grid.Column>
+					</Grid>
+					<div hidden={!showFilter}>
+						<Filter
+							conf={ADMIN.vehicle}
+							aggregate={contextScope.vehicle.aggregate}
+							filterCallback={setFilters}
+						/>
+					</div>
 					<EditTable
-						context={contextScope.vehicle}
 						filters={filters}
-						showTitle={true}
+						context={contextScope.vehicle}
 					/>
 				</>
 				:

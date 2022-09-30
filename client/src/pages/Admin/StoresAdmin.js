@@ -2,11 +2,11 @@ import React, {useContext, useEffect, useState} from 'react';
 import {observer} from "mobx-react-lite";
 import {Context} from "../../index";
 import {doFetch} from "../../http/storeAPI";
-import {Container} from "react-bootstrap";
 import Filter from "../../components/Admin/Filter/Filter";
 import {ADMIN} from "../../utils/consts";
 import DictAccordion from "../../components/UI/DictAccordion/DictAccordion";
 import CreateVehicle from "../../components/modals/CreateVehicle";
+import {Container} from "semantic-ui-react";
 
 const StoresAdmin = observer(() => {
 	const [storeVisible, setStoreVisible] = useState(false)
@@ -22,7 +22,7 @@ const StoresAdmin = observer(() => {
 		// eslint-disable-next-line
 	}, []);
 	return (
-		<Container className="d-flex flex-column">
+		<Container>
 			{user.isStaff
 				?
 				<>

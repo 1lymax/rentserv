@@ -1,9 +1,10 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {Container} from "react-bootstrap";
-import {Context} from "../../index";
 import {observer} from "mobx-react-lite";
+
+import {Context} from "../../index";
 import DictAccordion from "../../components/UI/DictAccordion/DictAccordion";
 import {doFetch} from "../../http/storeAPI";
+import {Container} from "semantic-ui-react";
 
 const Catalogs = observer(() => {
 	const [typeVisible, setTypeVisible] = useState(false)
@@ -21,7 +22,7 @@ const Catalogs = observer(() => {
 	}, [contextScope]);
 
 	return (
-		<Container className="d-flex flex-column">
+		<Container>
 			{user.isStaff
 				?
 				<>

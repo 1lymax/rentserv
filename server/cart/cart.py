@@ -39,7 +39,7 @@ class Cart():
         try:
             vehicle = Vehicle.objects.get(pk=int(vehicle_id))
             images = VehicleImage.objects.filter(vehicle=int(vehicle_id))
-            image = images[vehicle_id].image if images[vehicle_id].image else ""
+            image = images[vehicle_id].image if len(images) > 0 and images[vehicle_id].image else ""
 
         except models.ObjectDoesNotExist:
             raise serializers.ValidationError("Vehicle not found")

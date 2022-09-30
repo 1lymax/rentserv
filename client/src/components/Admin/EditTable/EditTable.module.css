@@ -24,3 +24,27 @@
 .pagination__wrapper {
     margin-bottom: 0;
 }
+
+.cellData {
+    cursor: cell;
+    min-height: 42px;
+    padding-left: 15px;
+    padding-top: 2px;
+    display: flex;
+    align-items: center;
+    font-family: Lato,'Helvetica Neue',Arial,Helvetica,sans-serif;
+}
+
+.cellEdit {
+    padding-top: 2px;
+    align-items: center;
+    min-height: 42px;
+    width: 100%;
+}
+
+.depButtonsCell {
+    border-top: 0!important;
+    padding-top: 0!important;
+}
+
+

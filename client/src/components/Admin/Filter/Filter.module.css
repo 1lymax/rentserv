@@ -1,4 +1,24 @@
 .filter_row {
+    /*display: flex;*/
+    border-bottom-width: 0!important;
+}
+
+.filter_wrapper {
+    display: flex;
+    justify-content: start;
     align-items: center;
-    height: 50px;
+}
+
+.field_wrapper {
+    padding-left: 5px;
+}
+
+.cell {
+    border-top-width: 0 !important;
+}
+
+.cell_wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: start;
 }

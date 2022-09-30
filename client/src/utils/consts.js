@@ -19,7 +19,7 @@ export const API_ROUTES = {
 }
 
 export const PAGINATION = {
-	backendPageSize: 'page_size',
+	backendName: 'page_size',
 	rowsPerPageDefault: 5
 }
 
@@ -34,7 +34,7 @@ export const ADMIN = {
 		addButtonTitle: '+ тип',
 		fields: [
 			{
-				name: 'name', type: 'string', placeholder: 'Название', cssClassName: "col-10"
+				name: 'name', type: 'string', placeholder: 'Название'
 			},
 		]
 	},
@@ -47,7 +47,7 @@ export const ADMIN = {
 		addButtonTitle: '+ изо',
 		fields: [
 			{
-				name: 'image', type: 'string', placeholder: 'Изображение', cssClassName: "col-10"
+				name: 'image', type: 'string', placeholder: 'Изображение'
 			},
 			{
 				name: 'vehicle', type: 'select', placeholder: 'Транспорт'
@@ -62,18 +62,18 @@ export const ADMIN = {
 		fields: [
 			{
 				name: 'feature', backendFiltersetField: 'features__feature',
-				type: 'select', placeholder: 'Характеристика', contextName: 'feature', cssClassName: "col-5 col-lg-4"
+				type: 'select', placeholder: 'Характеристика', contextName: 'feature', width: 6
 			},
 			{
 				name: 'value', backendFiltersetField: 'features__value', filterStyles: {minWidth: '70px', maxWidth: '100px'},
-				type: 'string', placeholder: 'Величина', cssClassName: "col-2"
+				type: 'string', placeholder: 'Величина', width: 2
 			},
 			{
 				name: 'unit', backendFiltersetField: 'features__unit', type: 'select', filterStyles: {minWidth: '120px', maxWidth: '140px'},
-				placeholder: 'Ед. изм.', contextName: 'unit', cssClassName: "col-2"
+				placeholder: 'ед.', contextName: 'unit', width: 2
 			},
 			{
-				name: 'vehicle', type: 'select', placeholder: 'Транспорт', contextName: 'vehicle', cssClassName: "col-3 col-lg-2"
+				name: 'vehicle', type: 'select', placeholder: 'Транспорт', contextName: 'vehicle'
 			},
 		]
 	},
@@ -99,17 +99,17 @@ export const ADMIN = {
 		fields: [
 			{
 				name: 'name', type: 'string', filter: 'autocomplete', filterStyles: {minWidth: '150px'},
-				contextName: 'vehicle', placeholder: 'Название', cssClassName: "col-4 col-lg-3 flex-grow-1"
+				contextName: 'vehicle', placeholder: 'Название', width: 5
 			},
 			{
 				name: 'vehicle_type', type: 'select', placeholder: 'Тип', filterStyles: {minWidth: '170px', maxWidth: '220px'},
-				contextName: 'type', cssClassName: "col-4 col-lg-3"
+				contextName: 'type', width: 5
 			},
 			{
-				name: 'price_cap', type: 'string', filter: 'slider', placeholder: 'Цена (Столица)', width: '80px', cssClassName: "col-2"
+				name: 'price_cap', type: 'string', filter: 'slider', placeholder: 'Цена (Столица)', width: 2
 			},
 			{
-				name: 'price_region', type: 'string', filter: 'slider', placeholder: 'Цена (Регионы)', width: '80px', cssClassName: "col-2"
+				name: 'price_region', type: 'string', filter: 'slider', placeholder: 'Цена (Регионы)', width: 2
 			},
 		]
 	},
@@ -123,13 +123,13 @@ export const ADMIN = {
 		],
 		fields: [
 			{
-				name: 'vehicle', type: 'select', placeholder: 'Транспорт', contextName: 'vehicle', filterStyles: {maxWidth: '170px'}, cssClassName: "col-4 col-lg-3"
+				name: 'vehicle', type: 'select', placeholder: 'Транспорт', contextName: 'vehicle', filterStyles: {maxWidth: '170px'}, width: 6
 			},
 			{
-				name: 'city', type: 'select', backendFiltersetField: 'store__city', placeholder: 'Город', contextName: 'city', cssClassName: "col-4 col-lg-3"
+				name: 'city', type: 'select', backendFiltersetField: 'store__city', placeholder: 'Город', contextName: 'city', width: 6
 			},
 			{
-				name: 'quantity', type: 'string', placeholder: 'Кол-во', filterStyles: {maxWidth: '90px'}, cssClassName: "col-4 col-lg-3"
+				name: 'quantity', type: 'string', placeholder: 'Кол-во', filterStyles: {maxWidth: '90px'}, width: 2
 			},
 		]
 	},
@@ -153,7 +153,7 @@ export const ADMIN = {
 		fields: [
 			{
 				name: 'name', type: 'string', filter: 'autocomplete', filterStyles: {minWidth: '180px'},
-				contextName: 'city', placeholder: 'Название города', cssClassName: "col-6 col-lg-5"
+				contextName: 'city', placeholder: 'Название города', width:5
 			},
 		]
 	}

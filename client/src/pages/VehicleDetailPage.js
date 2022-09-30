@@ -1,15 +1,16 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {Button, Col, Container, Image, Row} from "react-bootstrap";
 import {Context} from "../index";
-import {doFetch, fetchOneVehicle} from "../http/storeAPI";
+import {addToCart, doFetch, fetchOneVehicle} from "../http/storeAPI";
 import {useParams} from "react-router-dom";
+import {Button, Container, Grid, Icon, Image, Segment, Table} from "semantic-ui-react";
+import {ADMIN} from "../utils/consts";
 
 
 const VehicleDetailPage = () => {
-	const [vehicle, setVehicle] = useState({images: [{image: ''}], features:[]})
+	const [vehicle, setVehicle] = useState({images: [{image: ''}], features: []})
 
 	const {id} = useParams()
-	const {feature, unit} = useContext(Context)
+	const {feature, unit, cart} = useContext(Context)
 	const {images} = vehicle;
 	const vehicleFeature = vehicle.features
 
@@ -28,10 +29,16 @@ const VehicleDetailPage = () => {
 		// eslint-disable-next-line
 	}, []);
 
+	const handleClick = (e) => {
+		addToCart(vehicle.id, {id: vehicle.id, quantity: 1})
+			.then(resp => cart.setData(resp))
+		e.stopPropagation()
+	}
+
 	return (
 		<Container className="mt-3">
-			<Row>
-				<Col md={4}>
+			<Grid columns={3}>
+				<Grid.Column>
 					{images.length
 						?
 						<Image width={300} height={300} src={images[0].image}/>
@@ -39,45 +46,67 @@ const VehicleDetailPage = () => {
 						<></>
 					}
 
-				</Col>
-				<Col md={4}>
-					<Row>
-						<h2>{vehicle.name}</h2>
-						<div>{vehicle.vehicle_type_name}</div>
-					</Row>
-				</Col>
-				<Col md={4}>
-					<div className="p-2 d-flex flex-column">
-						<div className="d-flex flex-row justify-content-between align-items-center">
-							<div>
-								<h6>Цена</h6>
-								<h6>за смену</h6>
-							</div>
-							<div>
-								<h2>{vehicle.price_region}</h2>
-
-							</div>
+				</Grid.Column>
+				<Grid.Column>
+					<Segment basic>
+						<h2>{vehicle?.name}</h2>
+						<div>{vehicle?.vehicle_type_name}</div>
+					</Segment>
+				</Grid.Column>
+				<Grid.Column textAlign={"right"}>
+					<Segment basic>
+						<div style={{marginBottom: '15px'}}>
+							Цена за смену
 						</div>
-						<Button variant={"outline-dark"}>Добавить в корзину</Button>
-					</div>
-
-				</Col>
-			</Row>
+						<Grid columns={2}>
+							<Grid.Row>
+								<Grid.Column>Столица</Grid.Column>
+								<Grid.Column><h2>{vehicle?.price_cap}</h2></Grid.Column>
+							</Grid.Row>
+							<Grid.Row>
+								<Grid.Column>Регионы</Grid.Column>
+								<Grid.Column><h2>{vehicle?.price_region}</h2></Grid.Column>
+							</Grid.Row>
+						</Grid>
+						<div style={{marginTop: '15px'}} >
+							<Button primary onClick={(e) => handleClick(e)}>
+								<Icon name="cart"></Icon>
+								Add to Cart
+							</Button>
+						</div>
+					</Segment>
+				</Grid.Column>
+			</Grid>
 			{vehicleFeature.length
 				?
-				<Row className="d-flex flex-column m-3">
+				<Table striped>
+					<Table.Header>
+						<Table.Row>
+							{ADMIN.vehicleFeature.fields.map(item => item.name !== 'vehicle' &&
+								<Table.HeaderCell key={item.name}>
+									{item.placeholder}
+								</Table.HeaderCell>
+							)
+							}
+						</Table.Row>
+					</Table.Header>
+					<Table.Body>
+						{vehicleFeature.map((item) =>
+							<Table.Row key={item.id}>
+								<Table.Cell>
+									{feature.data.filter(i => i.id === item.feature)[0].name}
+								</Table.Cell>
+								<Table.Cell>
+									{item.value}
+								</Table.Cell>
+								<Table.Cell>
+									{unit.data.filter(i => i.id === item.unit)[0].name}
+								</Table.Cell>
 
-
-					{vehicleFeature.map((item, index) =>
-						<Row
-							key={item.id}
-							className="p-3"
-							style={{background: index % 2 === 0? 'lightgray' : 'transparent'}}
-						>
-							{feature.data.filter(i => i.id === item.feature)[0].name}: {item.value} {unit.data.filter(i => i.id === item.unit)[0].name}
-						</Row>
-					)}
-				</Row>
+							</Table.Row>
+						)}
+					</Table.Body>
+				</Table>
 				:
 				<></>
 

@@ -1,31 +1,21 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {observer} from "mobx-react-lite";
+import {Input, Menu} from "semantic-ui-react";
+import {useNavigate} from "react-router-dom";
+
 import Cart from "./Cart/Cart";
 import UserMenu from "./UserMenu/UserMenu";
-import {Input, Menu} from "semantic-ui-react";
+import {SHOP_ROUTE} from "../utils/consts";
 
 const NavBar = observer(() => {
-	const [activeLink, setActiveLink] = useState('home')
-
-	const handleItemClick = (e, {name}) => setActiveLink(name)
+	const navigate = useNavigate()
 
 	return (
-		<Menu secondary>
+		<Menu>
 			<Menu.Item
-				name='home'
-				active={activeLink === 'home'}
-				onClick={handleItemClick}
+				name='Home'
+				onClick={() => navigate(SHOP_ROUTE)}
 			/>
-			{/*<Menu.Item*/}
-			{/*	name='messages'*/}
-			{/*	active={activeItem === 'messages'}*/}
-			{/*	onClick={this.handleItemClick}*/}
-			{/*/>*/}
-			{/*<Menu.Item*/}
-			{/*	name='friends'*/}
-			{/*	active={activeItem === 'friends'}*/}
-			{/*	onClick={this.handleItemClick}*/}
-			{/*/>*/}
 			<Menu.Menu position='right'>
 				<Menu.Item>
 					<Input icon='search' placeholder='Search...'/>

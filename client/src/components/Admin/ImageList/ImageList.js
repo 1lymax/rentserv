@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from 'react';
-import {Card} from "semantic-ui-react";
+import {Card, Segment} from "semantic-ui-react";
 
-import {doCreate, doDelete, doFetch} from "../../../http/storeAPI";
-import ImageItem from "../ImageItem/ImageItem";
 import {ADMIN} from "../../../utils/consts";
+import ImageItem from "../ImageItem/ImageItem";
+import {doCreate, doDelete, doFetch} from "../../../http/storeAPI";
 
 const ImageList = ({context, filters}) => {
 		const [data, setData] = useState([])
@@ -45,6 +45,7 @@ const ImageList = ({context, filters}) => {
 		};
 
 		return (
+			<Segment basic>
 				<Card.Group>
 					{data.map(image =>
 						<ImageItem key={image.image} image={image.image} id={image.id} handleAction={handleAction} isBackendImage={true}/>
@@ -56,6 +57,7 @@ const ImageList = ({context, filters}) => {
 						}
 					</>
 				</Card.Group>
+			</Segment>
 		);
 	}
 ;

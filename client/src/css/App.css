@@ -3,10 +3,23 @@
     margin-bottom: 5px;
 }
 
-.ui.secondary.menu {
-    margin: 10px;
+.ui.menu {
+    padding: 10px;
+    margin-bottom: 30px;
 }
 
 .ui.search.dropdown {
     z-index: 2;
+}
+
+.ui.circular.button {
+    background: transparent;
+}
+
+.ui.search.dropdown {
+    font-family: Lato,'Helvetica Neue',Arial,Helvetica,sans-serif;
+}
+
+.filterCell {
+    margin-bottom: 15px;
 }

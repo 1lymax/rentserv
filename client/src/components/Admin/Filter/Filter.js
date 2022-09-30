@@ -1,10 +1,11 @@
-import React, {useContext, useEffect, useState} from 'react';
-import {Col, Row} from "react-bootstrap";
 import {observer} from "mobx-react-lite";
+import {Header, Table} from "semantic-ui-react";
+import React, {useContext, useEffect, useState} from 'react';
 
-import InputControl from "../../UI/InputControl/InputControl";
-import {ADMIN} from "../../../utils/consts";
 import {Context} from "../../../index";
+import {ADMIN} from "../../../utils/consts";
+import InputControl from "../../UI/InputControl/InputControl";
+
 import classes from './Filter.module.css'
 
 const Filter = observer(({conf, filterCallback, aggregate}) => {
@@ -62,61 +63,56 @@ const Filter = observer(({conf, filterCallback, aggregate}) => {
 	// contextScope.vehicle.data && console.log(contextScope.vehicles.data.price_cap)
 	return (
 		<div>
-			<div
-				className="d-flex justify-content-start align-items-center"
-			>
+			<div className={classes.filter_wrapper}>
 				{conf.fields.map(set =>
-					<div
-						key={set.name}
-						className="me-2"
-						style={set.filterStyles ? set.filterStyles : {}}
+					<div key={set.name}
+						 className={classes.field_wrapper}
+						 style={set.filterStyles ? set.filterStyles : {}}
 					>
 						<InputControl
-							add
-							filterComponent
 							set={set}
-							min={aggregate ? aggregate['min_' + set.name] : 0}
-							max={aggregate ? aggregate['max_' + set.name] : 0}
-							isClearable={true}
+							filterComponent
 							inputName={set.name}
 							onChange={e => handleChange(e)}
+							min={aggregate ? aggregate['min_' + set.name] : 0}
+							max={aggregate ? aggregate['max_' + set.name] : 0}
 							value={fieldValues[set.name] ? fieldValues[set.name] : ''}
 							selectOptions={set.contextName && contextScope[set.contextName].data}
 						/>
 					</div>
 				)}
 			</div>
+			<Table basic={"very"} collapsing>
+				<Table.Body>
+					{conf.dependencies.map(set => !ADMIN[set.name].imageContent &&
+						<Table.Row key={set.name} className={classes.filter_row}>
+							<Table.Cell className={classes.cell}>
+								<Header as="h4">{set.inlineTitle}</Header>
+							</Table.Cell>
+							<Table.Cell className={classes.cell}>
+								<div className={classes.cell_wrapper}>
+								{ADMIN[set.name].fields.map(dep =>
+									set.field !== dep.name &&
+									<div className={classes.field_wrapper} style={{width: dep.width * 45}}>
+										<InputControl fluid
+													  set={dep}
+													  key={dep.name}
+													  filterComponent
+													  onChange={e => handleChange(e)}
+													  value={getDependencyFieldValue(dep)}
+													  style={dep.filterStyles ? dep.filterStyles : {}}
+													  selectOptions={dep.contextName && contextScope[dep.contextName].data}
+													  inputName={dep.backendFiltersetField ? dep.backendFiltersetField : dep.name}
+										/>
+									</div>
+								)}
+								</div>
 
-			{conf.dependencies.map(set => !ADMIN[set.name].imageContent &&
-				<Row key={set.name}
-					 className={classes.filter_row}>
-					<Col md={2}>
-						<h6>{set.inlineTitle}</h6>
-					</Col>
-					<Col md={10} className="d-flex flex-row justify-content-start align-items-center">
-						{ADMIN[set.name].fields.map(dep =>
-							<div key={dep.name} className="ps-2">
-								<InputControl
-									set={dep}
-									filterComponent
-									isClearable={true}
-									style={dep.filterStyles ? dep.filterStyles : {}}
-									onChange={e => handleChange(e)}
-									add={dep.name !== conf.selfName}
-									inputName={dep.backendFiltersetField ? dep.backendFiltersetField : dep.name}
-									value={getDependencyFieldValue(dep)}
-									selectOptions={dep.contextName && contextScope[dep.contextName].data}
-								/>
-							</div>
-						)}
-
-					</Col>
-				</Row>
-			)}
-			{/*<div>*/}
-			{/*	<Button variant={"outline-dark"} onClick={e => setFieldValues({})}>Сбросить</Button>*/}
-			{/*</div>*/}
-
+							</Table.Cell>
+						</Table.Row>
+					)}
+				</Table.Body>
+			</Table>
 		</div>
 	);
 });

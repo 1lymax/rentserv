@@ -1,5 +1,5 @@
 import {ADMIN_ROUTE, ITEMDETAIL_ROUTE, LOGIN_ROUTE, REGISTRATION_ROUTE, SHOP_ROUTE} from "./utils/consts";
-import Auth from "./pages/Auth";
+import Auth from "./pages/Auth/Auth";
 import Shop from "./pages/Shop";
 import VehicleDetailPage from "./pages/VehicleDetailPage";
 import Catalogs from "./pages/Admin/Catalogs";

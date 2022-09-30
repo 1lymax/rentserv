@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import {observer} from "mobx-react-lite";
 import {Box, Slider, Typography} from "@mui/material";
-import classes from "./InputControl.module.css"
 import {Dropdown, Input} from "semantic-ui-react";
 
 const InputControl = observer((props) => {
@@ -23,13 +22,11 @@ const InputControl = observer((props) => {
 	};
 
 	const handleDropdownChange = (e, data) => {
-		console.log(e, data)
 		props.onChange({
 			name: data.name,
 			value: data && data.value ? data.value : ''
 		})
 	};
-
 
 	return (
 		<React.Fragment>
@@ -51,8 +48,8 @@ const InputControl = observer((props) => {
 					search
 					selection
 					clearable
-					selectOnBlur={false}
 					value={props.value}
+					selectOnBlur={false}
 					name={props.inputName}
 					searchQuery={props.value}
 					placeholder={props.set.placeholder}
@@ -63,27 +60,29 @@ const InputControl = observer((props) => {
 							value: item.name
 						})
 					)}
-					onSearchChange={(e, data) => e && handleDropdownSearch(e, data)}
 					onChange={(e, data) => e && handleDropdownChange(e, data)}
+					onSearchChange={(e, data) => e && handleDropdownSearch(e, data)}
 				/>
 			}
 			{props.filterComponent && inputType === 'slider' &&
 				<Box sx={{width: 200, marginX: '20px'}}>
-					<Typography gutterBottom>
-						{props.set.placeholder}
-					</Typography>
+					{!props.noPlaceholder &&
+						<Typography gutterBottom>
+							{props.set.placeholder}
+						</Typography>
+					}
 					<Slider
 						name={props.inputName}
+						valueLabelDisplay="auto"
+						disabled={props.disabled}
+						onChange={handleSliderChange}
 						min={sliderMin ? sliderMin : 1}
 						max={sliderMax ? sliderMax : 1}
+						value={sliderValue ? sliderValue : 1}
 						marks={[
 							{value: sliderMin, label: sliderMin},
 							{value: sliderMax, label: sliderMax}
 						]}
-						disabled={props.disabled}
-						value={sliderValue ? sliderValue : 1}
-						onChange={handleSliderChange}
-						valueLabelDisplay="auto"
 					/>
 				</Box>
 			}
@@ -101,11 +100,9 @@ const InputControl = observer((props) => {
 				// 	onKeyDown={e => e.key === 'Enter' && props.handleSubmit && props.handleSubmit(e)}
 				// />
 				<Input
-					//size='small'
+					fluid={props.fluid}
 					name={props.inputName}
-					className={classes.root}
 					disabled={props.disabled}
-					style={props.style}
 					autoFocus={props.autoFocus}
 					onChange={e => props.onChange(e)}
 					placeholder={props.set.placeholder}
@@ -113,17 +110,18 @@ const InputControl = observer((props) => {
 					onKeyDown={e => e.key === 'Enter' && props.handleSubmit && props.handleSubmit(e)}
 				/>
 			}
-			{(!props.filterComponent || (props.filterComponent && !props.set.filter)) && props.set.type === 'select' && (props.hidden || props.add) &&
+			{props.set.type === 'select' &&
+			// {(!props.filterComponent || (props.filterComponent && !props.set.filter)) && props.set.type === 'select' && (props.hidden || props.add) &&
 				<Dropdown
 					search
-					header={props.set.placeholder}
 					selection
 					clearable
 					openOnFocus
-					selectOnBlur={false}
+					fluid={props.fluid}
 					value={props.value}
+					selectOnBlur={false}
 					name={props.inputName}
-					searchInput={{ autoFocus: props.autoFocus }}
+					header={props.set.placeholder}
 					placeholder={props.set.placeholder}
 					options={props.selectOptions.map(item =>
 						({
@@ -132,8 +130,9 @@ const InputControl = observer((props) => {
 							value: item.id
 						})
 					)}
-					onSearchChange={(e, data) => e && handleDropdownSearch(e, data)}
+					searchInput={{ autoFocus: props.autoFocus }}
 					onChange={(e, data) => e && handleDropdownChange(e, data)}
+					onSearchChange={(e, data) => e && handleDropdownSearch(e, data)}
 				/>
 
 
