@@ -1,6 +1,13 @@
 import {$authHost, $host} from "./index";
 import {API_ROUTES} from "../utils/consts";
 
+const removeEmpties = (data) => {
+	for (let key in data) {
+		data[key] === '' &&	delete data[key]
+	}
+	return data
+};
+
 export const doUpdate = async (context, id, updateData) => {
 	const {data} = await $authHost.put(API_ROUTES.api + context.endpoint + '/' + id + '/', updateData)
 	return data
@@ -15,13 +22,6 @@ export const doCreate = async (context, createData) => {
 	const {data} = await $authHost.post(API_ROUTES.api + context.endpoint + '/', createData)
 	return data
 }
-
-const removeEmpties = (data) => {
-	for (let key in data) {
-		data[key] === '' &&	delete data[key]
-	}
-	return data
-};
 
 export const doFetch = async (context, ordering, filters, pagination) => {
 	try{
@@ -38,8 +38,6 @@ export const doFetch = async (context, ordering, filters, pagination) => {
 	}catch (e){
 		console.log('doFetch error', e.response.data)
 	}
-
-
 }
 
 export const doDelete = async (context, id) => {

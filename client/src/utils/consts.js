@@ -111,6 +111,11 @@ export const ADMIN = {
 			{
 				name: 'price_region', type: 'string', filter: 'slider', placeholder: 'Цена (Регионы)', width: 2
 			},
+		],
+		filterAdditionalfields: [
+			{
+				name: 'city', type: 'select', backendFiltersetField: 'store__city', placeholder: 'Наличие (город)', contextName: 'city', width: 6
+			},
 		]
 	},
 	store: {

@@ -31,19 +31,6 @@ const InputControl = observer((props) => {
 	return (
 		<React.Fragment>
 			{props.filterComponent && inputType === 'autocomplete' &&
-				// <Autocomplete
-				// 	freeSolo
-				// 	size='small'
-				// 	name={props.inputName}
-				// 	disabled={props.disabled}
-				// 	options={props.selectOptions}
-				// 	onChange={e => e && props.onChange(e)}
-				// 	onKeyDown={e => e.key === 'Enter' && props.handleSubmit(e)}
-				// 	onInputChange={(e, value) => props.onChange({name: props.inputName, value: value})}
-				// 	getOptionLabel={props.getOptionLabel ? props.getOptionLabel : (option) => option.name}
-				// 	renderInput={(params) => <TextField {...params} name={props.inputName}
-				// 										label={props.set.placeholder}/>}
-				// />
 				<Dropdown
 					search
 					selection
@@ -87,18 +74,6 @@ const InputControl = observer((props) => {
 				</Box>
 			}
 			{(!props.filterComponent || (props.filterComponent && !props.set.filter)) && props.set.type === 'string' &&
-				// <TextField
-				// 	size='small'
-				// 	name={props.inputName}
-				// 	className={classes.root}
-				// 	disabled={props.disabled}
-				// 	autoFocus={props.autoFocus}
-				// 	label={props.set.placeholder}
-				// 	onChange={e => props.onChange(e)}
-				// 	placeholder={props.set.placeholder}
-				// 	value={props.value ? props.value : ''}
-				// 	onKeyDown={e => e.key === 'Enter' && props.handleSubmit && props.handleSubmit(e)}
-				// />
 				<Input
 					fluid={props.fluid}
 					name={props.inputName}
@@ -111,7 +86,6 @@ const InputControl = observer((props) => {
 				/>
 			}
 			{props.set.type === 'select' &&
-			// {(!props.filterComponent || (props.filterComponent && !props.set.filter)) && props.set.type === 'select' && (props.hidden || props.add) &&
 				<Dropdown
 					search
 					selection
@@ -121,7 +95,7 @@ const InputControl = observer((props) => {
 					value={props.value}
 					selectOnBlur={false}
 					name={props.inputName}
-					header={props.set.placeholder}
+					header={props.noPlaceholder ? false : props.set.placeholder}
 					placeholder={props.set.placeholder}
 					options={props.selectOptions.map(item =>
 						({
@@ -134,24 +108,6 @@ const InputControl = observer((props) => {
 					onChange={(e, data) => e && handleDropdownChange(e, data)}
 					onSearchChange={(e, data) => e && handleDropdownSearch(e, data)}
 				/>
-
-
-				// <MultiSelect
-				// 	isMulti={false}
-				// 	menuIsOpen={true}
-				// 	value={props.value}
-				// 	name={props.inputName}
-				// 	disabled={props.disabled}
-				// 	autoFocus={props.autoFocus}
-				// 	options={props.selectOptions}
-				// 	isClearable={props.isClearable}
-				// 	placeholder={props.set.placeholder}
-				// 	onKeyDown={e => e.key === 'Enter' && props.handleSubmit && props.handleSubmit(e)}
-				// 	onChange={e => props.onChange(e ? {name: props.inputName, 'value': e.id} : {
-				// 		name: props.inputName,
-				// 		value: ''
-				// 	})}
-				// />
 			}
 
 		</React.Fragment>

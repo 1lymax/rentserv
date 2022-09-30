@@ -11,11 +11,12 @@ import {PAGINATION} from "../utils/consts";
 import {pageCount} from "../utils/pageCount";
 import {useScroll} from "../hooks/useScroll";
 import {useDidMountEffect} from "../hooks/useDidMountEffect";
+import {useDebounce} from "../hooks/useDebounce";
 
 const Shop = observer(() => {
 	const childRef = useRef()
 	const parentRef = useRef()
-	const {vehicle, type} = useContext(Context)
+	const {vehicle} = useContext(Context)
 	const [filter, setFilter] = useState({})
 	const [vehicleSorting, setVehicleSorting] = useState('')
 	const [currentPage, setCurrentPage] = useState(1)
@@ -29,7 +30,10 @@ const Shop = observer(() => {
 
 	useScroll(parentRef, childRef, fetchVehicles(), needUseScrool())
 
-	useDidMountEffect(fetchFiltering, [vehicleSorting, filter])
+	useDidMountEffect(
+		useDebounce(fetchFiltering, 500),
+		[vehicleSorting, filter]
+	)
 
 	const sortingOptions = [
 		{value: 'name', name: 'Название А-Я'},
@@ -55,7 +59,7 @@ const Shop = observer(() => {
 
 	}
 
-	function fetchFiltering () {
+	function fetchFiltering() {
 		let ordering = {ordering: vehicleSorting}
 		doFetch(vehicle, ordering, filter, {
 			page: 1,
@@ -67,12 +71,6 @@ const Shop = observer(() => {
 				setCurrentPage(2)
 			})
 	}
-
-	useEffect(() => {
-		doFetch(type)
-			.then(data => type.setData(data.results))
-		// eslint-disable-next-line
-	}, []);
 
 	useEffect(() => {
 		doFetch(vehicle)

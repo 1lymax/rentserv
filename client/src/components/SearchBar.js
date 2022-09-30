@@ -1,20 +1,37 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {observer} from "mobx-react-lite";
 
 import {Context} from "../index";
 import {ADMIN} from "../utils/consts";
 import InputControl from "./UI/InputControl/InputControl";
 import {Accordion, Divider, Icon} from "semantic-ui-react";
+import {doFetch} from "../http/storeAPI";
 
 const SearchBar = observer(({setFilter}) => {
 	const contextScope = useContext(Context)
-	const {vehicle} = useContext(Context)
+	const {vehicle, type, store, city} = useContext(Context)
 	const [openParam, setOpenParam] = useState([])
 	const [fieldValues, setFieldValues] = useState({})
 
-	const filterSet = ADMIN.vehicle.fields
+	const filterSet = ADMIN.vehicle.fields.concat(ADMIN.vehicle.filterAdditionalfields)
 
+	useEffect(() => {
+		doFetch(type)
+			.then(data => type.setData(data.results))
+		// eslint-disable-next-line
+	}, []);
 
+	useEffect(() => {
+		doFetch(store)
+			.then(data => store.setData(data.results))
+		// eslint-disable-next-line
+	}, []);
+
+	useEffect(() => {
+		doFetch(city)
+			.then(data => city.setData(data.results))
+		// eslint-disable-next-line
+	}, []);
 
 	const handleInputChange = (e) => {
 		let value = ''
@@ -50,30 +67,34 @@ const SearchBar = observer(({setFilter}) => {
 		<>
 			{filterSet.map(item =>
 				<React.Fragment key={item.name}>
-				<Accordion fluid>
-					<Accordion.Title
-						active={openParam[item.name]}
-						onClick={() => handleOpen(item.name, !openParam[item.name])}
-					>
-						<Icon name={openParam[item.name] ? 'chevron down' : 'chevron right'}/>
-						{item.placeholder}
-					</Accordion.Title>
-					<Accordion.Content active={openParam[item.name]}>
-						<InputControl
-							fluid
-							noPlaceholder={true}
-							set={item}
-							key={item.name}
-							filterComponent
-							min={vehicle.aggregate ? vehicle.aggregate['min_' + item.name] : 0}
-							max={vehicle.aggregate ? vehicle.aggregate['max_' + item.name] : 0}
-							inputName={item.name}
-							value={fieldValues[item.name] ? fieldValues[item.name] : ''}
-							onChange={(e) => handleInputChange(e)}
-							selectOptions={item.contextName && contextScope[item.contextName].data}/>
-					</Accordion.Content>
-				</Accordion>
-				<Divider/>
+					<Accordion fluid>
+						<Accordion.Title
+							active={openParam[item.name]}
+							onClick={() => handleOpen(item.name, !openParam[item.name])}
+						>
+							<Icon name={openParam[item.name] ? 'chevron down' : 'chevron right'}/>
+							{item.placeholder}
+						</Accordion.Title>
+						<Accordion.Content active={openParam[item.name]}>
+							<InputControl
+								fluid
+								noPlaceholder
+								set={item}
+								key={item.name}
+								filterComponent
+								min={vehicle.aggregate ? vehicle.aggregate['min_' + item.name] : 0}
+								max={vehicle.aggregate ? vehicle.aggregate['max_' + item.name] : 0}
+								inputName={item.backendFiltersetField ? item.backendFiltersetField : item.name}
+								value={
+									fieldValues[item.backendFiltersetField ? item.backendFiltersetField : item.name]
+										? fieldValues[item.backendFiltersetField ? item.backendFiltersetField : item.name]
+										: ''
+								}
+								onChange={(e) => handleInputChange(e)}
+								selectOptions={item.contextName && contextScope[item.contextName].data}/>
+						</Accordion.Content>
+					</Accordion>
+					<Divider/>
 				</React.Fragment>
 			)}
 

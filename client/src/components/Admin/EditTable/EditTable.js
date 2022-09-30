@@ -11,6 +11,7 @@ import setDependencyName from "../../../utils/setDependencyName";
 import {doCreate, doDelete, doFetch, doUpdate} from "../../../http/storeAPI";
 
 import classes from "./EditTable.module.css"
+import {useDebounce} from "../../../hooks/useDebounce";
 
 
 const EditTable = observer(({context, isDependencyTable, filters, ordering, parentContext}) => {
@@ -32,15 +33,23 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 		[PAGINATION.backendName]: rowsPerPage
 	}
 
-	useEffect(() => {
+	//eslint-disable-next-line
+	useEffect(
+		useDebounce(
+			() => fetchFiltering(),
+			500),
+
+		[needFetch, filters, currentPage, rowsPerPage]
+	)
+
+	function fetchFiltering() {
 		doFetch(context, ordering, filters, pagination)
 			.then(resp => {
 					setData(resp.results)
 					setTotalRows(resp.count)
 				}
 			)
-		// eslint-disable-next-line
-	}, [needFetch, filters, currentPage, rowsPerPage]);
+	}
 
 	const setCellValue = (item, set) => {
 		if (set.contextName && !set.filter && contextScope[set.contextName] && contextScope[set.contextName].data.length) {
@@ -242,7 +251,8 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 						</Table.Row>
 						:
 						<Table.Row>
-							<Table.Cell colSpan={isDependencyTable ? Math.floor(conf.fields.length / 2): conf.fields.length+1}>
+							<Table.Cell
+								colSpan={isDependencyTable ? Math.floor(conf.fields.length / 2) : conf.fields.length + 1}>
 								<Button primary content='Add record' icon='add' labelPosition='left'
 										onClick={() => {
 											hideAll()
