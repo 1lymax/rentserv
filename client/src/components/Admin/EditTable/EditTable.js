@@ -3,7 +3,7 @@ import React, {useContext, useEffect, useState} from 'react';
 import {Button, Grid, Header, Table} from "semantic-ui-react";
 
 import {Context} from "../../../index";
-import {PAGINATION} from "../../../utils/consts";
+import {MESSAGES, PAGINATION} from "../../../utils/consts";
 import Paginate from "../../UI/Paginate/Paginate";
 import InputControl from "../../UI/InputControl/InputControl";
 import DependencyShow from "../DependencyShow/DependencyShow";
@@ -12,6 +12,7 @@ import {doCreate, doDelete, doFetch, doUpdate} from "../../../http/storeAPI";
 
 import classes from "./EditTable.module.css"
 import {useDebounce} from "../../../hooks/useDebounce";
+import {useSnackbar} from "notistack";
 
 
 const EditTable = observer(({context, isDependencyTable, filters, ordering, parentContext}) => {
@@ -23,6 +24,7 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 	const [rowsPerPage, setRowsPerPage] = useState(PAGINATION.rowsPerPageDefault)
 	const [isLoading, setIsLoading] = useState(false)
 	const [needFetch, setNeedFetch] = useState([])
+	const {enqueueSnackbar} = useSnackbar()
 	const [fieldValues, setFieldValues] = useState({})
 	const [actionButtonsVisible, setActionButtonsVisible] = useState(0)
 	const [focusElement, setFocusElement] = useState([])
@@ -49,6 +51,7 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 					setTotalRows(resp.count)
 				}
 			)
+			.catch(e => enqueueSnackbar(e.response.data));
 	}
 
 	const setCellValue = (item, set) => {
@@ -84,16 +87,17 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 				doFetch(context).then(resp => context.setData(resp.results))
 				setNeedFetch(Date.now())
 				hideAll()
-			}).catch(e => {
-				console.log(e.response.data)
-			});
+			})
+				.catch(e => enqueueSnackbar(e.response.data, {variant: "error"}))
+				.finally(() => enqueueSnackbar(MESSAGES.updateSuccess, {variant: "success"}))
 		} else if (actionButtonsVisible === 0) {
 			doCreate(context, fieldValues).then(() => {
 				doFetch(context).then(resp => context.setData(resp.results))
 				setNeedFetch(Date.now())
 				setFieldsArray(isDependencyTable ? filters : [])
 				hideAll()
-			})
+			}).catch(e => enqueueSnackbar(e.response.data, {variant: "error"}))
+				.finally(() => enqueueSnackbar(MESSAGES.addSuccess, {variant: "success"}))
 		}
 
 	}
@@ -104,7 +108,8 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 		} else {
 			doDelete(context, id).then(() => {
 				setNeedFetch(Date.now())
-			})
+			}).catch(e => enqueueSnackbar(e.response.data, {variant: "error"}))
+				.finally(() => enqueueSnackbar(MESSAGES.deleteSuccess, {variant: "success"}))
 		}
 	}
 

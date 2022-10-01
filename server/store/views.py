@@ -4,6 +4,7 @@ from rest_framework.filters import OrderingFilter
 from rest_framework.viewsets import ModelViewSet
 
 from store.models import City, Store
+from store.pagination import PaginationVehicleWithAggregates
 from store.serializers import CitySerializer, StoreViewSerializer
 from vehicles.pagination import SetPagination
 from vehicles.permissions import IsStaffOrReadOnly
@@ -39,7 +40,7 @@ class StoreCreateUpdateGetSet(ModelViewSet):
     serializer_class = StoreViewSerializer
     permission_classes = [IsStaffOrReadOnly]
     filter_backends = [DjangoFilterBackend, OrderingFilter]
-    pagination_class = SetPagination
+    pagination_class = PaginationVehicleWithAggregates
     filterset_fields = ['id', 'city', 'vehicle']
 
 

@@ -5,10 +5,11 @@ import {Button, Container, Form, Grid, Icon, Input, Segment} from "semantic-ui-r
 
 import {Context} from "../../index";
 import {login, registration} from "../../http/userAPI";
-import InlineAlert from "../../components/UI/InlineAlert/InlineAlert";
-import {LOGIN_ROUTE, REGISTRATION_ROUTE, SHOP_ROUTE} from "../../utils/consts";
+import {LOGIN_ROUTE, MESSAGES, REGISTRATION_ROUTE, SHOP_ROUTE} from "../../utils/consts";
 
 import classes from "./Auth.module.css";
+import {useSnackbar} from "notistack";
+import {convertErrorMessage} from "../../utils/convertErrorMessage";
 
 const Auth = observer(() => {
 	const {user} = useContext(Context)
@@ -21,9 +22,8 @@ const Auth = observer(() => {
 	const [password, setPassword] = useState('')
 	const [first_name, setFirstName] = useState('')
 	const [last_name, setLastName] = useState('')
-
-	const [alertVisible, setAlertVisible] = useState(false)
-	const [alertMessage, setAlertMessage] = useState(false)
+	const [error, setError] = useState({})
+	const {enqueueSnackbar} = useSnackbar()
 
 	const submit = async () => {
 		try {
@@ -33,15 +33,15 @@ const Auth = observer(() => {
 			} else {
 				data = await registration(username, email, password, first_name, last_name)
 			}
+			enqueueSnackbar(MESSAGES.loggedIn, {variant: "success"})
 			user.setUser(data)
 			user.setIsAuth(true)
 			user.setIsStaff(data.isStaff)
-			navigate(SHOP_ROUTE)
+			setTimeout(navigate(SHOP_ROUTE), 1000)
 		} catch (e) {
-			setAlertVisible(true)
-			setAlertMessage(e.response.data)
+			enqueueSnackbar(convertErrorMessage(e.response.data), {variant: "error"})
+			setError(e.response.data)
 		}
-
 	}
 
 	return (
@@ -49,33 +49,42 @@ const Auth = observer(() => {
 			<Segment style={{width: 600}}>
 				<h2 className="m-auto">{isLogin ? "Authorization" : "Registration"}</h2>
 				<Form>
-					<Form.Field placeholder="Login">
-						<label>Login</label>
-						<Input placeholder='Login'
-							   value={username}
-							   onChange={e => setUsername(e.target.value)}/>
-					</Form.Field>
-					<Form.Field
+					<Form.Input label="Login"
+								value={username}
+								placeholder="Login"
+								error={'username' in error ? {
+									content: error.username[0],
+									pointing: 'below',
+								} : false}
+								onChange={e => setUsername(e.target.value)}/>
+					<Form.Input type="password"
+						label="Password"
 						value={password}
+						error={'password' in error ? {
+							content: error.password[0],
+							pointing: 'below',
+						} : false}
 						onChange={e => setPassword(e.target.value)}
 						placeholder="Password"
-					>
-						<label>Password</label>
-						<input placeholder='Password'
-							  type={"password"}
-							  value={password}
-							  onChange={e => setPassword(e.target.value)}/>
-					</Form.Field>
+					/>
 					{!isLogin
 						?
 						<>
-							<Form.Field placeholder="Email">
-								<label>Email</label>
-								<input placeholder='Email'
-									   type={"email"}
-									   value={email}
-									   onChange={e => setEmail(e.target.value)}/>
-							</Form.Field>
+							<Form.Input icon={true}
+										type="email"
+										label="Email"
+										value={email}
+										control={Input}
+										iconPosition="left"
+										placeholder="Email"
+										error={'email' in error ? {
+											content: error.email[0],
+											pointing: 'below',
+										} : false}
+										onChange={e => setEmail(e.target.value)}>
+								<Icon name='at'/>
+								<input/>
+							</Form.Input>
 							<Form.Field placeholder="First name">
 								<label>First name</label>
 								<input placeholder='First name'
@@ -93,11 +102,6 @@ const Auth = observer(() => {
 						<></>
 
 					}
-					<InlineAlert
-						show={alertVisible}
-						setShow={setAlertVisible}
-						message={alertMessage}
-					/>
 					<Grid columns={2}>
 						<Grid.Column textAlign="left" verticalAlign="middle">
 							{isLogin
@@ -124,7 +128,8 @@ const Auth = observer(() => {
 			</Segment>
 
 		</Container>
-	);
+	)
+		;
 });
 
 export default Auth;

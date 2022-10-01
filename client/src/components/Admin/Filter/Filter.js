@@ -8,7 +8,7 @@ import InputControl from "../../UI/InputControl/InputControl";
 
 import classes from './Filter.module.css'
 
-const Filter = observer(({conf, filterCallback, aggregate}) => {
+const Filter = observer(({conf, filterCallback}) => {
 	const [fieldValues, setFieldValues] = useState({})
 
 	const contextScope = useContext(Context)
@@ -74,8 +74,8 @@ const Filter = observer(({conf, filterCallback, aggregate}) => {
 							filterComponent
 							inputName={set.name}
 							onChange={e => handleChange(e)}
-							min={aggregate ? aggregate['min_' + set.name] : 0}
-							max={aggregate ? aggregate['max_' + set.name] : 0}
+							min={set.aggregateContext ? contextScope[set.aggregateContext].aggregate['min_' + set.name] : 0}
+							max={set.aggregateContext ? contextScope[set.aggregateContext].aggregate['max_' + set.name] : 0}
 							value={fieldValues[set.name] ? fieldValues[set.name] : ''}
 							selectOptions={set.contextName && contextScope[set.contextName].data}
 						/>
@@ -93,7 +93,7 @@ const Filter = observer(({conf, filterCallback, aggregate}) => {
 								<div className={classes.cell_wrapper}>
 								{ADMIN[set.name].fields.map(dep =>
 									set.field !== dep.name &&
-									<div className={classes.field_wrapper} style={{width: dep.width * 45}}>
+									<div className={classes.field_wrapper} style={{width: dep.width * 45}} key={dep.name}>
 										<InputControl fluid
 													  set={dep}
 													  key={dep.name}
@@ -101,6 +101,8 @@ const Filter = observer(({conf, filterCallback, aggregate}) => {
 													  onChange={e => handleChange(e)}
 													  value={getDependencyFieldValue(dep)}
 													  style={dep.filterStyles ? dep.filterStyles : {}}
+													  min={dep.aggregateContext ? contextScope[dep.aggregateContext].aggregate['min_' + dep.name] : 0}
+													  max={dep.aggregateContext ? contextScope[dep.aggregateContext].aggregate['max_' + dep.name] : 0}
 													  selectOptions={dep.contextName && contextScope[dep.contextName].data}
 													  inputName={dep.backendFiltersetField ? dep.backendFiltersetField : dep.name}
 										/>

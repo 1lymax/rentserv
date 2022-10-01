@@ -9,6 +9,7 @@ import {Context} from "./index";
 import {check} from "./http/userAPI";
 // eslint-disable-next-line
 import classes from "./css/App.css"
+import {SnackbarProvider} from "notistack";
 
 
 const App = observer(() => {
@@ -32,8 +33,10 @@ const App = observer(() => {
 
 	return (
 		<BrowserRouter>
-			<NavBar/>
-			<AppRouter/>
+			<SnackbarProvider>
+				<NavBar/>
+				<AppRouter/>
+			</SnackbarProvider>
 		</BrowserRouter>
 	);
 })

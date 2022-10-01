@@ -23,3 +23,9 @@
 .filterCell {
     margin-bottom: 15px;
 }
+.ui.input>input, .ui.input>input:focus, .ui.input>input:active,
+    .ui.search.selection.dropdown>input.search, .ui.form input
+{
+    box-shadow: inset 0 1px 2px rgb(0 0 0 / 30%)!important;
+    background-color: transparent!important;
+}

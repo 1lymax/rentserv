@@ -12,6 +12,7 @@ import {pageCount} from "../utils/pageCount";
 import {useScroll} from "../hooks/useScroll";
 import {useDidMountEffect} from "../hooks/useDidMountEffect";
 import {useDebounce} from "../hooks/useDebounce";
+import {useSnackbar} from "notistack";
 
 const Shop = observer(() => {
 	const childRef = useRef()
@@ -21,6 +22,7 @@ const Shop = observer(() => {
 	const [vehicleSorting, setVehicleSorting] = useState('')
 	const [currentPage, setCurrentPage] = useState(1)
 	const [totalRows, setTotalRows] = useState(0)
+	const { enqueueSnackbar} = useSnackbar()
 	const rowsPerPage = PAGINATION.rowsPerPageDefault
 
 	const pagination = {
@@ -48,20 +50,15 @@ const Shop = observer(() => {
 
 	function fetchVehicles() {
 		if (needUseScrool()) {
-			let ordering = {ordering: vehicleSorting};
-			doFetch(vehicle, ordering, filter, pagination)
-				.then(data => {
-						vehicle.setData([...vehicle.data, ...data.results])
-					}
-				);
+			doFetch(vehicle, {ordering: vehicleSorting}, filter, pagination)
+				.then(data => vehicle.setData([...vehicle.data, ...data.results]))
+				.catch(e => enqueueSnackbar(e.response.data));
 			setCurrentPage(currentPage + 1)
 		}
-
 	}
 
 	function fetchFiltering() {
-		let ordering = {ordering: vehicleSorting}
-		doFetch(vehicle, ordering, filter, {
+		doFetch(vehicle, {ordering: vehicleSorting}, filter, {
 			page: 1,
 			[PAGINATION.backendName]: rowsPerPage
 		})
@@ -70,6 +67,7 @@ const Shop = observer(() => {
 				setTotalRows(data.count)
 				setCurrentPage(2)
 			})
+			.catch(e => enqueueSnackbar(e.response.data));
 	}
 
 	useEffect(() => {
@@ -78,6 +76,7 @@ const Shop = observer(() => {
 				vehicle.setAggregate(data.aggregate)
 				setTotalRows(data.count)
 			})
+			.catch(e => enqueueSnackbar(e.response.data));
 		// eslint-disable-next-line
 	}, []);
 

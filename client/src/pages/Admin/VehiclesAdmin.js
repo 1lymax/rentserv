@@ -19,6 +19,7 @@ const VehiclesAdmin = observer(() => {
 			obj.noFetchContextFromBackend === undefined && doFetch(obj, '', '')
 				.then(data => {
 					obj.setData(data.results)
+					console.log('data.aggregate', data.aggregate)
 					obj.aggregate && obj.setAggregate(data.aggregate)
 				})
 		}

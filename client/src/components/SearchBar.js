@@ -70,12 +70,16 @@ const SearchBar = observer(({setFilter}) => {
 					<Accordion fluid>
 						<Accordion.Title
 							active={openParam[item.name]}
+
 							onClick={() => handleOpen(item.name, !openParam[item.name])}
 						>
-							<Icon name={openParam[item.name] ? 'chevron down' : 'chevron right'}/>
-							{item.placeholder}
+							<div style={{display:"flex", justifyContent:"space-between"}}>
+								{item.placeholder}
+								<Icon name={openParam[item.name] ? 'chevron down' : 'chevron right'}/>
+							</div>
+
 						</Accordion.Title>
-						<Accordion.Content active={openParam[item.name]}>
+						<Accordion.Content active={openParam[item.name]} >
 							<InputControl
 								fluid
 								noPlaceholder

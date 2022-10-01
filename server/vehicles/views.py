@@ -51,7 +51,9 @@ class VehicleViewSet(ModelViewSet):
     permission_classes = [IsStaffOrReadOnly]
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_fields = ['id', 'vehicle_type', 'price_cap', 'price_region',
-                        'vehicle_type__name', 'features__feature', 'features__unit', 'features__value', 'store__city']
+                        'vehicle_type__name',
+                        'features__feature', 'features__unit', 'features__value',
+                        'store__city', 'store__quantity']
     ordering_fields = ['name', 'vehicle_type_name', 'price_cap']
     search_fields = ['vehicle_type_name', ]
 
@@ -73,6 +75,10 @@ class VehicleViewSet(ModelViewSet):
             self.queryset = self.queryset.filter(features__value__gte=predicate['min_features__value'])
         if predicate.get('max_features__value', None) is not None:
             self.queryset = self.queryset.filter(features__value__lte=predicate['max_features__value'])
+        if predicate.get('min_store__quantity', None) is not None:
+            self.queryset = self.queryset.filter(store__quantity__gte=predicate['min_store__quantity'])
+        if predicate.get('max_store__quantity', None) is not None:
+            self.queryset = self.queryset.filter(store__quantity__lte=predicate['max_store__quantity'])
 
         return self.queryset
 

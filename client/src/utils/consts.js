@@ -18,6 +18,13 @@ export const API_ROUTES = {
 	cart: 'cart'
 }
 
+export const MESSAGES = {
+	addSuccess: 'Successfully added!',
+	updateSuccess: 'Successfully updated!',
+	deleteSuccess: 'Successfully deleted!',
+	loggedIn: 'Login success!',
+}
+
 export const PAGINATION = {
 	backendName: 'page_size',
 	rowsPerPageDefault: 5
@@ -106,10 +113,12 @@ export const ADMIN = {
 				contextName: 'type', width: 5
 			},
 			{
-				name: 'price_cap', type: 'string', filter: 'slider', placeholder: 'Цена (Столица)', width: 2
+				name: 'price_cap', type: 'string', filter: 'slider', aggregateContext: 'vehicle',
+				placeholder: 'Цена (Столица)', width: 2,
 			},
 			{
-				name: 'price_region', type: 'string', filter: 'slider', placeholder: 'Цена (Регионы)', width: 2
+				name: 'price_region', type: 'string', filter: 'slider', aggregateContext: 'vehicle',
+				placeholder: 'Цена (Регионы)', width: 2
 			},
 		],
 		filterAdditionalfields: [
@@ -134,7 +143,8 @@ export const ADMIN = {
 				name: 'city', type: 'select', backendFiltersetField: 'store__city', placeholder: 'Город', contextName: 'city', width: 6
 			},
 			{
-				name: 'quantity', type: 'string', placeholder: 'Кол-во', filterStyles: {maxWidth: '90px'}, width: 2
+				name: 'quantity', type: 'string', backendFiltersetField: 'store__quantity', filter: 'slider', aggregateContext: 'store',
+				placeholder: 'Кол-во', filterStyles: {maxWidth: '90px'}, width: 2
 			},
 		]
 	},
