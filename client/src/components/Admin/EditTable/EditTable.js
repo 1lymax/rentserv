@@ -13,22 +13,25 @@ import {doCreate, doDelete, doFetch, doUpdate} from "../../../http/storeAPI";
 import classes from "./EditTable.module.css"
 import {useDebounce} from "../../../hooks/useDebounce";
 import {useSnackbar} from "notistack";
+import {convertErrorMessage} from "../../../utils/convertErrorMessage";
 
 
 const EditTable = observer(({context, isDependencyTable, filters, ordering, parentContext}) => {
-	const [add, setAdd] = useState(false)
+	const {enqueueSnackbar} = useSnackbar()
+	const contextScope = useContext(Context)
 	const [edit, setEdit] = useState(0)
 	const [data, setData] = useState([])
-	const [currentPage, setCurrentPage] = useState(0)
+	const [add, setAdd] = useState(false)
+	const [error, setError] = useState([])
 	const [totalRows, setTotalRows] = useState(0)
-	const [rowsPerPage, setRowsPerPage] = useState(PAGINATION.rowsPerPageDefault)
-	const [isLoading, setIsLoading] = useState(false)
 	const [needFetch, setNeedFetch] = useState([])
-	const {enqueueSnackbar} = useSnackbar()
+	const [isLoading, setIsLoading] = useState(false)
+	const [currentPage, setCurrentPage] = useState(0)
 	const [fieldValues, setFieldValues] = useState({})
-	const [actionButtonsVisible, setActionButtonsVisible] = useState(0)
 	const [focusElement, setFocusElement] = useState([])
-	const contextScope = useContext(Context)
+	const [actionButtonsVisible, setActionButtonsVisible] = useState(0)
+	const [rowsPerPage, setRowsPerPage] = useState(PAGINATION.rowsPerPageDefault)
+
 	const conf = context.settings
 	const pagination = {
 		page: currentPage ? currentPage + 1 : undefined,
@@ -40,9 +43,7 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 		useDebounce(
 			() => fetchFiltering(),
 			500),
-
-		[needFetch, filters, currentPage, rowsPerPage]
-	)
+		[needFetch, filters, currentPage, rowsPerPage])
 
 	function fetchFiltering() {
 		doFetch(context, ordering, filters, pagination)
@@ -51,7 +52,10 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 					setTotalRows(resp.count)
 				}
 			)
-			.catch(e => enqueueSnackbar(e.response.data));
+			.catch(e => {
+				enqueueSnackbar(convertErrorMessage(e.response.data))
+				setError(convertErrorMessage(e.response.data))
+			});
 	}
 
 	const setCellValue = (item, set) => {
@@ -85,19 +89,22 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 			setIsLoading(true)
 			doUpdate(context, id, fieldValues).then(() => {
 				doFetch(context).then(resp => context.setData(resp.results))
+				enqueueSnackbar(MESSAGES.updateSuccess, {variant: "success"})
 				setNeedFetch(Date.now())
 				hideAll()
 			})
-				.catch(e => enqueueSnackbar(e.response.data, {variant: "error"}))
-				.finally(() => enqueueSnackbar(MESSAGES.updateSuccess, {variant: "success"}))
+				.catch(e => enqueueSnackbar(convertErrorMessage(e.response.data), {variant: "error"}))
 		} else if (actionButtonsVisible === 0) {
 			doCreate(context, fieldValues).then(() => {
 				doFetch(context).then(resp => context.setData(resp.results))
+				enqueueSnackbar(MESSAGES.addSuccess, {variant: "success"})
 				setNeedFetch(Date.now())
 				setFieldsArray(isDependencyTable ? filters : [])
 				hideAll()
-			}).catch(e => enqueueSnackbar(e.response.data, {variant: "error"}))
-				.finally(() => enqueueSnackbar(MESSAGES.addSuccess, {variant: "success"}))
+			}).catch(e => {
+				enqueueSnackbar(convertErrorMessage(e.response.data), {variant: "error"})
+				setError(convertErrorMessage(e.response.data))
+			})
 		}
 
 	}
@@ -108,8 +115,11 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 		} else {
 			doDelete(context, id).then(() => {
 				setNeedFetch(Date.now())
-			}).catch(e => enqueueSnackbar(e.response.data, {variant: "error"}))
-				.finally(() => enqueueSnackbar(MESSAGES.deleteSuccess, {variant: "success"}))
+				enqueueSnackbar(MESSAGES.deleteSuccess, {variant: "success"})
+			}).catch(e => {
+				enqueueSnackbar(convertErrorMessage(e.response.data), {variant: "error"})
+				setError(convertErrorMessage(e.response.data))
+			})
 		}
 	}
 
@@ -179,6 +189,7 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 												<InputControl
 													fluid
 													set={set}
+													error={error}
 													inputName={set.name}
 													value={fieldValues[set.name]}
 													onChange={e => handleInputChange(e)}

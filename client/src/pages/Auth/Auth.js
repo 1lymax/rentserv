@@ -52,18 +52,12 @@ const Auth = observer(() => {
 					<Form.Input label="Login"
 								value={username}
 								placeholder="Login"
-								error={'username' in error ? {
-									content: error.username[0],
-									pointing: 'below',
-								} : false}
+								error={'username' in error ? error.username[0] : false}
 								onChange={e => setUsername(e.target.value)}/>
 					<Form.Input type="password"
 						label="Password"
 						value={password}
-						error={'password' in error ? {
-							content: error.password[0],
-							pointing: 'below',
-						} : false}
+						error={'password' in error ? error.password[0] : false}
 						onChange={e => setPassword(e.target.value)}
 						placeholder="Password"
 					/>
@@ -77,10 +71,7 @@ const Auth = observer(() => {
 										control={Input}
 										iconPosition="left"
 										placeholder="Email"
-										error={'email' in error ? {
-											content: error.email[0],
-											pointing: 'below',
-										} : false}
+										error={'email' in error ? error.email[0] : false}
 										onChange={e => setEmail(e.target.value)}>
 								<Icon name='at'/>
 								<input/>
