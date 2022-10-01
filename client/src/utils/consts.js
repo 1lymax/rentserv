@@ -1,7 +1,8 @@
 export const ADMIN_ROUTE = '/admin'
 export const LOGIN_ROUTE = '/login'
 export const REGISTRATION_ROUTE = '/registration'
-export const SHOP_ROUTE = '/'
+export const SHOP_ROUTE = '/shop'
+export const MAIN_ROUTE = '/'
 export const ITEMDETAIL_ROUTE = '/detail'
 export const REACT_APP_API_CLOUD_URL='https://rentserv-api.herokuapp.com/'
 

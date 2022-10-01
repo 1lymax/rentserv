@@ -1,4 +1,4 @@
-import {ADMIN_ROUTE, ITEMDETAIL_ROUTE, LOGIN_ROUTE, REGISTRATION_ROUTE, SHOP_ROUTE} from "./utils/consts";
+import {ADMIN_ROUTE, ITEMDETAIL_ROUTE, LOGIN_ROUTE, MAIN_ROUTE, REGISTRATION_ROUTE, SHOP_ROUTE} from "./utils/consts";
 import Auth from "./pages/Auth/Auth";
 import Shop from "./pages/Shop";
 import VehicleDetailPage from "./pages/VehicleDetailPage";
@@ -7,6 +7,7 @@ import Admin from "./pages/Admin";
 import MainPage from "./pages/Admin/MainPage";
 import StoresAdmin from "./pages/Admin/StoresAdmin";
 import VehiclesAdmin from "./pages/Admin/VehiclesAdmin";
+import Main from "./pages/Main";
 
 export const authRoutes = [
     {
@@ -44,6 +45,10 @@ export const publicRoutes = [
     {
         path: SHOP_ROUTE,
         Component: Shop
+    },
+    {
+        path: MAIN_ROUTE,
+        Component: Main
     },
     {
         path: LOGIN_ROUTE,

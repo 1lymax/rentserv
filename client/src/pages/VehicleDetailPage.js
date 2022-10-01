@@ -4,6 +4,7 @@ import {addToCart, doFetch, fetchOneVehicle} from "../http/storeAPI";
 import {useParams} from "react-router-dom";
 import {Button, Container, Grid, Icon, Image, Segment, Table} from "semantic-ui-react";
 import {ADMIN} from "../utils/consts";
+import {API_URL} from "../http";
 
 
 const VehicleDetailPage = () => {
@@ -43,7 +44,7 @@ const VehicleDetailPage = () => {
 						?
 						<Image width={300} height={300} src={images[0].image}/>
 						:
-						<></>
+						<Image width={300} height={300} src={[API_URL, "/media/no_image.png"].join(" ").replace("/ /", "/")}/>
 					}
 
 				</Grid.Column>
@@ -77,7 +78,7 @@ const VehicleDetailPage = () => {
 					</Segment>
 				</Grid.Column>
 			</Grid>
-			{vehicleFeature.length
+			{vehicleFeature.length > 0
 				?
 				<Table striped>
 					<Table.Header>

@@ -5,6 +5,7 @@ import {Button, Card, Icon} from "semantic-ui-react";
 import {Context} from "../index";
 import {addToCart} from "../http/storeAPI";
 import {ITEMDETAIL_ROUTE} from "../utils/consts";
+import {API_URL} from "../http";
 
 const VehicleItem = ({vehicle}) => {
 	const {images} = vehicle
@@ -24,17 +25,22 @@ const VehicleItem = ({vehicle}) => {
 			  header={vehicle.name}
 			  meta={vehicle.vehicle_type_name}
 			  extra={
-				  <div style={{display:"flex", justifyContent: "space-between", alignItems:"center", fontSize:"1.4rem"}}>
-					 {vehicle.price_cap}
-				  <Button primary onClick={e => handleClick(e)}>
-					  <Icon name="cart"/> Add
-				  </Button>
+				  <div style={{
+					  display: "flex",
+					  justifyContent: "space-between",
+					  alignItems: "center",
+					  fontSize: "1.4rem"
+				  }}>
+					  {vehicle.price_cap}
+					  <Button primary onClick={e => handleClick(e)}>
+						  <Icon name="cart"/> Add
+					  </Button>
 				  </div>
 			  }
 			  image={{
 				  src: imagesObj.image
 					  ? imagesObj.image
-					  : "https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png"
+					  : [API_URL, "/media/no_image.png"].join(" ").replace("/ /", "/")
 			  }}
 		/>
 	);
