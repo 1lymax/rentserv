@@ -81,7 +81,7 @@ const Cart = observer(() => {
 										<Grid.Row className={classes.cartRow}>
 											<Grid> </Grid>
 											<Grid> </Grid>
-											<Grid.Column className={classes.cartCell + ' ' + classes.cellQuantity}>
+											<Grid.Column className={[classes.cartCell, classes.cellQuantity].join(" ")}>
 												<Button icon="minus" circular size="small"
 														className={classes.buttonAddRemove}
 														onClick={e => handleInputChange(e, item[1].id, inputData[item[1].id]?.quantity - 1)}/>
@@ -92,7 +92,7 @@ const Cart = observer(() => {
 														className={classes.buttonAddRemove}
 														onClick={e => handleInputChange(e, item[1].id, inputData[item[1].id]?.quantity + 1)}/>
 											</Grid.Column>
-											<Grid.Column className={classes.cartCell + ' ' + classes.cellPrice}>
+											<Grid.Column className={[classes.cartCell, classes.cellPrice].join(" ")}>
 												<h2>{item[1].price}</h2>
 											</Grid.Column>
 										</Grid.Row>
@@ -107,14 +107,6 @@ const Cart = observer(() => {
 			<Modal.Actions className={classes.actions}>
 				<div className={classes.total_wrapper}>
 					<div><h2>Total:</h2></div>
-					{/*<Input*/}
-					{/*	label={{tag: true, content: 'Total', pointing: 'right'}}*/}
-					{/*	labelPosition='left'*/}
-					{/*	value={cart.data.total.price}*/}
-					{/*	size={"large"}*/}
-					{/*	style={{width: '100px', textAlign: 'right'}}*/}
-					{/*/>*/}
-
 					<div><h2>{cart.data.total.price}</h2></div>
 				</div>
 				<Button.Group>

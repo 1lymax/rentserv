@@ -1,7 +1,7 @@
 .cartCell {
     display: flex!important;
-    align-items: center!important;
-    justify-content: space-between!important;
+    align-items: center;
+    justify-content: space-between;
     padding-left: 20px;
 }
 .cartRow {
@@ -20,29 +20,25 @@
     width: 150px!important;
 }
 .cartModal {
-    bottom: auto!important;
-    left: auto!important;
-    right: auto!important;
-    top: auto!important;
-    height: auto!important;
+
 }
 .actions {
-    flex-direction: column!important;
-    justify-content: right!important;
-    padding-left: 25px!important;
+    flex-direction: column;
+    justify-content: right;
+    padding-left: 25px;
 }
 .total_wrapper {
-    margin-bottom: 15px!important;
-    padding-inline: 20px!important;
+    margin-bottom: 15px;
+    padding-inline: 20px;
     /*width: 50px!important;*/
     display: flex;
-    flex-direction: row!important;
+    flex-direction: row;
     justify-content: space-between;
 }
 .quantity_input {
     width: 50px;
     margin-inline: 10px;
-    text-align: center!important;
+    text-align: center;
 }
 
 .buttonAddRemove {

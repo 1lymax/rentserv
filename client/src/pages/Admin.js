@@ -16,7 +16,7 @@ const Admin = observer(() => {
 		<Container>
 			{user.isStaff
 				? <Grid columns={2}>
-					<Grid.Row className="mt-3">
+					<Grid.Row>
 						<Grid.Column width={3}>
 							<Header as="h3">Categories</Header>
 							<List selection animated size="large" verticalAlign="middle">

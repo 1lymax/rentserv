@@ -1,12 +1,11 @@
 import {observer} from "mobx-react-lite";
-import {Container, Grid, Segment} from "semantic-ui-react";
+import {Container, Dropdown, Grid, Segment} from "semantic-ui-react";
 import React, {useContext, useEffect, useRef, useState} from 'react';
 
 import {Context} from "../index";
 import {doFetch} from "../http/storeAPI";
 import SearchBar from "../components/SearchBar";
 import VehicleList from "../components/VehicleList";
-import MultiSelect from "../components/UI/MultiSelect/MultiSelect";
 import {PAGINATION} from "../utils/consts";
 import {pageCount} from "../utils/pageCount";
 import {useScroll} from "../hooks/useScroll";
@@ -38,10 +37,10 @@ const Shop = observer(() => {
 	)
 
 	const sortingOptions = [
-		{value: 'name', name: 'Название А-Я'},
-		{value: '-name', name: 'Название Я-А'},
-		{value: 'price_cap', name: 'Цена А-Я'},
-		{value: '-price_cap', name: 'Цена Я-А'},
+		{value: 'name', text: 'Название А-Я'},
+		{value: '-name', text: 'Название Я-А'},
+		{value: 'price_cap', text: 'Цена А-Я'},
+		{value: '-price_cap', text: 'Цена Я-А'},
 	]
 
 	function needUseScrool() {
@@ -91,20 +90,22 @@ const Shop = observer(() => {
 					</Grid.Column>
 					<Grid.Column width={11}>
 						<div style={{maxWidth: "180px", marginBottom: "20px"}}>
-							<MultiSelect
-								isMulti={false}
-								isClearable={true}
-								placeholder={'Сортировка'}
-								options={sortingOptions}
-								getOptionValue={(option) => `${option.value}`}
-								getOptionLabel={(option) => `${option.name}`}
+							<Dropdown fluid
+								labeled
+								floating
+								selection
+								clearable
+								openOnFocus
+								selectOnBlur={false}
 								value={vehicleSorting}
+								options={sortingOptions}
+								placeholder={"Сортировка"}
 								onChange={e => e ? setVehicleSorting(e.value) : setVehicleSorting(undefined)}
 							/>
 						</div>
 						<div ref={parentRef}>
 							<VehicleList/>
-							<div ref={childRef} style={{height: '20px', backgroundColor: 'teal'}}></div>
+							<div ref={childRef} style={{height: '20px'}}></div>
 						</div>
 
 					</Grid.Column>

@@ -24,12 +24,12 @@ const VehicleItem = ({vehicle}) => {
 			  header={vehicle.name}
 			  meta={vehicle.vehicle_type_name}
 			  extra={
-				  <Button primary
-						  onClick={e => handleClick(e)}
-				  >
-					  <Icon name="cart"></Icon>
-					  Add
+				  <div style={{display:"flex", justifyContent: "space-between", alignItems:"center", fontSize:"1.4rem"}}>
+					 {vehicle.price_cap}
+				  <Button primary onClick={e => handleClick(e)}>
+					  <Icon name="cart"/> Add
 				  </Button>
+				  </div>
 			  }
 			  image={{
 				  src: imagesObj.image
