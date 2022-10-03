@@ -8,14 +8,17 @@ const Main = () => {
 
 	return (
 		<Container>
-			<Segment placeholder>
+			<Segment placeholder textAlign={"center"}>
 				<Header icon>
 					<Icon name='code'/>
-					This site is working in demo mode.
+					Demo mode.
 				</Header>
+				<div>This is a demo application created to show programming skills.
+				</div>
+				<br/>
 				<Segment.Inline>
 					<Button.Group>
-						<Button primary onClick={() => navigate(SHOP_ROUTE)}>Go to shop</Button>
+						<Button primary onClick={() => navigate(SHOP_ROUTE)}>Go to portal</Button>
 						<Button.Or/>
 						<Button onClick={() => navigate(ADMIN_ROUTE)}>Admin panel</Button>
 					</Button.Group>

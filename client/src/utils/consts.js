@@ -24,6 +24,8 @@ export const MESSAGES = {
 	updateSuccess: 'Successfully updated!',
 	deleteSuccess: 'Successfully deleted!',
 	loggedIn: 'Login success!',
+	cartAdd: 'Added to cart!',
+	cartRemove: 'Removed from cart'
 }
 
 export const PAGINATION = {

@@ -5,8 +5,11 @@ import {Context} from "../../index";
 import DictAccordion from "../../components/UI/DictAccordion/DictAccordion";
 import {doFetch} from "../../http/storeAPI";
 import {Container} from "semantic-ui-react";
+import {convertErrorMessage} from "../../utils/convertErrorMessage";
+import {useSnackbar} from "notistack";
 
 const Catalogs = observer(() => {
+	const {enqueueSnackbar} = useSnackbar()
 	const [typeVisible, setTypeVisible] = useState(false)
 	const [featureVisible, setFeatureVisible] = useState(false)
 	const [featureVehicleVisible, setFeatureVehicleVisible] = useState(false)
@@ -18,7 +21,9 @@ const Catalogs = observer(() => {
 		for (const obj of Object.values(contextScope)) {
 			obj.noFetchContextFromBackend === undefined && doFetch(obj)
 				.then(data => obj.setData(data.results))
+				.catch(e => enqueueSnackbar(convertErrorMessage(e), {variant: "error"}));
 		}
+		//eslint-disable-next-line
 	}, [contextScope]);
 
 	return (

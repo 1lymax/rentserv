@@ -15,7 +15,6 @@ class Cart():
         cart = self.session.get(settings.CART_SESSION_ID)
         if not cart:
             cart = self.session[settings.CART_SESSION_ID] = {}
-            print('new session')
         self.cart = cart
 
     def get(self):

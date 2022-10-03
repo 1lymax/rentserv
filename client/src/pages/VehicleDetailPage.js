@@ -5,34 +5,44 @@ import {useParams} from "react-router-dom";
 import {Button, Container, Grid, Icon, Image, Segment, Table} from "semantic-ui-react";
 import {ADMIN} from "../utils/consts";
 import {API_URL} from "../http";
+import {useSnackbar} from "notistack";
+import {convertErrorMessage} from "../utils/convertErrorMessage";
 
 
 const VehicleDetailPage = () => {
-	const [vehicle, setVehicle] = useState({images: [{image: ''}], features: []})
-
 	const {id} = useParams()
+	const {enqueueSnackbar} = useSnackbar()
 	const {feature, unit, cart} = useContext(Context)
-	const {images} = vehicle;
+	const [vehicle, setVehicle] = useState({images: [{image: ''}], features: []})
 	const vehicleFeature = vehicle.features
+	const {images} = vehicle;
 
 	useEffect(() => {
-		fetchOneVehicle(id).then(data => setVehicle(data))
+		fetchOneVehicle(id)
+			.then(data => setVehicle(data))
+			.catch(e => enqueueSnackbar(convertErrorMessage(e), {variant: "error"}));
 		// eslint-disable-next-line
 	}, []);
 
 	useEffect(() => {
-		doFetch(feature).then(data => feature.setData(data.results))
+		doFetch(feature)
+			.then(data => feature.setData(data.results))
+			.catch(e => enqueueSnackbar(convertErrorMessage(e), {variant: "error"}));
 		// eslint-disable-next-line
 	}, []);
 
 	useEffect(() => {
-		doFetch(unit).then(data => unit.setData(data.results))
+		doFetch(unit)
+			.then(data => unit.setData(data.results))
+			.catch(e => enqueueSnackbar(convertErrorMessage(e), {variant: "error"}));
 		// eslint-disable-next-line
 	}, []);
 
 	const handleClick = (e) => {
 		addToCart(vehicle.id, {id: vehicle.id, quantity: 1})
 			.then(resp => cart.setData(resp))
+			.catch(e => enqueueSnackbar(convertErrorMessage(e), {variant: "error"}));
+
 		e.stopPropagation()
 	}
 

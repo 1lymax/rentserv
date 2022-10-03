@@ -1,18 +1,18 @@
+import {useSnackbar} from "notistack";
 import {observer} from "mobx-react-lite";
 import React, {useContext, useEffect, useState} from 'react';
-import {Button, Grid, Header, Table} from "semantic-ui-react";
 
+import {Button, Grid, Header, Table} from "semantic-ui-react";
 import {Context} from "../../../index";
 import {MESSAGES, PAGINATION} from "../../../utils/consts";
 import Paginate from "../../UI/Paginate/Paginate";
 import InputControl from "../../UI/InputControl/InputControl";
 import DependencyShow from "../DependencyShow/DependencyShow";
 import setDependencyName from "../../../utils/setDependencyName";
-import {doCreate, doDelete, doFetch, doUpdate} from "../../../http/storeAPI";
 
+import {doCreate, doDelete, doFetch, doUpdate} from "../../../http/storeAPI";
 import classes from "./EditTable.module.css"
 import {useDebounce} from "../../../hooks/useDebounce";
-import {useSnackbar} from "notistack";
 import {convertErrorMessage} from "../../../utils/convertErrorMessage";
 
 
@@ -25,7 +25,7 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 	const [error, setError] = useState([])
 	const [totalRows, setTotalRows] = useState(0)
 	const [needFetch, setNeedFetch] = useState([])
-	const [isLoading, setIsLoading] = useState(false)
+	const [isSaving, setIsSaving] = useState(false)
 	const [currentPage, setCurrentPage] = useState(0)
 	const [fieldValues, setFieldValues] = useState({})
 	const [focusElement, setFocusElement] = useState([])
@@ -53,9 +53,9 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 				}
 			)
 			.catch(e => {
-				enqueueSnackbar(convertErrorMessage(e.response.data))
+				enqueueSnackbar(convertErrorMessage(e), {variant: "error"})
 				setError(convertErrorMessage(e.response.data))
-			});
+			})
 	}
 
 	const setCellValue = (item, set) => {
@@ -86,7 +86,7 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 	const handleEditOrSave = (id) => {
 		setEdit(id)
 		if (id === edit && id) {
-			setIsLoading(true)
+			setIsSaving(true)
 			doUpdate(context, id, fieldValues).then(() => {
 				doFetch(context).then(resp => context.setData(resp.results))
 				enqueueSnackbar(MESSAGES.updateSuccess, {variant: "success"})
@@ -102,8 +102,8 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 				setFieldsArray(isDependencyTable ? filters : [])
 				hideAll()
 			}).catch(e => {
-				enqueueSnackbar(convertErrorMessage(e.response.data), {variant: "error"})
-				setError(convertErrorMessage(e.response.data))
+				enqueueSnackbar(convertErrorMessage(e), {variant: "error"})
+				setError(convertErrorMessage(e))
 			})
 		}
 
@@ -117,7 +117,7 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 				setNeedFetch(Date.now())
 				enqueueSnackbar(MESSAGES.deleteSuccess, {variant: "success"})
 			}).catch(e => {
-				enqueueSnackbar(convertErrorMessage(e.response.data), {variant: "error"})
+				enqueueSnackbar(convertErrorMessage(e), {variant: "error"})
 				setError(convertErrorMessage(e.response.data))
 			})
 		}
@@ -135,7 +135,7 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 	const hideAll = () => {
 		setEdit(0)
 		setActionButtonsVisible(0)
-		setIsLoading(false)
+		setIsSaving(false)
 	};
 
 	// eslint-disable-next-line
@@ -214,7 +214,7 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 								<Table.Cell>
 									{actionButtonsVisible === item.id &&
 										<>
-											<Button size="large" circular loading={isLoading}
+											<Button size="large" circular loading={isSaving}
 													icon={edit === item.id ? "save" : "edit"}
 													onClick={() => handleSubmit(item)}/>
 											<Button size="large" circular
@@ -255,7 +255,7 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 							)}
 
 							<Table.Cell>
-								<Button circular size="large" loading={isLoading} icon="save"
+								<Button circular size="large" loading={isSaving} icon="save"
 										onClick={() => {
 											setEdit(-1)
 											handleEditOrSave(undefined, fieldValues)

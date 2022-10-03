@@ -1,16 +1,17 @@
-import React, {useContext, useState} from 'react';
-import {Context} from "../index";
-import {observer} from "mobx-react-lite";
-import {authRoutes} from "../route";
-import {ADMIN_ROUTE} from "../utils/consts";
-import MainPage from "./Admin/MainPage";
 import {Container, Grid, Header, List} from "semantic-ui-react";
+import React, {useContext, useState} from 'react';
+
+import {Context} from "../index";
+import {authRoutes} from "../route";
+import MainPage from "./Admin/MainPage";
+import {observer} from "mobx-react-lite";
+import {ADMIN_ROUTE} from "../utils/consts";
 
 const Admin = observer(() => {
-	const [SelectedComponent, setSelectedComponent] = useState(MainPage)
-	const [selectedLink, setSelectedLink] = useState('')
 	const contextScope = useContext(Context)
 	const user = contextScope.user
+	const [selectedLink, setSelectedLink] = useState('')
+	const [SelectedComponent, setSelectedComponent] = useState(MainPage)
 
 	return (
 		<Container>

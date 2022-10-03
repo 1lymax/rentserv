@@ -39,7 +39,7 @@ const Auth = observer(() => {
 			user.setIsStaff(data.isStaff)
 			setTimeout(navigate(SHOP_ROUTE), 1000)
 		} catch (e) {
-			enqueueSnackbar(convertErrorMessage(e.response.data), {variant: "error"})
+			enqueueSnackbar(convertErrorMessage(e), {variant: "error"})
 			setError(e.response.data)
 		}
 	}

@@ -1,21 +1,34 @@
-import React, {useContext} from 'react';
+import {useSnackbar} from "notistack";
+import React, {useContext, useState} from 'react';
 import {useNavigate} from "react-router-dom";
 import {Button, Card, Icon} from "semantic-ui-react";
 
 import {Context} from "../index";
 import {addToCart} from "../http/storeAPI";
-import {ITEMDETAIL_ROUTE} from "../utils/consts";
+import {ITEMDETAIL_ROUTE, MESSAGES} from "../utils/consts";
 import {API_URL} from "../http";
+import {convertErrorMessage} from "../utils/convertErrorMessage";
 
 const VehicleItem = ({vehicle}) => {
 	const {images} = vehicle
-	const {cart} = useContext(Context)
-	const imagesObj = images.reduce((acc, curr) => (acc[curr] = curr), {});
 	const navigate = useNavigate()
+	const {cart} = useContext(Context)
+	const {enqueueSnackbar} = useSnackbar()
+	const imagesObj = images.reduce((acc, curr) => (acc[curr] = curr), {});
+	const [fetching, setFetching] = useState(false)
 
 	const handleClick = (e) => {
+		setFetching(true)
+		setTimeout(
 		addToCart(vehicle.id, {id: vehicle.id, quantity: 1})
-			.then(resp => cart.setData(resp))
+			.then(resp => {
+				cart.setData(resp)
+				enqueueSnackbar(MESSAGES.cartAdd, {variant: "success"})
+				setFetching(false)
+			})
+			.catch(e => enqueueSnackbar(convertErrorMessage(e), {variant: "error"}))
+	,1000)
+
 		e.stopPropagation()
 	}
 
@@ -32,7 +45,7 @@ const VehicleItem = ({vehicle}) => {
 					  fontSize: "1.4rem"
 				  }}>
 					  {vehicle.price_cap}
-					  <Button primary onClick={e => handleClick(e)}>
+					  <Button primary onClick={e => handleClick(e)} loading={fetching}>
 						  <Icon name="cart"/> Add
 					  </Button>
 				  </div>

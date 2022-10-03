@@ -27,5 +27,4 @@ class CartViewSet(GenericAPIView):
         if 'id' not in kwargs:
             raise s.ValidationError("Some parameters are missed")
         cart.remove(kwargs['id'])
-        print(Cart(request.session).get())
         return Response(data={settings.CART_SESSION_ID: Cart(request.session).get()})

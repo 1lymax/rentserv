@@ -60,7 +60,7 @@ const Filter = observer(({conf, filterCallback}) => {
 			[name]: value,
 		}));
 	};
-	// contextScope.vehicle.data && console.log(contextScope.vehicles.data.price_cap)
+
 	return (
 		<div>
 			<div className={classes.filter_wrapper}>

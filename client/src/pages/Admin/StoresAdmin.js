@@ -7,8 +7,11 @@ import {ADMIN} from "../../utils/consts";
 import DictAccordion from "../../components/UI/DictAccordion/DictAccordion";
 import CreateVehicle from "../../components/modals/CreateVehicle";
 import {Container} from "semantic-ui-react";
+import {convertErrorMessage} from "../../utils/convertErrorMessage";
+import {useSnackbar} from "notistack";
 
 const StoresAdmin = observer(() => {
+	const {enqueueSnackbar} = useSnackbar()
 	const [storeVisible, setStoreVisible] = useState(false)
 	const contextScope = useContext(Context)
 	const [filters, setFilters] = useState({})
@@ -18,6 +21,7 @@ const StoresAdmin = observer(() => {
 		for (const obj of Object.values(contextScope)) {
 			obj.noFetchContextFromBackend === undefined && doFetch(obj, '', '')
 				.then(data => obj.setData(data.results))
+				.catch(e => enqueueSnackbar(convertErrorMessage(e), {variant: "error"}));
 		}
 		// eslint-disable-next-line
 	}, []);

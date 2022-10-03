@@ -24,7 +24,6 @@ export const doCreate = async (context, createData) => {
 }
 
 export const doFetch = async (context, ordering, filters, pagination) => {
-	try{
 		const {data} = await $host.get(
 			API_ROUTES.api + context.endpoint + '/',
 			{params:
@@ -35,9 +34,6 @@ export const doFetch = async (context, ordering, filters, pagination) => {
 					}
 			})
 		return data
-	}catch (e){
-		console.log('doFetch error', e.response.data)
-	}
 }
 
 export const doDelete = async (context, id) => {

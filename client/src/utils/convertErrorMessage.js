@@ -1,4 +1,5 @@
-export const convertErrorMessage = (object) => {
+export const convertErrorMessage = (error) => {
+	let object = error?.response.data ? error.response.data : error?.message
 	let str = ''
 	if (typeof object === "string") {
 		return object

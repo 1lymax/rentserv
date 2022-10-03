@@ -7,8 +7,11 @@ import {ADMIN} from "../../utils/consts";
 import Filter from "../../components/Admin/Filter/Filter";
 import EditTable from "../../components/Admin/EditTable/EditTable";
 import {Container, Dropdown, Grid, Header} from "semantic-ui-react";
+import {convertErrorMessage} from "../../utils/convertErrorMessage";
+import {useSnackbar} from "notistack";
 
 const VehiclesAdmin = observer(() => {
+	const {enqueueSnackbar} = useSnackbar()
 	const contextScope = useContext(Context)
 	const [filters, setFilters] = useState({})
 	const [showFilter, setShowFilter] = useState(false)
@@ -19,9 +22,9 @@ const VehiclesAdmin = observer(() => {
 			obj.noFetchContextFromBackend === undefined && doFetch(obj, '', '')
 				.then(data => {
 					obj.setData(data.results)
-					console.log('data.aggregate', data.aggregate)
 					obj.aggregate && obj.setAggregate(data.aggregate)
 				})
+				.catch(e => enqueueSnackbar(convertErrorMessage(e), {variant: "error"}));
 		}
 		// eslint-disable-next-line
 	}, []);

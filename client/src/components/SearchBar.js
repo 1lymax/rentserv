@@ -1,35 +1,43 @@
-import React, {useContext, useEffect, useState} from 'react';
+import {useSnackbar} from "notistack";
 import {observer} from "mobx-react-lite";
+import {Accordion, Divider, Icon} from "semantic-ui-react";
+import React, {useContext, useEffect, useState} from 'react';
 
 import {Context} from "../index";
 import {ADMIN} from "../utils/consts";
-import InputControl from "./UI/InputControl/InputControl";
-import {Accordion, Divider, Icon} from "semantic-ui-react";
 import {doFetch} from "../http/storeAPI";
+import InputControl from "./UI/InputControl/InputControl";
+import {convertErrorMessage} from "../utils/convertErrorMessage";
 
 const SearchBar = observer(({setFilter}) => {
 	const contextScope = useContext(Context)
 	const {vehicle, type, store, city} = useContext(Context)
 	const [openParam, setOpenParam] = useState([])
 	const [fieldValues, setFieldValues] = useState({})
+	const {enqueueSnackbar} = useSnackbar()
 
 	const filterSet = ADMIN.vehicle.fields.concat(ADMIN.vehicle.filterAdditionalfields)
 
 	useEffect(() => {
 		doFetch(type)
 			.then(data => type.setData(data.results))
+			.catch(e => enqueueSnackbar(convertErrorMessage(e), {variant: "error"}));
+
 		// eslint-disable-next-line
 	}, []);
 
 	useEffect(() => {
 		doFetch(store)
 			.then(data => store.setData(data.results))
+			.catch(e => enqueueSnackbar(convertErrorMessage(e), {variant: "error"}));
+
 		// eslint-disable-next-line
 	}, []);
 
 	useEffect(() => {
 		doFetch(city)
 			.then(data => city.setData(data.results))
+			.catch(e => enqueueSnackbar(convertErrorMessage(e), {variant: "error"}));
 		// eslint-disable-next-line
 	}, []);
 

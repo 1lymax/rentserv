@@ -7,8 +7,12 @@ import {Context} from "../../index";
 import {addToCart, fetchCart, removeFromCart} from "../../http/storeAPI";
 
 import classes from "./Cart.module.css";
+import {convertErrorMessage} from "../../utils/convertErrorMessage";
+import {useSnackbar} from "notistack";
+import {MESSAGES} from "../../utils/consts";
 
 const Cart = observer(() => {
+	const {enqueueSnackbar} = useSnackbar()
 	const [openCart, setOpenCart] = useState(false);
 	const [inputData, setInputData] = useState({});
 
@@ -20,6 +24,7 @@ const Cart = observer(() => {
 				cart.setData(resp)
 				setInputData(cart.data)
 			})
+			.catch(e => enqueueSnackbar(convertErrorMessage(e), {variant: "error"}));
 		//eslint-disable-next-line
 	}, [cart.needFetch]);
 
@@ -28,8 +33,10 @@ const Cart = observer(() => {
 			.then(resp => {
 					cart.setData(resp)
 					setInputData(cart.data)
+					enqueueSnackbar(MESSAGES.cartAdd, {variant: "success"})
 				}
 			)
+			.catch(e => enqueueSnackbar(convertErrorMessage(e), {variant: "error"}));
 	};
 
 	const handleInputChange = (e, id, quantity) => {
@@ -37,9 +44,12 @@ const Cart = observer(() => {
 			.then(resp => {
 					cart.setData(resp)
 					setInputData(cart.data)
+					enqueueSnackbar(MESSAGES.cartAdd, {variant: "success"})
 				}
 			)
+			.catch(e => enqueueSnackbar(convertErrorMessage(e), {variant: "error"}));
 	}
+
 	return (
 		<Modal
 			centered
@@ -59,6 +69,18 @@ const Cart = observer(() => {
 			<Modal.Header><h1><Icon name='shop'/> Your Cart</h1></Modal.Header>
 			<Modal.Content scrolling>
 				<Modal.Description>
+					{Object.entries(cart.data).length < 2 &&
+						<div style={{
+							textAlign: "center",
+							color: "gray",
+							fontSize: "2rem",
+							marginTop: "2rem",
+							marginBottom: "4rem"
+						}}>
+							Cart is empty :( <br/>
+							<Icon name="time"/> Time to fix this!
+						</div>
+					}
 					{Object.entries(cart.data).map(item =>
 						(
 							<Grid key={item[0]} centered className={classes.cartRow}>
@@ -66,9 +88,14 @@ const Cart = observer(() => {
 									<>
 										<Grid.Row className={classes.cartRow}>
 											<Grid.Column className={classes.cartCell}>
-												<Image src={[API_URL, item[1].image].join(" ").replace("/ /", "/")}></Image>
-												<div><h4>{item[1].name}</h4></div>
-												<div>
+												<div style={{width: "23%"}}>
+													<Image
+														src={[API_URL, item[1].image].join(" ").replace("/ /", "/")}></Image>
+												</div>
+												<div style={{width: "60%", textAlign: "left"}}>
+													<h4>{item[1].name}</h4>
+												</div>
+												<div style={{width: "17%", textAlign: "right"}}>
 													<Dropdown icon='ellipsis vertical' direction="left">
 														<Dropdown.Menu>
 															<Dropdown.Item

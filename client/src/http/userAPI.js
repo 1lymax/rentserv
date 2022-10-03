@@ -29,12 +29,16 @@ export const check = async () => {
 		}
 		return {}
 	} catch (e) {
-		const {data} = await $authHost.post('user/token/refresh/', {refresh: localStorage.refresh})
-		localStorage.setItem('access', data.access)
-		console.log('refreshed data at local storage')
-		return jwtDecode(data.access)
-
+		return refresh()
 	}
-
-
 }
+
+export const refresh = async () => {
+	if (localStorage.refresh) {
+		const {data} = await $authHost.post('user/token/refresh/', {refresh: localStorage.refresh});
+		localStorage.setItem('access', data.access)
+		console.log('refreshed data at local storage', data)
+		return jwtDecode(data.access)
+	}
+	return {}
+};

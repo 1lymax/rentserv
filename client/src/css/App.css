@@ -12,10 +12,6 @@
     z-index: 2;
 }
 
-.ui.circular.button {
-    background: transparent;
-}
-
 .ui.search.dropdown {
     font-family: Lato,'Helvetica Neue',Arial,Helvetica,sans-serif;
 }
@@ -32,4 +28,8 @@
 
 .ui.dimmer {
     background-color: rgba(0,0,0,0.5);
+}
+
+.ui.circular.button {
+    background-color: transparent;
 }

@@ -4,9 +4,12 @@ import {Card, Segment} from "semantic-ui-react";
 import {ADMIN} from "../../../utils/consts";
 import ImageItem from "../ImageItem/ImageItem";
 import {doCreate, doDelete, doFetch} from "../../../http/storeAPI";
+import {convertErrorMessage} from "../../../utils/convertErrorMessage";
+import {useSnackbar} from "notistack";
 
 const ImageList = ({context, filters}) => {
 		const [data, setData] = useState([])
+		const {enqueueSnackbar} = useSnackbar()
 		const [uploadedFile, setUploadedFile] = useState({file: '', imagePreviewUrl: ''})
 		const [needFetch, setNeedFetch] = useState(0)
 		const dependsOn = ADMIN[context.endpoint].dependsOn
@@ -14,6 +17,7 @@ const ImageList = ({context, filters}) => {
 		useEffect(() => {
 			doFetch(context, '', filters)
 				.then(resp => setData(resp.results))
+				.catch(e => enqueueSnackbar(convertErrorMessage(e), {variant: "error"}));
 			// eslint-disable-next-line
 		}, [needFetch]);
 
@@ -48,7 +52,8 @@ const ImageList = ({context, filters}) => {
 			<Segment basic>
 				<Card.Group>
 					{data.map(image =>
-						<ImageItem key={image.image} image={image.image} id={image.id} handleAction={handleAction} isBackendImage={true}/>
+						<ImageItem key={image.image} image={image.image} id={image.id} handleAction={handleAction}
+								   isBackendImage={true}/>
 					)}
 					<>
 						{uploadedFile.imagePreviewUrl
