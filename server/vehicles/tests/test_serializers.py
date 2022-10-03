@@ -123,7 +123,6 @@ class VehicleSerializerTestCase(TestCase):
             },
         ]
         serializer_data = VehicleFeaturesViewSerializer(queryset, many=True).data
-        print(serializer_data, data)
 
     def test_types(self):
         queryset = Type.objects.all()
@@ -132,5 +131,4 @@ class VehicleSerializerTestCase(TestCase):
             {"id": 2, "name": "Excavator"}
         ]
         serializer_data = FeatureListSerializer(queryset, many=True).data
-        print(serializer_data)
         self.assertEqual(serializer_data, data, serializer_data)

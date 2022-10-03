@@ -30,7 +30,6 @@ class Cart():
             total_price = total_items = 0
         cart_with_total = self.cart
         cart_with_total.update({"total": {"quantity": total_items, "price": str(total_price)}})
-        print(cart_with_total)
         return cart_with_total
 
     def add(self, vehicle_id, quantity=1):
@@ -43,7 +42,6 @@ class Cart():
         except models.ObjectDoesNotExist:
             raise serializers.ValidationError("Vehicle not found")
         is_in_cart = False
-        print(dir(self.session))
         for vehicle_in_cart in self.cart:
             if vehicle_in_cart == vehicle.id:
                 is_in_cart = True
@@ -75,7 +73,7 @@ class Cart():
         return self.cart
 
     def __iter__(self):
-        vehicle_ids = self.cart.keys()
+        vehicle_ids = [k  for k in self.cart.keys() if k != 'total'] #self.cart.keys()
         vehicles = Vehicle.objects.filter(id__in=vehicle_ids)
         for vehicle in vehicles:
             self.cart[str(vehicle.id)]['vehicle'] = vehicle

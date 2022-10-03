@@ -30,9 +30,9 @@ class CartApiTestCase(APITestCase):
 
         url = reverse('cart_detail')
         response = self.client.get(url)
-        compare_data = {'cart': {'1': {'id': 1, 'name': 'Hyundai 100', 'quantity': 9, 'price': 600.0},
-                                 '2': {'id': 2, 'name': 'Hyundai 200', 'quantity': 10, 'price': 700.0},
-                                 'total_items': 19,
-                                 'total_price': 12400}}
+        compare_data = {'cart': {'1': {'id': 1, 'image': '/media/_thumb.', 'name': 'Hyundai 100', 'price': 600.0, 'quantity': 9},
+                                 '2': {'id': 2, 'image': '/media/_thumb.', 'name': 'Hyundai 200', 'price': 700.0, 'quantity': 10},
+                                 'total': {'price': '12400', 'quantity': 19
+                                           }}}
         self.assertEqual(status.HTTP_200_OK, response.status_code)
         self.assertEqual(compare_data, response.data)

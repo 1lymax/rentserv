@@ -61,11 +61,13 @@ class VehicleImage(models.Model):
     def save(self, *args, **kwargs):
         if self.image:
             super().save(*args, **kwargs)
-            img = Image.open(self.image.path)
-            output_size = (100, 100)
-            img.thumbnail(output_size)
-            img.save(get_extra_image_name(self.image.path, '_thumb'))
-
+            try:
+                img = Image.open(self.image.path)
+                output_size = (100, 100)
+                img.thumbnail(output_size)
+                img.save(get_extra_image_name(self.image.path, '_thumb'))
+            except:
+                pass
 
 
 class VehicleFeature(models.Model):

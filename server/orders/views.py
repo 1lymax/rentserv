@@ -45,7 +45,10 @@ class OrderCreateViewSet(ModelViewSet):
             cart = Cart(request.session)
             if len(cart)==0 and not request.user.is_staff:
                 raise serializers.ValidationError('Cart is empty')
+
             for item in cart:
+                if 'id' not in item:
+                    continue
                 vehicle = Vehicle.objects.get(id=item['id'])
                 OrderItem.objects.create(order=order, vehicle=vehicle, quantity=item['quantity'], price=vehicle.price_region)
             cart.clear()
