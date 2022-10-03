@@ -1,29 +1,33 @@
 import {useEffect, useRef} from "react";
 
-export const useScroll = (parentRef, childRef, callback, needObserve) => {
+export const useScroll = (parentRef, childRef, callback) => {
 	const observer = useRef()
 
 	useEffect(() => {
 		const options = {
-			root: parentRef.current,
 			rootMargin: '0px',
 			threshold: 0
 		}
 
-		if (needObserve) {
-			observer.current = new IntersectionObserver(([target]) => {
-				if (target.isIntersecting) {
-					console.log('intersected')
-					callback()
-				}
+		observer.current = new IntersectionObserver(([target]) => {
+			console.log(target)
+			if (target.isIntersecting) {
+				console.log('intersected')
+				callback()
+			}
 
-			}, options);
+		}, options);
 
-			observer.current.observe(childRef.current)
-		}
+		observer.current.observe(childRef.current)
 
 		return function () {
-			observer.current && observer.current.unobserve(childRef.current)
+			console.log('return', observer.current)
+			try {
+				observer.current && observer.current.unobserve(childRef.current);
+			} catch (e) {
+
+			}
+
 		};
 	}, [callback]);
 };

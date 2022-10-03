@@ -13,6 +13,7 @@ import {useDidMountEffect} from "../hooks/useDidMountEffect";
 import {useDebounce} from "../hooks/useDebounce";
 import {useSnackbar} from "notistack";
 import {convertErrorMessage} from "../utils/convertErrorMessage";
+import VehicleItem from "../components/VehicleItem";
 
 const Shop = observer(() => {
 	const childRef = useRef()
@@ -30,7 +31,7 @@ const Shop = observer(() => {
 		[PAGINATION.backendName]: rowsPerPage
 	}
 
-	useScroll(parentRef, childRef, fetchVehicles(), needUseScrool())
+	useScroll(parentRef, childRef, () => fetchVehicles())
 
 	useDidMountEffect(
 		useDebounce(fetchFiltering, 500),
@@ -49,15 +50,19 @@ const Shop = observer(() => {
 	}
 
 	function fetchVehicles() {
+		console.log('fetchVehicles')
 		if (needUseScrool()) {
 			doFetch(vehicle, {ordering: vehicleSorting}, filter, pagination)
-				.then(data => vehicle.setData([...vehicle.data, ...data.results]))
+				.then(data => {
+					vehicle.setData([...vehicle.data, ...data.results])
+					setCurrentPage(currentPage + 1)
+				})
 				.catch(e => enqueueSnackbar(convertErrorMessage(e), {variant: "error"}));
-			setCurrentPage(currentPage + 1)
 		}
 	}
 
 	function fetchFiltering() {
+		console.log('fetchFiltering')
 		doFetch(vehicle, {ordering: vehicleSorting}, filter, {
 			page: 1,
 			[PAGINATION.backendName]: rowsPerPage
@@ -71,6 +76,7 @@ const Shop = observer(() => {
 	}
 
 	useEffect(() => {
+		console.log('firstload')
 		doFetch(vehicle)
 			.then(data => {
 				vehicle.setAggregate(data.aggregate)
@@ -92,20 +98,26 @@ const Shop = observer(() => {
 					<Grid.Column width={11}>
 						<div style={{maxWidth: "180px", marginBottom: "20px"}}>
 							<Dropdown fluid
-								labeled
-								floating
-								selection
-								clearable
-								openOnFocus
-								selectOnBlur={false}
-								value={vehicleSorting}
-								options={sortingOptions}
-								placeholder={"Сортировка"}
-								onChange={e => e ? setVehicleSorting(e.value) : setVehicleSorting(undefined)}
+									  labeled
+									  floating
+									  selection
+									  clearable
+									  openOnFocus
+									  selectOnBlur={false}
+									  value={vehicleSorting}
+									  options={sortingOptions}
+									  placeholder={"Сортировка"}
+									  onChange={e => e ? setVehicleSorting(e.value) : setVehicleSorting(undefined)}
 							/>
 						</div>
 						<div ref={parentRef}>
-							<VehicleList/>
+							<Grid>
+								{vehicle.data.map(vehicle =>
+									<Grid.Column mobile={16} tablet={8} computer={5} key={vehicle.id}>
+										<VehicleItem vehicle={vehicle}></VehicleItem>
+									</Grid.Column>
+								)}
+							</Grid>
 							<div ref={childRef} style={{height: '20px'}}></div>
 						</div>
 

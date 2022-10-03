@@ -93,7 +93,7 @@ const Cart = observer(() => {
 														src={[API_URL, item[1].image].join(" ").replace("/ /", "/")}></Image>
 												</div>
 												<div style={{width: "60%", textAlign: "left"}}>
-													<h4>{item[1].name}</h4>
+													<h3>{item[1].name}</h3>
 												</div>
 												<div style={{width: "17%", textAlign: "right"}}>
 													<Dropdown icon='ellipsis vertical' direction="left">
