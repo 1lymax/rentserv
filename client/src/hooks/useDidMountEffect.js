@@ -9,6 +9,6 @@ export const useDidMountEffect = (func, deps = []) => {
 		} else {
 			didMount.current = true;
 		}
-		//eslint-disable-next-line
+		// eslint-disable-next-line
 	}, deps);
 };

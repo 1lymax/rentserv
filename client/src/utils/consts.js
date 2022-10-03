@@ -109,11 +109,11 @@ export const ADMIN = {
 		fields: [
 			{
 				name: 'name', type: 'string', filter: 'autocomplete', filterStyles: {minWidth: '150px'},
-				contextName: 'vehicle', placeholder: 'Название', width: 5
+				contextName: 'vehicle', placeholder: 'Название', width: 3
 			},
 			{
 				name: 'vehicle_type', type: 'select', placeholder: 'Тип', filterStyles: {minWidth: '170px', maxWidth: '220px'},
-				contextName: 'type', width: 5
+				contextName: 'type', width: 4
 			},
 			{
 				name: 'price_cap', type: 'string', filter: 'slider', aggregateContext: 'vehicle',
@@ -122,6 +122,12 @@ export const ADMIN = {
 			{
 				name: 'price_region', type: 'string', filter: 'slider', aggregateContext: 'vehicle',
 				placeholder: 'Цена (Регионы)', width: 2
+			},
+			{
+				name: 'discount', type: 'string', placeholder: '%', width: 2, filterStyles: {display: 'none'},
+			},
+			{
+				name: 'sale', type: 'checkbox', filter: 'checkbox',	placeholder: 'Sale', width: 1
 			},
 		],
 		filterAdditionalfields: [

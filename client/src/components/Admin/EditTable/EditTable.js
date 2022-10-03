@@ -2,7 +2,7 @@ import {useSnackbar} from "notistack";
 import {observer} from "mobx-react-lite";
 import React, {useContext, useEffect, useState} from 'react';
 
-import {Button, Grid, Header, Table} from "semantic-ui-react";
+import {Button, Checkbox, Grid, Header, Table} from "semantic-ui-react";
 import {Context} from "../../../index";
 import {MESSAGES, PAGINATION} from "../../../utils/consts";
 import Paginate from "../../UI/Paginate/Paginate";
@@ -58,14 +58,19 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 			})
 	}
 
+	const isBoolean = (value, name) => {
+		console.log(value)
+		return value === true || value === false ? <Checkbox name={name} checked={value} disabled/> : value
+	};
+
 	const setCellValue = (item, set) => {
 		if (set.contextName && !set.filter && contextScope[set.contextName] && contextScope[set.contextName].data.length) {
 			if (isNeedDependencyValue(set.name)) {
 				let result = setDependencyName(contextScope[set.contextName].data, item[set.name])
-				return result && result.name
+				return result && isBoolean(result.name, item.name)
 			}
 		} else {
-			return item[set.name]
+			return isBoolean(item[set.name], item.name)
 		}
 	};
 

@@ -50,11 +50,11 @@ class VehicleViewSet(ModelViewSet):
     pagination_class = PaginationVehicleWithAggregates
     permission_classes = [IsStaffOrReadOnly]
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-    filterset_fields = ['id', 'vehicle_type', 'price_cap', 'price_region',
+    filterset_fields = ['id', 'vehicle_type', 'price_cap', 'price_region', 'sale', 'discount',
                         'vehicle_type__name',
                         'features__feature', 'features__unit', 'features__value',
                         'store__city', 'store__quantity']
-    ordering_fields = ['name', 'vehicle_type_name', 'price_cap']
+    ordering_fields = ['name', 'vehicle_type_name', 'price_cap', 'sale', 'discount']
     search_fields = ['vehicle_type_name', ]
 
     def filter_queryset(self, request):

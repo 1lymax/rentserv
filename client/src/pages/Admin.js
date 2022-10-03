@@ -18,7 +18,7 @@ const Admin = observer(() => {
 			{user.isStaff
 				? <Grid columns={2}>
 					<Grid.Row>
-						<Grid.Column width={3}>
+						<Grid.Column width={2}>
 							<Header as="h3">Categories</Header>
 							<List selection animated size="large" verticalAlign="middle">
 								{authRoutes.map(item =>
@@ -42,7 +42,7 @@ const Admin = observer(() => {
 							</List>
 
 						</Grid.Column>
-						<Grid.Column width={13}>
+						<Grid.Column width={14}>
 							<SelectedComponent/>
 						</Grid.Column>
 					</Grid.Row>

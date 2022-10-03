@@ -1,7 +1,7 @@
 import {useSnackbar} from "notistack";
 import React, {useContext, useState} from 'react';
 import {useNavigate} from "react-router-dom";
-import {Button, Card, Icon} from "semantic-ui-react";
+import {Button, Card, Icon, Label} from "semantic-ui-react";
 
 import {Context} from "../index";
 import {addToCart} from "../http/storeAPI";
@@ -20,14 +20,14 @@ const VehicleItem = ({vehicle}) => {
 	const handleClick = (e) => {
 		setFetching(true)
 		setTimeout(
-		addToCart(vehicle.id, {id: vehicle.id, quantity: 1})
-			.then(resp => {
-				cart.setData(resp)
-				enqueueSnackbar(MESSAGES.cartAdd, {variant: "success"})
-				setFetching(false)
-			})
-			.catch(e => enqueueSnackbar(convertErrorMessage(e), {variant: "error"}))
-	,1000)
+			addToCart(vehicle.id, {id: vehicle.id, quantity: 1})
+				.then(resp => {
+					cart.setData(resp)
+					enqueueSnackbar(MESSAGES.cartAdd, {variant: "success"})
+					setFetching(false)
+				})
+				.catch(e => enqueueSnackbar(convertErrorMessage(e), {variant: "error"}))
+			, 1000)
 
 		e.stopPropagation()
 	}
@@ -35,16 +35,41 @@ const VehicleItem = ({vehicle}) => {
 	return (
 		<Card link
 			  onClick={() => navigate(ITEMDETAIL_ROUTE + '/' + vehicle.id)}
-			  header={vehicle.name}
+			  header={
+				  <div style={{
+					  display: "flex",
+					  justifyContent: "space-between",
+					  alignItems: "center"
+				  }}>
+					  <div style={{fontSize:'1.3rem', color:'grey'}}>{vehicle.name}</div>
+					  {vehicle.sale &&
+						  <div><Label color='red' tag>
+							  Sale!
+						  </Label>
+						  </div>
+					  }
+				  </div>
+			  }
 			  meta={vehicle.vehicle_type_name}
 			  extra={
 				  <div style={{
 					  display: "flex",
 					  justifyContent: "space-between",
 					  alignItems: "center",
-					  fontSize: "1.4rem"
+					  fontSize: "1.9rem"
 				  }}>
-					  {vehicle.price_cap}
+					  <div>
+						  {vehicle.discount > 0
+							  ?
+							  <>
+								  <div style={{fontSize: "1.1rem"}}><s>{vehicle.price_cap}</s></div>
+								  <div
+									  style={{color: 'red'}}>{Math.ceil(vehicle.price_cap * (100 - vehicle.discount) / 100)}</div>
+							  </>
+							  :
+							  vehicle.price_cap
+						  }
+					  </div>
 					  <Button primary onClick={e => handleClick(e)} loading={fetching}>
 						  <Icon name="cart"/> Add
 					  </Button>
@@ -56,6 +81,7 @@ const VehicleItem = ({vehicle}) => {
 					  : [API_URL, "/media/no_image.png"].join(" ").replace("/ /", "/")
 			  }}
 		/>
+
 	);
 };
 

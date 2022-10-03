@@ -35,7 +35,8 @@ class Vehicle(models.Model):
     vehicle_type = models.ForeignKey(Type, null=True, on_delete=models.CASCADE)
     price_cap = models.DecimalField(max_digits=7, decimal_places=0, null=True)
     price_region = models.DecimalField(max_digits=7, decimal_places=0, null=True)
-
+    sale = models.BooleanField(null=True, default=False)
+    discount = models.DecimalField(max_digits=2, decimal_places=0, null=True, default=0)
 
     def __str__(self):
         return self.name

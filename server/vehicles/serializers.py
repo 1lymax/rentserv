@@ -33,7 +33,7 @@ class VehicleSerializer(ModelSerializer):
     class Meta:
         model = Vehicle
         fields = (
-            'id', 'name', 'vehicle_type', 'vehicle_type_name', 'price_cap', 'price_region', 'images', 'features', 'store')
+            'id', 'name', 'vehicle_type', 'vehicle_type_name', 'price_cap', 'price_region', 'discount', 'sale', 'images', 'features', 'store')
 
 
 class FeatureListSerializer(ModelSerializer):

@@ -1,18 +1,24 @@
 import React, {useState} from 'react';
 import {observer} from "mobx-react-lite";
 import {Box, Slider, Typography} from "@mui/material";
-import {Dropdown, Input} from "semantic-ui-react";
+import {Checkbox, Dropdown, Input} from "semantic-ui-react";
 
 const InputControl = observer((props) => {
 	const inputType = props.set.filter ? props.set.filter : props.set.type
 	let sliderMin = props.min ? props.min : 0
 	let sliderMax = props.max ? props.max : 100000
 	const [sliderValue, setSliderValue] = useState([sliderMin, sliderMax]);
+	const [checkbox, setCheckbox] = useState(props.value)
 
 	const handleSliderChange = (e) => {
 		setSliderValue(e.target.value)
 		props.onChange(e)
 	}
+
+	const handleCheckbox = () => {
+		setCheckbox(!checkbox)
+		props.onChange({name: props.inputName, value: !checkbox})
+	};
 
 	const handleDropdownSearch = (e, data) => {
 		props.onChange({
@@ -109,7 +115,36 @@ const InputControl = observer((props) => {
 					onSearchChange={(e, data) => e && handleDropdownSearch(e, data)}
 				/>
 			}
-
+			{props.set.type === 'checkbox' &&
+				<Checkbox
+					name={props.inputName}
+					label={props.filterComponent ? props.set.placeholder: ""}
+					onChange={() => handleCheckbox()}
+					checked={!!props.value}
+				/>
+				// <Dropdown
+				// 	search
+				// 	selection
+				// 	clearable
+				// 	openOnFocus
+				// 	fluid={props.fluid}
+				// 	value={props.value}
+				// 	selectOnBlur={false}
+				// 	name={props.inputName}
+				// 	header={props.noPlaceholder ? false : props.set.placeholder}
+				// 	placeholder={props.set.placeholder}
+				// 	options={props.selectOptions.map(item =>
+				// 		({
+				// 			key: item.id,
+				// 			text: item.name,
+				// 			value: item.id
+				// 		})
+				// 	)}
+				// 	searchInput={{ autoFocus: props.autoFocus }}
+				// 	onChange={(e, data) => e && handleDropdownChange(e, data)}
+				// 	onSearchChange={(e, data) => e && handleDropdownSearch(e, data)}
+				// />
+			}
 		</React.Fragment>
 	);
 });

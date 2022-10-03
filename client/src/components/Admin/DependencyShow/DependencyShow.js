@@ -1,8 +1,11 @@
+
 import React, {useState} from 'react';
 import {Icon, Transition} from "semantic-ui-react";
 
 import {ADMIN} from "../../../utils/consts";
+
 import ImageList from "../ImageList/ImageList";
+
 import EditTable from "../EditTable/EditTable";
 
 import classes from "./DependencyShow.module.css"

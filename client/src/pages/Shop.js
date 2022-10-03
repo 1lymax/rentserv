@@ -5,7 +5,6 @@ import React, {useContext, useEffect, useRef, useState} from 'react';
 import {Context} from "../index";
 import {doFetch} from "../http/storeAPI";
 import SearchBar from "../components/SearchBar";
-import VehicleList from "../components/VehicleList";
 import {PAGINATION} from "../utils/consts";
 import {pageCount} from "../utils/pageCount";
 import {useScroll} from "../hooks/useScroll";

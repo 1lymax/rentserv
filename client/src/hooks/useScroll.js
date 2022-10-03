@@ -23,11 +23,13 @@ export const useScroll = (parentRef, childRef, callback) => {
 		return function () {
 			console.log('return', observer.current)
 			try {
+				// eslint-disable-next-line
 				observer.current && observer.current.unobserve(childRef.current);
 			} catch (e) {
 
 			}
 
 		};
+		// eslint-disable-next-line
 	}, [callback]);
 };
