@@ -2,6 +2,7 @@ from django.db import connection
 from django.db.models import F
 from django.test import TestCase
 from django.test.utils import CaptureQueriesContext
+from rest_framework.utils import json
 
 from store.models import City, Store
 from vehicles.models import Type, Vehicle, MessurementUnit, FeatureList, VehicleFeature, VehicleImage
@@ -36,6 +37,9 @@ class VehicleSerializerTestCase(TestCase):
         vehicles = Vehicle.objects.all().annotate(
             vehicle_type_name=F('vehicle_type__name')
         ).prefetch_related('images').prefetch_related('features').prefetch_related('store').distinct()
+        with CaptureQueriesContext(connection) as queries:
+            serializer_data = VehicleSerializer(vehicles, many=True).data
+            self.assertEqual(4, len(queries))
         data = [
             {
                 "id": 1,
@@ -44,6 +48,7 @@ class VehicleSerializerTestCase(TestCase):
                 "vehicle_type_name": "Manipulator",
                 "price_cap": "500",
                 "price_region": "1000",
+                "discount": "0", "sale": False,
                 "images": [{
                     "id": 1,
                     "vehicle": 1,
@@ -72,6 +77,7 @@ class VehicleSerializerTestCase(TestCase):
                 "vehicle_type_name": "Excavator",
                 "price_cap": "1500",
                 "price_region": "2000",
+                "discount": "0", "sale": False,
                 "images": [],
                 "features": [{
                     "id": 2,
@@ -82,11 +88,8 @@ class VehicleSerializerTestCase(TestCase):
                 "store": [{"id": 3, "city": 1, "vehicle": 2, "quantity": 4}]
             }
         ]
-        with CaptureQueriesContext(connection) as queries:
-            serializer_data = VehicleSerializer(vehicles, many=True).data
-            self.assertEqual(4, len(queries))
 
-        #print(json.dumps(serializer_data), sep='\n\n')
+        print(json.dumps(serializer_data), sep='\n\n')
         self.assertEqual(serializer_data, data, serializer_data)
 
     def test_feature(self):
