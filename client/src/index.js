@@ -1,5 +1,7 @@
 import React, {createContext} from 'react';
 import ReactDOM from 'react-dom/client';
+import {SnackbarProvider} from "notistack";
+
 import App from './App';
 import UserStore from "./store/UserStore";
 import Features from "./store/Features";
@@ -11,7 +13,7 @@ import Units from "./store/Units";
 import VehicleFeatures from "./store/VehicleFeatures";
 import VehicleImages from "./store/VehicleImages";
 import Cart from "./store/Cart";
-import {SnackbarProvider} from "notistack";
+import Orders from "./store/Orders";
 
 
 export const Context = createContext(null)
@@ -30,6 +32,7 @@ root.render(
 			type: new Types(),
 			unit: new Units(),
 			cart: new Cart(),
+			order: new Orders(),
 			vehicleImage: new VehicleImages(),
 			vehicleFeature: new VehicleFeatures()
 		}}>

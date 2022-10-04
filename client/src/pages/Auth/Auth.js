@@ -9,7 +9,7 @@ import {LOGIN_ROUTE, MESSAGES, REGISTRATION_ROUTE, SHOP_ROUTE} from "../../utils
 
 import classes from "./Auth.module.css";
 import {useSnackbar} from "notistack";
-import {convertErrorMessage} from "../../utils/convertErrorMessage";
+import {getErrorMessage} from "../../utils/getErrorMessage";
 
 const Auth = observer(() => {
 	const {user} = useContext(Context)
@@ -39,7 +39,7 @@ const Auth = observer(() => {
 			user.setIsStaff(data.isStaff)
 			setTimeout(navigate(SHOP_ROUTE), 1000)
 		} catch (e) {
-			enqueueSnackbar(convertErrorMessage(e), {variant: "error"})
+			enqueueSnackbar(getErrorMessage(e), {variant: "error"})
 			setError(e.response.data)
 		}
 	}

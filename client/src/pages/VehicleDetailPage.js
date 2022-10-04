@@ -6,7 +6,7 @@ import {Button, Container, Grid, Icon, Image, Segment, Table} from "semantic-ui-
 import {ADMIN} from "../utils/consts";
 import {API_URL} from "../http";
 import {useSnackbar} from "notistack";
-import {convertErrorMessage} from "../utils/convertErrorMessage";
+import {getErrorMessage} from "../utils/getErrorMessage";
 
 
 const VehicleDetailPage = () => {
@@ -20,28 +20,28 @@ const VehicleDetailPage = () => {
 	useEffect(() => {
 		fetchOneVehicle(id)
 			.then(data => setVehicle(data))
-			.catch(e => enqueueSnackbar(convertErrorMessage(e), {variant: "error"}));
+			.catch(e => enqueueSnackbar(getErrorMessage(e), {variant: "error"}));
 		// eslint-disable-next-line
 	}, []);
 
 	useEffect(() => {
 		doFetch(feature)
 			.then(data => feature.setData(data.results))
-			.catch(e => enqueueSnackbar(convertErrorMessage(e), {variant: "error"}));
+			.catch(e => enqueueSnackbar(getErrorMessage(e), {variant: "error"}));
 		// eslint-disable-next-line
 	}, []);
 
 	useEffect(() => {
 		doFetch(unit)
 			.then(data => unit.setData(data.results))
-			.catch(e => enqueueSnackbar(convertErrorMessage(e), {variant: "error"}));
+			.catch(e => enqueueSnackbar(getErrorMessage(e), {variant: "error"}));
 		// eslint-disable-next-line
 	}, []);
 
 	const handleClick = (e) => {
 		addToCart(vehicle.id, {id: vehicle.id, quantity: 1})
 			.then(resp => cart.setData(resp))
-			.catch(e => enqueueSnackbar(convertErrorMessage(e), {variant: "error"}));
+			.catch(e => enqueueSnackbar(getErrorMessage(e), {variant: "error"}));
 
 		e.stopPropagation()
 	}

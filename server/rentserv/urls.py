@@ -26,7 +26,7 @@ urlpatterns = [
     path('__debug__/', include('debug_toolbar.urls')),
     path('user/', include('user.urls')),
     path('cart/', include('cart.urls')),
-    path('order/', include('orders.urls')),
+    path('api/order/', include('orders.urls')),
 ]
 
 urlpatterns += router.urls

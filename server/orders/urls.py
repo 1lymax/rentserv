@@ -6,7 +6,6 @@ from orders.views import OrderViewSet, OrderCreateViewSet, OrderItemCreateViewSe
 
 router = SimpleRouter()
 
-
 urlpatterns = [
     path('create/', OrderCreateViewSet.as_view({'post': 'create'}), name='order_create'),
     path('remove/<pk>/', OrderRemoveViewSet.as_view({'delete': 'destroy'}), name='order_remove'),

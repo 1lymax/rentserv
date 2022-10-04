@@ -11,7 +11,7 @@ import {useScroll} from "../hooks/useScroll";
 import {useDidMountEffect} from "../hooks/useDidMountEffect";
 import {useDebounce} from "../hooks/useDebounce";
 import {useSnackbar} from "notistack";
-import {convertErrorMessage} from "../utils/convertErrorMessage";
+import {getErrorMessage} from "../utils/getErrorMessage";
 import VehicleItem from "../components/VehicleItem";
 
 const Shop = observer(() => {
@@ -56,7 +56,7 @@ const Shop = observer(() => {
 					vehicle.setData([...vehicle.data, ...data.results])
 					setCurrentPage(currentPage + 1)
 				})
-				.catch(e => enqueueSnackbar(convertErrorMessage(e), {variant: "error"}));
+				.catch(e => enqueueSnackbar(getErrorMessage(e), {variant: "error"}));
 		}
 	}
 
@@ -71,7 +71,7 @@ const Shop = observer(() => {
 				setTotalRows(data.count)
 				setCurrentPage(2)
 			})
-			.catch(e => enqueueSnackbar(convertErrorMessage(e), {variant: "error"}));
+			.catch(e => enqueueSnackbar(getErrorMessage(e), {variant: "error"}));
 	}
 
 	useEffect(() => {
@@ -81,7 +81,7 @@ const Shop = observer(() => {
 				vehicle.setAggregate(data.aggregate)
 				setTotalRows(data.count)
 			})
-			.catch(e => enqueueSnackbar(convertErrorMessage(e), {variant: "error"}));
+			.catch(e => enqueueSnackbar(getErrorMessage(e), {variant: "error"}));
 		// eslint-disable-next-line
 	}, []);
 

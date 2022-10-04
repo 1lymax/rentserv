@@ -7,7 +7,7 @@ import {Context} from "../index";
 import {ADMIN} from "../utils/consts";
 import {doFetch} from "../http/storeAPI";
 import InputControl from "./UI/InputControl/InputControl";
-import {convertErrorMessage} from "../utils/convertErrorMessage";
+import {getErrorMessage} from "../utils/getErrorMessage";
 
 const SearchBar = observer(({setFilter}) => {
 	const contextScope = useContext(Context)
@@ -21,7 +21,7 @@ const SearchBar = observer(({setFilter}) => {
 	useEffect(() => {
 		doFetch(type)
 			.then(data => type.setData(data.results))
-			.catch(e => enqueueSnackbar(convertErrorMessage(e), {variant: "error"}));
+			.catch(e => enqueueSnackbar(getErrorMessage(e), {variant: "error"}));
 
 		// eslint-disable-next-line
 	}, []);
@@ -29,7 +29,7 @@ const SearchBar = observer(({setFilter}) => {
 	useEffect(() => {
 		doFetch(store)
 			.then(data => store.setData(data.results))
-			.catch(e => enqueueSnackbar(convertErrorMessage(e), {variant: "error"}));
+			.catch(e => enqueueSnackbar(getErrorMessage(e), {variant: "error"}));
 
 		// eslint-disable-next-line
 	}, []);
@@ -37,7 +37,7 @@ const SearchBar = observer(({setFilter}) => {
 	useEffect(() => {
 		doFetch(city)
 			.then(data => city.setData(data.results))
-			.catch(e => enqueueSnackbar(convertErrorMessage(e), {variant: "error"}));
+			.catch(e => enqueueSnackbar(getErrorMessage(e), {variant: "error"}));
 		// eslint-disable-next-line
 	}, []);
 

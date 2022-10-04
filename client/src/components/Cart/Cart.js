@@ -7,7 +7,7 @@ import {Context} from "../../index";
 import {addToCart, fetchCart, removeFromCart} from "../../http/storeAPI";
 
 import classes from "./Cart.module.css";
-import {convertErrorMessage} from "../../utils/convertErrorMessage";
+import {getErrorMessage} from "../../utils/getErrorMessage";
 import {useSnackbar} from "notistack";
 import {MESSAGES} from "../../utils/consts";
 
@@ -19,12 +19,15 @@ const Cart = observer(() => {
 	const {cart} = useContext(Context)
 
 	useEffect(() => {
+		setInputData(cart.data)
+	}, [cart.data]);
+
+	useEffect(() => {
 		fetchCart()
 			.then(resp => {
 				cart.setData(resp)
-				setInputData(cart.data)
 			})
-			.catch(e => enqueueSnackbar(convertErrorMessage(e), {variant: "error"}));
+			.catch(e => enqueueSnackbar(getErrorMessage(e), {variant: "error"}));
 		//eslint-disable-next-line
 	}, [cart.needFetch]);
 
@@ -32,22 +35,20 @@ const Cart = observer(() => {
 		removeFromCart(id)
 			.then(resp => {
 					cart.setData(resp)
-					setInputData(cart.data)
-					enqueueSnackbar(MESSAGES.cartAdd, {variant: "success"})
+					enqueueSnackbar(MESSAGES.cartRemove, {variant: "success"})
 				}
 			)
-			.catch(e => enqueueSnackbar(convertErrorMessage(e), {variant: "error"}));
+			.catch(e => enqueueSnackbar(getErrorMessage(e), {variant: "error"}));
 	};
 
 	const handleInputChange = (e, id, quantity) => {
 		addToCart(id, {id: id, quantity})
 			.then(resp => {
 					cart.setData(resp)
-					setInputData(cart.data)
 					enqueueSnackbar(MESSAGES.cartAdd, {variant: "success"})
 				}
 			)
-			.catch(e => enqueueSnackbar(convertErrorMessage(e), {variant: "error"}));
+			.catch(e => enqueueSnackbar(getErrorMessage(e), {variant: "error"}));
 	}
 
 	return (

@@ -10,9 +10,7 @@ export const useScroll = (parentRef, childRef, callback) => {
 		}
 
 		observer.current = new IntersectionObserver(([target]) => {
-			console.log(target)
 			if (target.isIntersecting) {
-				console.log('intersected')
 				callback()
 			}
 
@@ -21,7 +19,6 @@ export const useScroll = (parentRef, childRef, callback) => {
 		observer.current.observe(childRef.current)
 
 		return function () {
-			console.log('return', observer.current)
 			try {
 				// eslint-disable-next-line
 				observer.current && observer.current.unobserve(childRef.current);

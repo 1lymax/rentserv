@@ -84,7 +84,7 @@ const Filter = observer(({conf, filterCallback}) => {
 			</div>
 			<Table basic={"very"} collapsing>
 				<Table.Body>
-					{conf.dependencies.map(set => !ADMIN[set.name].imageContent &&
+					{conf.dependencies.map(set => !ADMIN[set.name]?.imageContent &&
 						<Table.Row key={set.name} className={classes.filter_row}>
 							<Table.Cell className={classes.cell}>
 								<Header as="h4">{set.inlineTitle}</Header>
@@ -94,7 +94,7 @@ const Filter = observer(({conf, filterCallback}) => {
 								{ADMIN[set.name].fields.map(dep =>
 									set.field !== dep.name &&
 									<div className={classes.field_wrapper} style={{width: dep.width * 45}} key={dep.name}>
-										<InputControl fluid
+										<InputControl
 													  set={dep}
 													  key={dep.name}
 													  filterComponent

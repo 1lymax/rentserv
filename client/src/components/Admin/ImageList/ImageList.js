@@ -4,7 +4,7 @@ import {Card, Segment} from "semantic-ui-react";
 import {ADMIN} from "../../../utils/consts";
 import ImageItem from "../ImageItem/ImageItem";
 import {doCreate, doDelete, doFetch} from "../../../http/storeAPI";
-import {convertErrorMessage} from "../../../utils/convertErrorMessage";
+import {getErrorMessage} from "../../../utils/getErrorMessage";
 import {useSnackbar} from "notistack";
 
 const ImageList = ({context, filters}) => {
@@ -17,7 +17,7 @@ const ImageList = ({context, filters}) => {
 		useEffect(() => {
 			doFetch(context, '', filters)
 				.then(resp => setData(resp.results))
-				.catch(e => enqueueSnackbar(convertErrorMessage(e), {variant: "error"}));
+				.catch(e => enqueueSnackbar(getErrorMessage(e), {variant: "error"}));
 			// eslint-disable-next-line
 		}, [needFetch]);
 

@@ -7,7 +7,7 @@ import {Context} from "../index";
 import {addToCart} from "../http/storeAPI";
 import {ITEMDETAIL_ROUTE, MESSAGES} from "../utils/consts";
 import {API_URL} from "../http";
-import {convertErrorMessage} from "../utils/convertErrorMessage";
+import {getErrorMessage} from "../utils/getErrorMessage";
 
 const VehicleItem = ({vehicle}) => {
 	const {images} = vehicle
@@ -26,7 +26,7 @@ const VehicleItem = ({vehicle}) => {
 					enqueueSnackbar(MESSAGES.cartAdd, {variant: "success"})
 					setFetching(false)
 				})
-				.catch(e => enqueueSnackbar(convertErrorMessage(e), {variant: "error"}))
+				.catch(e => enqueueSnackbar(getErrorMessage(e), {variant: "error"}))
 			, 1000)
 
 		e.stopPropagation()

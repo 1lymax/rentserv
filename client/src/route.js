@@ -8,6 +8,7 @@ import MainPage from "./pages/Admin/MainPage";
 import StoresAdmin from "./pages/Admin/StoresAdmin";
 import VehiclesAdmin from "./pages/Admin/VehiclesAdmin";
 import Main from "./pages/Main";
+import OrdersAdmin from "./pages/Admin/OrdersAdmin";
 
 export const authRoutes = [
     {
@@ -34,6 +35,11 @@ export const authRoutes = [
         path: ADMIN_ROUTE + '/stores/' ,
         Component: StoresAdmin,
         title: 'Хранение'
+    },
+    {
+        path: ADMIN_ROUTE + '/orders/' ,
+        Component: OrdersAdmin,
+        title: 'Orders'
     },
 ]
 

@@ -1,27 +1,24 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect} from 'react';
 import {observer} from "mobx-react-lite";
 
 import {Context} from "../../index";
 import DictAccordion from "../../components/UI/DictAccordion/DictAccordion";
 import {doFetch} from "../../http/storeAPI";
 import {Container} from "semantic-ui-react";
-import {convertErrorMessage} from "../../utils/convertErrorMessage";
+import {getErrorMessage} from "../../utils/getErrorMessage";
 import {useSnackbar} from "notistack";
 
 const Catalogs = observer(() => {
 	const {enqueueSnackbar} = useSnackbar()
-	const [typeVisible, setTypeVisible] = useState(false)
-	const [featureVisible, setFeatureVisible] = useState(false)
-	const [featureVehicleVisible, setFeatureVehicleVisible] = useState(false)
-	const [unitVisible, setUnitVisible] = useState(false)
 	const contextScope = useContext(Context)
 	const user = contextScope.user
 
 	useEffect(() => {
 		for (const obj of Object.values(contextScope)) {
-			obj.noFetchContextFromBackend === undefined && doFetch(obj)
+			obj.noFetchContextFromBackend === undefined &&
+			doFetch(obj, '','','', obj?.auth)
 				.then(data => obj.setData(data.results))
-				.catch(e => enqueueSnackbar(convertErrorMessage(e), {variant: "error"}));
+				.catch(e => enqueueSnackbar(getErrorMessage(e), {variant: "error"}));
 		}
 		//eslint-disable-next-line
 	}, [contextScope]);
@@ -32,29 +29,13 @@ const Catalogs = observer(() => {
 				?
 				<>
 					<h4 className="mt-3">Транспорт</h4>
-					<DictAccordion
-						context={contextScope.type}
-						modalVisible={typeVisible}
-						setModalVisible={setTypeVisible}
-					/>
+					<DictAccordion context={contextScope.type}/>
 
-					<DictAccordion
-						context={contextScope.feature}
-						modalVisible={featureVisible}
-						setModalVisible={setFeatureVisible}
-					/>
+					<DictAccordion context={contextScope.feature}/>
 
-					<DictAccordion
-						context={contextScope.unit}
-						modalVisible={unitVisible}
-						setModalVisible={setUnitVisible}
-					/>
+					<DictAccordion context={contextScope.unit}/>
 
-					<DictAccordion
-						context={contextScope.vehicleFeature}
-						modalVisible={featureVehicleVisible}
-						setModalVisible={setFeatureVehicleVisible}
-					/>
+					<DictAccordion context={contextScope.vehicleFeature}/>
 
 					{/*<h4 className="mt-4">Склады</h4>*/}
 

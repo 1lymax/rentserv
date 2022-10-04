@@ -36,8 +36,10 @@ const InputControl = observer((props) => {
 
 	return (
 		<React.Fragment>
-			{props.filterComponent && inputType === 'autocomplete' &&
+			{inputType === 'autocomplete' &&
+				//console.log(props.selectOptions) &&
 				<Dropdown
+					fluid={props.fluid}
 					search
 					selection
 					clearable
@@ -49,8 +51,8 @@ const InputControl = observer((props) => {
 					options={props.selectOptions.map(item =>
 						({
 							key: item.id,
-							text: item.name,
-							value: item.name
+							text: item[props.inputName],
+							value: item[props.inputName]
 						})
 					)}
 					onChange={(e, data) => e && handleDropdownChange(e, data)}
@@ -122,28 +124,6 @@ const InputControl = observer((props) => {
 					onChange={() => handleCheckbox()}
 					checked={!!props.value}
 				/>
-				// <Dropdown
-				// 	search
-				// 	selection
-				// 	clearable
-				// 	openOnFocus
-				// 	fluid={props.fluid}
-				// 	value={props.value}
-				// 	selectOnBlur={false}
-				// 	name={props.inputName}
-				// 	header={props.noPlaceholder ? false : props.set.placeholder}
-				// 	placeholder={props.set.placeholder}
-				// 	options={props.selectOptions.map(item =>
-				// 		({
-				// 			key: item.id,
-				// 			text: item.name,
-				// 			value: item.id
-				// 		})
-				// 	)}
-				// 	searchInput={{ autoFocus: props.autoFocus }}
-				// 	onChange={(e, data) => e && handleDropdownChange(e, data)}
-				// 	onSearchChange={(e, data) => e && handleDropdownSearch(e, data)}
-				// />
 			}
 		</React.Fragment>
 	);

@@ -16,7 +16,8 @@ export const API_ROUTES = {
 	vehicleFeature: 'vehicle_feature',
 	city: 'city',
 	store: 'store',
-	cart: 'cart'
+	cart: 'cart',
+	order: 'order'
 }
 
 export const MESSAGES = {
@@ -108,8 +109,8 @@ export const ADMIN = {
 		],
 		fields: [
 			{
-				name: 'name', type: 'string', filter: 'autocomplete', filterStyles: {minWidth: '150px'},
-				contextName: 'vehicle', placeholder: 'Название', width: 3
+				name: 'name', type: 'autocomplete', filter: 'autocomplete', filterStyles: {minWidth: '150px'},
+				contextName: 'vehicle', placeholder: 'Название', width: 4
 			},
 			{
 				name: 'vehicle_type', type: 'select', placeholder: 'Тип', filterStyles: {minWidth: '170px', maxWidth: '220px'},
@@ -142,7 +143,7 @@ export const ADMIN = {
 		addButtonTitle: '+ на склад',
 		dependsOn: 'city',
 		dependencies: [
-			//{name: 'city', field: 'city', inlineTitle: 'Наличие'},
+			{name: 'store', field: 'vehicle', inlineTitle: 'Наличие транспорт'},
 		],
 		fields: [
 			{
@@ -176,9 +177,44 @@ export const ADMIN = {
 		],
 		fields: [
 			{
-				name: 'name', type: 'string', filter: 'autocomplete', filterStyles: {minWidth: '180px'},
+				name: 'name', type: 'autocomplete', filter: 'autocomplete', filterStyles: {minWidth: '180px'},
 				contextName: 'city', placeholder: 'Название города', width:5
 			},
+		]
+	},
+	order: {
+		title: 'Orders',
+		selfName: 'order',
+		dependencies: [],
+		fields: [
+			{
+				name: 'first_name', type: 'sting', filter: 'autocomplete', contextName: 'order', placeholder: 'First name',
+				width: 3
+			},
+			{
+				name: 'last_name', type: 'sting', filter: 'autocomplete', contextName: 'order', placeholder: 'Last name',
+				width: 3
+			},
+			{
+				name: 'email', type: 'sting', filter: 'autocomplete', contextName: 'order', placeholder: 'Email',
+				width: 2
+			},
+			{
+				name: 'phone', type: 'sting', filter: 'autocomplete', contextName: 'order', placeholder: 'Phone',
+				width: 2
+			},
+			{
+				name: 'city', type: 'select', contextName: 'city', placeholder: 'City',
+				width: 2
+			},
+			{
+				name: 'paid', type: 'checkbox', filter: 'checkbox', placeholder: 'Paid',
+				width: 1
+			},
+			{
+				name: 'done', type: 'checkbox', filter: 'checkbox', placeholder: 'Done',
+				width: 1
+			}
 		]
 	}
 }

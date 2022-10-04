@@ -2,7 +2,7 @@ import {useSnackbar} from "notistack";
 import {observer} from "mobx-react-lite";
 import React, {useContext, useEffect, useState} from 'react';
 
-import {Button, Checkbox, Grid, Header, Table} from "semantic-ui-react";
+import {Button, Checkbox, Dropdown, Grid, Header, Table} from "semantic-ui-react";
 import {Context} from "../../../index";
 import {MESSAGES, PAGINATION} from "../../../utils/consts";
 import Paginate from "../../UI/Paginate/Paginate";
@@ -13,7 +13,7 @@ import setDependencyName from "../../../utils/setDependencyName";
 import {doCreate, doDelete, doFetch, doUpdate} from "../../../http/storeAPI";
 import classes from "./EditTable.module.css"
 import {useDebounce} from "../../../hooks/useDebounce";
-import {convertErrorMessage} from "../../../utils/convertErrorMessage";
+import {getErrorMessage} from "../../../utils/getErrorMessage";
 
 
 const EditTable = observer(({context, isDependencyTable, filters, ordering, parentContext}) => {
@@ -46,20 +46,19 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 		[needFetch, filters, currentPage, rowsPerPage])
 
 	function fetchFiltering() {
-		doFetch(context, ordering, filters, pagination)
+		doFetch(context, ordering, filters, pagination, context?.auth)
 			.then(resp => {
 					setData(resp.results)
 					setTotalRows(resp.count)
 				}
 			)
 			.catch(e => {
-				enqueueSnackbar(convertErrorMessage(e), {variant: "error"})
-				setError(convertErrorMessage(e.response.data))
+				enqueueSnackbar(getErrorMessage(e), {variant: "error"})
+				setError(getErrorMessage(e.response.data))
 			})
 	}
 
 	const isBoolean = (value, name) => {
-		console.log(value)
 		return value === true || value === false ? <Checkbox name={name} checked={value} disabled/> : value
 	};
 
@@ -98,7 +97,7 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 				setNeedFetch(Date.now())
 				hideAll()
 			})
-				.catch(e => enqueueSnackbar(convertErrorMessage(e.response.data), {variant: "error"}))
+				.catch(e => enqueueSnackbar(getErrorMessage(e.response.data), {variant: "error"}))
 		} else if (actionButtonsVisible === 0) {
 			doCreate(context, fieldValues).then(() => {
 				doFetch(context).then(resp => context.setData(resp.results))
@@ -107,8 +106,8 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 				setFieldsArray(isDependencyTable ? filters : [])
 				hideAll()
 			}).catch(e => {
-				enqueueSnackbar(convertErrorMessage(e), {variant: "error"})
-				setError(convertErrorMessage(e))
+				enqueueSnackbar(getErrorMessage(e), {variant: "error"})
+				setError(getErrorMessage(e))
 			})
 		}
 
@@ -122,8 +121,8 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 				setNeedFetch(Date.now())
 				enqueueSnackbar(MESSAGES.deleteSuccess, {variant: "success"})
 			}).catch(e => {
-				enqueueSnackbar(convertErrorMessage(e), {variant: "error"})
-				setError(convertErrorMessage(e.response.data))
+				enqueueSnackbar(getErrorMessage(e), {variant: "error"})
+				setError(getErrorMessage(e.response.data))
 			})
 		}
 	}
@@ -164,7 +163,7 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 					<Table.Row>
 						{conf.fields.map(set =>
 							isNeedDependencyValue(set.name) &&
-							<Table.HeaderCell width={set.width} key={set.name}>
+							<Table.HeaderCell width={set?.width} key={set.name}>
 								{set.placeholder}
 							</Table.HeaderCell>
 						)}
@@ -216,21 +215,24 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 										}
 									</Table.Cell>
 								)}
-								<Table.Cell>
-									{actionButtonsVisible === item.id &&
-										<>
-											<Button size="large" circular loading={isSaving}
-													icon={edit === item.id ? "save" : "edit"}
-													onClick={() => handleSubmit(item)}/>
-											<Button size="large" circular
-													icon={edit === item.id ? "cancel" : "trash"}
-													onClick={() => {
-														setAdd(false)
-														handleDelOrCancel(item.id)
-													}}
+								<Table.Cell textAlign={"center"}>
+									<Dropdown simple icon='ellipsis vertical' direction="left">
+										<Dropdown.Menu>
+											<Dropdown.Item
+												onClick={() => handleSubmit(item)}
+												icon={edit === item.id ? "save" : "edit"}
+												text={edit === item.id ? "Save" : "Edit"}
 											/>
-										</>
-									}
+											<Dropdown.Item
+												onClick={() => {
+													setAdd(false)
+													handleDelOrCancel(item.id)
+												}}
+												icon={edit === item.id ? "cancel" : "trash"}
+												text={edit === item.id ? "Undo changes" : "Delete record"}
+											/>
+										</Dropdown.Menu>
+									</Dropdown>
 								</Table.Cell>
 							</Table.Row>
 							{conf.dependencies && conf.dependencies.length > 0 &&

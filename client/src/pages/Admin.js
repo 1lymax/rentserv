@@ -1,10 +1,10 @@
-import {Container, Grid, Header, List} from "semantic-ui-react";
+import {observer} from "mobx-react-lite";
 import React, {useContext, useState} from 'react';
+import {Container, Grid, Header, List} from "semantic-ui-react";
 
 import {Context} from "../index";
 import {authRoutes} from "../route";
 import MainPage from "./Admin/MainPage";
-import {observer} from "mobx-react-lite";
 import {ADMIN_ROUTE} from "../utils/consts";
 
 const Admin = observer(() => {

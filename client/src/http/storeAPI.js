@@ -3,7 +3,7 @@ import {API_ROUTES} from "../utils/consts";
 
 const removeEmpties = (data) => {
 	for (let key in data) {
-		data[key] === '' &&	delete data[key]
+		data[key] === '' && delete data[key]
 	}
 	return data
 };
@@ -23,17 +23,19 @@ export const doCreate = async (context, createData) => {
 	return data
 }
 
-export const doFetch = async (context, ordering, filters, pagination) => {
-		const {data} = await $host.get(
-			API_ROUTES.api + context.endpoint + '/',
-			{params:
-					{
-						...removeEmpties(ordering),
-						...removeEmpties(filters),
-						...removeEmpties(pagination)
-					}
-			})
-		return data
+export const doFetch = async (context, ordering, filters, pagination, auth = false) => {
+	const host = auth ? $authHost : $host
+	const {data} = await host.get(
+		API_ROUTES.api + context.endpoint + '/',
+		{
+			params:
+				{
+					...removeEmpties(ordering),
+					...removeEmpties(filters),
+					...removeEmpties(pagination)
+				}
+		})
+	return data
 }
 
 export const doDelete = async (context, id) => {
@@ -47,7 +49,7 @@ export const addToCart = async (id, params) => {
 };
 
 export const removeFromCart = async (id) => {
-	const {data} = await $host.delete('cart/remove/' + id + '/',{withCredentials: true})
+	const {data} = await $host.delete('cart/remove/' + id + '/', {withCredentials: true})
 	return data.cart
 };
 
