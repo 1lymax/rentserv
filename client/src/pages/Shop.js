@@ -38,10 +38,10 @@ const Shop = observer(() => {
 	)
 
 	const sortingOptions = [
-		{value: 'name', text: 'Название А-Я'},
-		{value: '-name', text: 'Название Я-А'},
-		{value: 'price_cap', text: 'Цена А-Я'},
-		{value: '-price_cap', text: 'Цена Я-А'},
+		{value: 'name', text: 'Name A-Z'},
+		{value: '-name', text: 'Name Z-A'},
+		{value: 'price_cap', text: 'Price A-Z'},
+		{value: '-price_cap', text: 'Price Z-A'},
 	]
 
 	function needUseScrool() {
@@ -49,7 +49,6 @@ const Shop = observer(() => {
 	}
 
 	function fetchVehicles() {
-		console.log('fetchVehicles')
 		if (needUseScrool()) {
 			doFetch(vehicle, {ordering: vehicleSorting}, filter, pagination)
 				.then(data => {
@@ -61,7 +60,6 @@ const Shop = observer(() => {
 	}
 
 	function fetchFiltering() {
-		console.log('fetchFiltering')
 		doFetch(vehicle, {ordering: vehicleSorting}, filter, {
 			page: 1,
 			[PAGINATION.backendName]: rowsPerPage
@@ -75,7 +73,6 @@ const Shop = observer(() => {
 	}
 
 	useEffect(() => {
-		console.log('firstload')
 		doFetch(vehicle)
 			.then(data => {
 				vehicle.setAggregate(data.aggregate)
@@ -105,8 +102,10 @@ const Shop = observer(() => {
 									  selectOnBlur={false}
 									  value={vehicleSorting}
 									  options={sortingOptions}
-									  placeholder={"Сортировка"}
-									  onChange={e => e ? setVehicleSorting(e.value) : setVehicleSorting(undefined)}
+									  placeholder={"Sort"}
+									  onChange={(e, props) =>
+										  e ? setVehicleSorting(props.value) : setVehicleSorting(undefined)
+									  }
 							/>
 						</div>
 						<div ref={parentRef}>
