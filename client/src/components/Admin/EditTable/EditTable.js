@@ -198,6 +198,10 @@ const EditTable = observer(({context, isDependencyTable, filters, ordering, pare
 													value={fieldValues[set.name]}
 													onChange={e => handleInputChange(e)}
 													handleSubmit={() => handleSubmit(item)}
+													handleEsc={() => {
+														setAdd(false)
+														handleDelOrCancel(item.id)
+													}}
 													hidden={isNeedDependencyValue(set.name)}
 													autoFocus={item.id === focusElement[0] && set.name === focusElement[1]}
 													selectOptions={set.contextName && contextScope[set.contextName].data}

@@ -34,6 +34,12 @@ const InputControl = observer((props) => {
 		})
 	};
 
+	const handleKeyDown = (e) => {
+		console.log(e)
+		e.key === 'Enter' && props.handleSubmit && props.handleSubmit(e)
+		e.key === 'Escape' && props.handleEsc && props.handleEsc(e)
+	};
+
 	return (
 		<React.Fragment>
 			{inputType === 'autocomplete' &&
@@ -45,6 +51,7 @@ const InputControl = observer((props) => {
 					clearable
 					value={props.value}
 					selectOnBlur={false}
+					searchInput={{ autoFocus: props.autoFocus }}
 					name={props.inputName}
 					searchQuery={props.value}
 					placeholder={props.set.placeholder}
@@ -55,6 +62,7 @@ const InputControl = observer((props) => {
 							value: item[props.inputName]
 						})
 					)}
+					onKeyDown={e => handleKeyDown(e)}
 					onChange={(e, data) => e && handleDropdownChange(e, data)}
 					onSearchChange={(e, data) => e && handleDropdownSearch(e, data)}
 				/>
@@ -71,6 +79,7 @@ const InputControl = observer((props) => {
 						valueLabelDisplay="auto"
 						disabled={props.disabled}
 						onChange={handleSliderChange}
+						onKeyDown={e => handleKeyDown(e)}
 						min={sliderMin ? sliderMin : 1}
 						max={sliderMax ? sliderMax : 1}
 						value={sliderValue ? sliderValue : 1}
@@ -90,7 +99,7 @@ const InputControl = observer((props) => {
 					onChange={e => props.onChange(e)}
 					placeholder={props.set.placeholder}
 					value={props.value ? props.value : ''}
-					onKeyDown={e => e.key === 'Enter' && props.handleSubmit && props.handleSubmit(e)}
+					onKeyDown={e => handleKeyDown(e)}
 				/>
 			}
 			{props.set.type === 'select' &&
@@ -113,6 +122,7 @@ const InputControl = observer((props) => {
 						})
 					)}
 					searchInput={{ autoFocus: props.autoFocus }}
+					onKeyDown={e => handleKeyDown(e)}
 					onChange={(e, data) => e && handleDropdownChange(e, data)}
 					onSearchChange={(e, data) => e && handleDropdownSearch(e, data)}
 				/>

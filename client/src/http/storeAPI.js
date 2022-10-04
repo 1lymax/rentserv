@@ -24,7 +24,7 @@ export const doCreate = async (context, createData) => {
 }
 
 export const doFetch = async (context, ordering, filters, pagination, auth = false) => {
-	const host = auth ? $authHost : $host
+	const host = auth ? $host : $host
 	const {data} = await host.get(
 		API_ROUTES.api + context.endpoint + '/',
 		{
