@@ -40,89 +40,89 @@ export const ADMIN = {
 	imageCardHeight: 200,
 
 	type: {
-		title: 'Типы транспортных средств',
+		title: 'Vehicle types',
 		selfName: 'type',
-		addButtonTitle: '+ тип',
+		addButtonTitle: '+ type',
 		fields: [
 			{
-				name: 'name', type: 'string', placeholder: 'Название'
+				name: 'name', type: 'string', placeholder: 'Name'
 			},
 		]
 	},
 	vehicleImage: {
-		title: 'Изображения',
+		title: 'Images',
 		imageContent: true,
 		maxImages: 10,
 		selfName: 'vehicleImage',
 		dependsOn: 'vehicle',
-		addButtonTitle: '+ изо',
+		addButtonTitle: '+ image',
 		fields: [
 			{
-				name: 'image', type: 'string', placeholder: 'Изображение'
+				name: 'image', type: 'string', placeholder: 'Image'
 			},
 			{
-				name: 'vehicle', type: 'select', placeholder: 'Транспорт'
+				name: 'vehicle', type: 'select', placeholder: 'Vehicle'
 			},
 		]
 	},
 	vehicleFeature: {
-		title: 'Характеристики транспортных средств',
+		title: 'Vehicle Features',
 		selfName: 'vehicleFeature',
-		addButtonTitle: '+ характиристика',
+		addButtonTitle: '+ feature',
 		dependsOn: 'vehicle',
 		fields: [
 			{
 				name: 'feature', backendFiltersetField: 'features__feature',
-				type: 'select', placeholder: 'Характеристика', contextName: 'feature', width: 6
+				type: 'select', placeholder: 'Feature', contextName: 'feature', width: 6
 			},
 			{
 				name: 'value', backendFiltersetField: 'features__value', filterStyles: {minWidth: '70px', maxWidth: '100px'},
-				type: 'string', placeholder: 'Величина', width: 2
+				type: 'string', placeholder: 'Value', width: 2
 			},
 			{
 				name: 'unit', backendFiltersetField: 'features__unit', type: 'select', filterStyles: {minWidth: '120px', maxWidth: '140px'},
-				placeholder: 'ед.', contextName: 'unit', width: 2
+				placeholder: 'unit', contextName: 'unit', width: 2
 			},
 			{
-				name: 'vehicle', type: 'select', placeholder: 'Транспорт', contextName: 'vehicle'
+				name: 'vehicle', type: 'select', placeholder: 'Vehicle', contextName: 'vehicle'
 			},
 		]
 	},
 	feature: {
-		title: 'Характеристики',
+		title: 'Features',
 		selfName: 'feature',
-		addButtonTitle: '+ характеристика',
+		addButtonTitle: '+ feature',
 		fields: [
 			{
-				name: 'name', type: 'string', placeholder: 'Характеристика'
+				name: 'name', type: 'string', placeholder: 'Feature'
 			},
 		]
 	},
 	vehicle: {
-		title: 'Транспорт',
-		addButtonTitle: '+ транспорт',
+		title: 'Vehicle',
+		addButtonTitle: '+ vehicle',
 		selfName: 'vehicle',
 		dependencies: [
-			{name: 'vehicleFeature', field: 'vehicle', inlineTitle: 'Характеристики'},
-			{name: 'store', field: 'vehicle', inlineTitle: 'Наличие'},
-			{name: 'vehicleImage', field: 'vehicle', inlineTitle: 'Изображения'},
+			{name: 'vehicleFeature', field: 'vehicle', inlineTitle: 'Features'},
+			{name: 'store', field: 'vehicle', inlineTitle: 'Stock'},
+			{name: 'vehicleImage', field: 'vehicle', inlineTitle: 'Images'},
 		],
 		fields: [
 			{
 				name: 'name', type: 'autocomplete', filter: 'autocomplete', filterStyles: {minWidth: '150px'},
-				contextName: 'vehicle', placeholder: 'Название', width: 4
+				contextName: 'vehicle', placeholder: 'Name', width: 4
 			},
 			{
-				name: 'vehicle_type', type: 'select', placeholder: 'Тип', filterStyles: {minWidth: '170px', maxWidth: '220px'},
+				name: 'vehicle_type', type: 'select', placeholder: 'Type', filterStyles: {minWidth: '170px', maxWidth: '220px'},
 				contextName: 'type', width: 4
 			},
 			{
 				name: 'price_cap', type: 'string', filter: 'slider', aggregateContext: 'vehicle',
-				placeholder: 'Цена (Столица)', width: 2,
+				placeholder: 'Price (Capital)', width: 2, filterStyles: {minWidth: '220px', maxWidth: '240px'}
 			},
 			{
 				name: 'price_region', type: 'string', filter: 'slider', aggregateContext: 'vehicle',
-				placeholder: 'Цена (Регионы)', width: 2
+				placeholder: 'Price (Regions)', width: 2, filterStyles: {minWidth: '220px', maxWidth: '240px'}
 			},
 			{
 				name: 'discount', type: 'string', placeholder: '%', width: 2, filterStyles: {display: 'none'},
@@ -133,52 +133,52 @@ export const ADMIN = {
 		],
 		filterAdditionalfields: [
 			{
-				name: 'city', type: 'select', backendFiltersetField: 'store__city', placeholder: 'Наличие (город)', contextName: 'city', width: 6
+				name: 'city', type: 'select', backendFiltersetField: 'store__city', placeholder: 'Stock (city)', contextName: 'city', width: 6
 			},
 		]
 	},
 	store: {
-		title: 'Склады',
+		title: 'Stores',
 		selfName: 'store',
 		addButtonTitle: '+ на склад',
 		dependsOn: 'city',
 		dependencies: [
-			{name: 'store', field: 'vehicle', inlineTitle: 'Наличие транспорт'},
+			{name: 'store', field: 'vehicle', inlineTitle: 'Vehicles available'},
 		],
 		fields: [
 			{
-				name: 'vehicle', type: 'select', placeholder: 'Транспорт', contextName: 'vehicle', filterStyles: {maxWidth: '170px'}, width: 6
+				name: 'vehicle', type: 'select', placeholder: 'Vehicle', contextName: 'vehicle', filterStyles: {maxWidth: '170px'}, width: 6
 			},
 			{
-				name: 'city', type: 'select', backendFiltersetField: 'store__city', placeholder: 'Город', contextName: 'city', width: 6
+				name: 'city', type: 'select', backendFiltersetField: 'store__city', placeholder: 'City', contextName: 'city', width: 6
 			},
 			{
 				name: 'quantity', type: 'string', backendFiltersetField: 'store__quantity', filter: 'slider', aggregateContext: 'store',
-				placeholder: 'Кол-во', filterStyles: {maxWidth: '90px'}, width: 2
+				placeholder: 'Quantity', filterStyles: {maxWidth: '90px'}, width: 2
 			},
 		]
 	},
 	unit: {
-		title: 'Единицы измерения',
+		title: 'Units',
 		selfName: 'unit',
-		addButtonTitle: '+ ед. изм.',
+		addButtonTitle: '+ unit',
 		fields: [
 			{
-				name: 'name', type: 'string', placeholder: 'Ед. изм.', filterStyles: {minWidth: '70px', maxWidth: '100px'},
+				name: 'name', type: 'string', placeholder: 'Unit', filterStyles: {minWidth: '70px', maxWidth: '100px'},
 			},
 		]
 	},
 	city: {
-		title: 'Города',
+		title: 'Cities',
 		selfName: 'city',
-		addButtonTitle: '+ город',
+		addButtonTitle: '+ city',
 		dependencies: [
-			{name: 'store', field: 'city', inlineTitle: 'Наличие'},
+			{name: 'store', field: 'city', inlineTitle: 'Stock'},
 		],
 		fields: [
 			{
 				name: 'name', type: 'autocomplete', filter: 'autocomplete', filterStyles: {minWidth: '180px'},
-				contextName: 'city', placeholder: 'Название города', width:5
+				contextName: 'city', placeholder: 'City name', width:5
 			},
 		]
 	},

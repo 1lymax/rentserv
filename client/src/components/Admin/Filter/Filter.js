@@ -67,9 +67,10 @@ const Filter = observer(({conf, filterCallback}) => {
 				{conf.fields.map(set =>
 					<div key={set.name}
 						 className={classes.field_wrapper}
-						 style={set.filterStyles ? set.filterStyles : {}}
+						 style={set.filterStyles ? set.filterStyles : {width: set.width * 60 + "px"}}
 					>
 						<InputControl
+							fluid
 							set={set}
 							filterComponent
 							inputName={set.name}
@@ -93,8 +94,8 @@ const Filter = observer(({conf, filterCallback}) => {
 								<div className={classes.cell_wrapper}>
 								{ADMIN[set.name].fields.map(dep =>
 									set.field !== dep.name &&
-									<div className={classes.field_wrapper} style={{width: dep.width * 45}} key={dep.name}>
-										<InputControl
+									<div className={classes.field_wrapper} style={{width: dep.width * 45+"px"}} key={dep.name}>
+										<InputControl fluid
 													  set={dep}
 													  key={dep.name}
 													  filterComponent

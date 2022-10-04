@@ -35,7 +35,6 @@ const InputControl = observer((props) => {
 	};
 
 	const handleKeyDown = (e) => {
-		console.log(e)
 		e.key === 'Enter' && props.handleSubmit && props.handleSubmit(e)
 		e.key === 'Escape' && props.handleEsc && props.handleEsc(e)
 	};

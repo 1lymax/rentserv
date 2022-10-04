@@ -12,16 +12,16 @@ from vehicles.models import Vehicle
 class OrderViewSet(ModelViewSet):
     queryset = Order.objects.all()
     serializer_class = OrderViewSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
-    def filter_queryset(self, request):
-        self.queryset = super().filter_queryset(request)
-        if self.kwargs.get('id'):
-            self.queryset = self.queryset.filter(id=self.kwargs.get('id'))
-        if not self.request.user.is_staff:
-            return self.queryset.filter(user=self.request.user)
-
-        return self.queryset
+    # def filter_queryset(self, request):
+    #     self.queryset = super().filter_queryset(request)
+    #     if self.kwargs.get('id'):
+    #         self.queryset = self.queryset.filter(id=self.kwargs.get('id'))
+    #     if not self.request.user.is_staff:
+    #         return self.queryset.filter(user=self.request.user)
+    #
+    #     return self.queryset
 
 
 class OrderRemoveViewSet(ModelViewSet):
