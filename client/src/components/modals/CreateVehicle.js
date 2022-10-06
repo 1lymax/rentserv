@@ -6,7 +6,7 @@ import {Context} from "../../index";
 const CreateVehicle = ({show, onHide}) => {
 	const {vehicles} = useContext(Context)
 	const [selectedType, setSelectedType] = useState('')
-	console.log(selectedType)
+
 	return (
 		<Modal
 			show={show}

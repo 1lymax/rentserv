@@ -11,11 +11,9 @@ export const registration = async (username, email, password, first_name, last_n
 export const login = async (username, password) => {
 
 	const {data} = await $host.post('user/login/', {username, password})
-	//console.log("login() data", data)
 	localStorage.setItem('access', data.access)
 	localStorage.setItem('refresh', data.refresh)
-	//onAuthorize(data.access)
-	//console.log('localstorage', localStorage)
+
 	return jwtDecode(data.access)
 
 }
@@ -24,7 +22,6 @@ export const check = async () => {
 	try {
 		if (localStorage.access) {
 			const {data} = await $authHost.post('user/token/verify/', {token: localStorage.access});
-			console.log('check data', data)
 			return jwtDecode(localStorage.access);
 		}
 		return {}
@@ -37,7 +34,6 @@ export const refresh = async () => {
 	if (localStorage.refresh) {
 		const {data} = await $authHost.post('user/token/refresh/', {refresh: localStorage.refresh});
 		localStorage.setItem('access', data.access)
-		console.log('refreshed data at local storage', data)
 		return jwtDecode(data.access)
 	}
 	return {}

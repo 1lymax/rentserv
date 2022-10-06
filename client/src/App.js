@@ -18,19 +18,15 @@ const App = observer(() => {
 
 	useEffect(() => {
 		check().then(data => {
-			console.log('userdata', data)
 			user.setUser(data)
 			user.setIsAuth(true)
 			user.setIsStaff(true)
-			//user.setIsStaff(data ? data.isStaff : false)
 		})
 			.catch(e => {
 				if (e.response.data?.code === "token_not_valid") {
 					localStorage.removeItem('access')
 					localStorage.removeItem('refresh')
 				}
-				//console.log(e)
-				//enqueueSnackbar(convertErrorMessage(e.response.data), {variant: "error"})
 			})
 			.finally(() => setLoading(false))
 	},)

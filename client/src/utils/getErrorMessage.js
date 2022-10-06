@@ -1,7 +1,8 @@
 export const getErrorMessage = (error) => {
-	if ('code' in error && error.code === 'bad_authorization_header') return 'Demo mode. Any changes are prohibited.'
+	console.log('error', error)
+	if ('code' in error && ['bad_authorization_header', 'token_not_valid'].includes(error.code)) return 'Demo mode. Changes not allowed.'
 	let object = error?.response.data ? error.response.data : error?.message
-	if ('code' in object && object.code === 'bad_authorization_header') return 'Demo mode. Any changes are prohibited.'
+	if ('code' in object && ['bad_authorization_header', 'token_not_valid'].includes(object.code)) return 'Demo mode. Changes not allowed.'
 	let str = ''
 	if (typeof object === "string") {
 		return object

@@ -17,7 +17,7 @@ const InputControl = observer((props) => {
 
 	const handleCheckbox = () => {
 		setCheckbox(!checkbox)
-		props.onChange({name: props.inputName, value: !checkbox})
+		props.onChange({name: props.inputName, value: !checkbox === false ? '' : true})
 	};
 
 	const handleDropdownSearch = (e, data) => {
@@ -42,7 +42,6 @@ const InputControl = observer((props) => {
 	return (
 		<React.Fragment>
 			{inputType === 'autocomplete' &&
-				//console.log(props.selectOptions) &&
 				<Dropdown
 					fluid={props.fluid}
 					search

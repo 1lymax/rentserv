@@ -45,7 +45,7 @@ const Cart = observer(() => {
 		addToCart(id, {id: id, quantity})
 			.then(resp => {
 					cart.setData(resp)
-					enqueueSnackbar(MESSAGES.cartAdd, {variant: "success"})
+					enqueueSnackbar(MESSAGES.cartUpdated, {variant: "success"})
 				}
 			)
 			.catch(e => enqueueSnackbar(getErrorMessage(e), {variant: "error"}));
