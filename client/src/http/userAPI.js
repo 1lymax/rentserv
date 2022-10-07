@@ -21,7 +21,7 @@ export const login = async (username, password) => {
 export const check = async () => {
 	try {
 		if (localStorage.access) {
-			const {data} = await $authHost.post('user/token/verify/', {token: localStorage.access});
+			await $authHost.post('user/token/verify/', {token: localStorage.access});
 			return jwtDecode(localStorage.access);
 		}
 		return {}
