@@ -90,8 +90,12 @@ const Cart = observer(() => {
 										<Grid.Row className={classes.cartRow}>
 											<Grid.Column className={classes.cartCell}>
 												<div style={{width: "23%"}}>
-													<Image
-														src={[API_URL, item[1].image].join(" ").replace("/ /", "/")}></Image>
+													<Image src={item[1].image === '/media/_thumb.'
+															? [API_URL, "/media/no_image_thumb.png"].join(" ").replace("/ /", "/")
+															: [API_URL, item[1].image].join(" ").replace("/ /", "/")
+
+														}
+													/>
 												</div>
 												<div style={{width: "60%", textAlign: "left"}}>
 													<h3>{item[1].name}</h3>
